@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solo2CEO - Transforming Self-Employed Businesses</title>
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0f4f8;
+            color: #333;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Smooth Scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #ff5c8d, #00d2ff);
+            color: #fff;
+            padding: 80px 20px;
+            text-align: center;
+            border-bottom: 4px solid #fff;
+        }
+
+        header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        header h2 {
+            font-size: 1.6rem;
+            margin-top: 10px;
+            font-weight: 300;
+        }
+
+        /* Section Styles */
+        section {
+            padding: 60px 20px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        section h3 {
+            font-size: 2.5rem;
+            color: #222;
+            font-weight: bold;
+            margin-bottom: 30px;
+            letter-spacing: 1px;
+        }
+
+        section p {
+            font-size: 1.2rem;
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 30px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 25px;
+            background: #ff5c8d;
+            color: white;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            border-radius: 30px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #00d2ff;
+            transform: scale(1.05);
+        }
+
+        /* Testimonial Styles */
+        .testimonials {
+            display: flex;
+            justify-content: space-between;
+            gap: 40px;
+            margin-top: 50px;
+            flex-wrap: wrap;
+        }
+
+        .testimonial {
+            background: #fff;
+            border-radius: 10px;
+            padding: 30px;
+            width: 30%;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            text-align: left;
+            font-size: 1.1rem;
+        }
+
+        .testimonial:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .testimonial p {
+            font-style: italic;
+            color: #444;
+            margin-bottom: 20px;
+        }
+
+        .testimonial strong {
+            color: #ff5c8d;
+            display: block;
+            margin-top: 15px;
+        }
+
+        /* Footer */
+        footer {
+            background: #333;
+            color: white;
+            padding: 30px;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        footer p {
+            font-size: 1.1rem;
+        }
+
+        footer a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        footer a:hover {
+            color: #ff5c8d;
+        }
+
+        /* Responsive Design */
+        @media screen and (max-width: 768px) {
+            .testimonials {
+                flex-direction: column;
+                align-items: center;
+                gap: 20px;
+            }
+
+            .testimonial {
+                width: 80%;
+            }
+        }
+
+        /* Toggle content */
+        .more-content {
+            display: none;
+            text-align: left;
+            font-size: 1.1rem;
+            margin-top: 20px;
+            color: #555;
+        }
+
+        .service-btn:focus + .more-content {
+            display: block;
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Solo2CEO</h1>
+        <h2>Transforming Self-Employed Hustles into Recognized Brands!</h2>
+    </header>
+    <section>
+        <h3>About Us</h3>
+        <p>Are you a self-employed professional, local business owner, or startup looking to grow into a recognized brand? Solo2CEO specializes in turning small-scale businesses into big names through expert branding, social media management, and one-on-one business growth strategies
+            From Instagram page creation to engaging reels, strategic promotions, and customized business coaching, we provide everything you need to scale up!
+            We offer all of this at unbelievably cheap rates—cheaper than any other company! You’ll only pay from what you earn through our services.</p>
+            <br>
+        <a href="#contact" class="btn">Get Started Today!</a>
+    </section>
+
+    <section>
+        <h3>Our Services</h3>
+        <p>We offer comprehensive services including social media management, content creation, business strategy, advertising, and customer engagement to ensure you grow your business the right way.</p>
+        <a href="services.html" class="btn">Learn More</a>
+    </section>
+
+    <section>
+        <h3>Testimonials</h3>
+        <div class="testimonials">
+            <div class="testimonial">
+                <p>"Solo2CEO completely transformed my business. From a local store to a brand known across social media. Their strategies are effective and tailored to my business needs!"</p>
+                <strong>- Amit Sharma, Bakery Owner</strong>
+            </div>
+            <div class="testimonial">
+                <p>"Working with Solo2CEO was the best decision I made for my boutique. They helped me grow my online presence and made my business more profitable in just a few months!"</p>
+                <strong>- Priya Mehta, Boutique Owner</strong>
+            </div>
+            <div class="testimonial">
+                <p>"Solo2CEO helped me scale my handicrafts business with amazing content and strategic marketing. The team is super responsive and creative!"</p>
+                <strong>- Rahul Verma, Handicrafts Business Owner</strong>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact">
+        <h3>Contact Us</h3>
+        <p>If you're ready to take your business to the next level, get in touch with us today. Let's make your brand stand out and grow!</p>
+        <a href="mailto:solo2ceo@gmail.com" class="btn">Email Us</a>
+        <p>Or reach us at:</p>
+        <p><strong>Phone:</strong> +91 7021360582</p>
+    </section>
+
+    <footer>
+        <p>Solo2CEO - Elevating Your Business to Brand Status</p>
+        <p><a href="https://www.instagram.com/solo2ceo" target="_blank">Follow Us on Instagram</a></p>
+    </footer>
+
+    <script>
+            const content = document.getElementById(`service-${serviceId}`);
+            if (content.style.display === 'block') {
+                content.style.display = 'none';
+            } else {
+                content.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>
