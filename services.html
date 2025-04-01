@@ -1,9 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
+    <title>Bootstrap Example</title>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  </head>
+  <body class="p-3 m-0 border-0 bd-example m-0 border-0">
+
+    <!-- Example Code -->
+    
+        
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/index.html">Home</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <div class="navbar-nav">
+            <a class="nav-link active" aria-current="page" href="templates/about.html">About</a>
+            <a class="nav-link" href="services.html">Services</a>
+            <a class="nav-link" href="templates/contact.html">Contact</a>
+            <a class="nav-link disabled" aria-disabled="true">Domains</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+    
+      
+    <!-- End Example Code -->
+  </body>
+</html>
+<link rel="stylesheet" href="styles.css">
+<!-- <link rel="stylesheet" href="javascript.js"> -->
 <div class="service-card">
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="javascript.js">
+    
     <h3>Social Media Growth & Branding</h3>
     <p>Grow your social media presence with expert branding strategies.</p>
-    <button class="service-btn" onclick="toggleDetails(1)">Learn More</button>
+    <button class="service-btn" id="btn-1">Learn More</button>
     <div class="service-details" id="service-1">
         <p>✔ Create & manage Instagram, Facebook, and other platforms.<br>
            ✔ Professional bio, logo, and profile optimization.<br>
@@ -16,7 +53,7 @@
 <div class="service-card">
     <h3>Business Strategy & Scaling</h3>
     <p>One-on-one consultation for business positioning.</p>
-    <button class="service-btn" onclick="toggleDetails(2)">Learn More</button>
+    <button class="service-btn" id="btn-2">Learn More</button>
     <div class="service-details" id="service-2">
         <p>✔ Personalized business growth strategy.<br>
            ✔ Identifying target audience & engagement techniques.<br>
@@ -29,7 +66,7 @@
 <div class="service-card">
     <h3>Professional Content Creation</h3>
     <p>High-quality content that engages and converts customers.</p>
-    <button class="service-btn" onclick="toggleDetails(3)">Learn More</button>
+    <button class="service-btn" id="btn-3">Learn More</button>
     <div class="service-details" id="service-3">
         <p>✔ High-quality photo & video shoots for your business.<br>
            ✔ Product/service highlights with storytelling.<br>
@@ -42,7 +79,7 @@
 <div class="service-card">
     <h3>Advertising & Paid Promotions</h3>
     <p>Get your brand in front of the right audience.</p>
-    <button class="service-btn" onclick="toggleDetails(4)">Learn More</button>
+    <button class="service-btn" id="btn-4">Learn More</button>
     <div class="service-details" id="service-4">
         <p>✔ Instagram & Facebook Ads to maximize reach.<br>
            ✔ Google My Business setup & local SEO.<br>
@@ -55,7 +92,7 @@
 <div class="service-card">
     <h3>Customer Engagement & Community Building</h3>
     <p>Boost interaction with your customers.</p>
-    <button class="service-btn" onclick="toggleDetails(5)">Learn More</button>
+    <button class="service-btn" id="btn-5">Learn More</button>
     <div class="service-details" id="service-5">
         <p>✔ Managing messages & comments professionally.<br>
            ✔ Running interactive giveaways & contests.<br>
@@ -65,3 +102,8 @@
 </div>
 
 </div>
+<script src="scripts.js"></script>
+
+
+
+

@@ -443,3 +443,38 @@ footer {
 .contact-btn:hover {
     background-color: #00d2ff;
 }
+
+
+
+
+body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    background-color: #f4f4f9;
+}
+
+h3 {
+    color: #333;
+}
+
+.service-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.3s;
+}
+
+.service-btn:hover {
+    background-color: #0056b3;
+}
+
+.service-details {
+    display: none;
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-left: 4px solid #007bff;
+}
