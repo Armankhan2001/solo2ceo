@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sell Your Phone</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: #007bff;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    .container {
+      padding: 20px;
+      max-width: 900px;
+      margin: auto;
+    }
+    .search-bar {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      margin-bottom: 20px;
+    }
+    .brand-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .brand {
+      background: white;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      transition: background 0.2s;
+    }
+    .brand:hover {
+      background: #e9ecef;
+    }
+    .model-list {
+      margin-top: 20px;
+    }
+    .model {
+      padding: 8px 10px;
+      border-bottom: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Sell Your Mobile Phone</h1>
+    <p>Select your phone brand and model to get started</p>
+  </header>
+
+  <div class="container">
+    <input type="text" id="searchInput" class="search-bar" placeholder="Search for a phone brand...">
+    <div id="brandContainer" class="brand-list"></div>
+    <div id="modelContainer" class="model-list"></div>
+  </div>
+
+  <script>
+    const phoneData = {
+      "Apple": ["iPhone 14", "iPhone 13", "iPhone 12", "iPhone SE"],
+      "Samsung": ["Galaxy S23", "Galaxy Note 20", "Galaxy A72"],
+      "OnePlus": ["OnePlus 11", "OnePlus 10 Pro"],
+      "Xiaomi": ["Redmi Note 12", "Mi 11", "Poco X3"],
+      "Realme": ["Realme 11", "Realme Narzo 50"],
+      "Motorola": ["Moto G73", "Moto Edge 40"],
+      // Add more from your list as needed
+    };
+
+    const brandContainer = document.getElementById("brandContainer");
+    const modelContainer = document.getElementById("modelContainer");
+    const searchInput = document.getElementById("searchInput");
+
+    function displayBrands(filter = "") {
+      brandContainer.innerHTML = "";
+      const filtered = Object.keys(phoneData).filter(brand => brand.toLowerCase().includes(filter.toLowerCase()));
+      filtered.sort().forEach(brand => {
+        const div = document.createElement("div");
+        div.className = "brand";
+        div.textContent = brand;
+        div.onclick = () => showModels(brand);
+        brandContainer.appendChild(div);
+      });
+    }
+
+    function showModels(brand) {
+      modelContainer.innerHTML = `<h3>Models for ${brand}</h3>`;
+      phoneData[brand].forEach(model => {
+        const div = document.createElement("div");
+        div.className = "model";
+        div.textContent = model;
+        modelContainer.appendChild(div);
+      });
+    }
+
+    searchInput.addEventListener("input", (e) => displayBrands(e.target.value));
+
+    // Initial render
+    displayBrands();
+  </script>
+</body>
+</html>
