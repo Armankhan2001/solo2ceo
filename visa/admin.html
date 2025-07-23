@@ -13,20 +13,24 @@
     }
 
     body {
-      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
       color: white;
       line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
     header {
       background: rgba(0, 0, 0, 0.6);
-      padding: 2rem;
+      padding: 2.5rem 1rem;
       text-align: center;
     }
 
     header h1 {
-      font-size: 2.5rem;
+      font-size: 2.8rem;
       margin-bottom: 0.5rem;
+      color: #fff;
     }
 
     header p {
@@ -35,132 +39,152 @@
     }
 
     .container {
-      padding: 2rem;
+      flex: 1;
       max-width: 1200px;
       margin: auto;
+      padding: 2rem 1rem;
     }
 
-    .cta {
+    .container h2 {
       text-align: center;
-      margin: 2rem 0;
+      font-size: 2rem;
+      color: #ffe082;
+      margin-bottom: 2rem;
     }
 
-    .cta button {
-      background-color: #ff9800;
-      color: white;
-      padding: 1rem 2rem;
-      border: none;
+    .grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2rem;
+    }
+
+    .card {
+      width: 280px;
+      background: rgba(255, 255, 255, 0.08);
+      padding: 2rem 1.2rem;
+      border-radius: 15px;
+      text-align: center;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      transition: all 0.4s ease;
+      flex: 0 0 auto;
+    }
+
+    .card:hover {
+      transform: translateY(-8px);
+      background: rgba(255, 255, 255, 0.12);
+      box-shadow: 0 6px 20px rgba(255, 255, 255, 0.15);
+    }
+
+    .card .logo {
+      width: 60px;
+      height: auto;
+      margin-bottom: 1rem;
+      filter: brightness(1.1);
+      border-radius: 8px;
+    }
+
+    .card h3 {
+      font-size: 1.25rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .card button {
+      padding: 0.8rem 1.5rem;
       font-size: 1rem;
-      border-radius: 5px;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(to right, #ffa726, #fb8c00);
+      color: white;
       cursor: pointer;
       transition: background 0.3s ease;
     }
 
-    .cta button:hover {
-      background-color: #e68900;
-    }
-
-    .services {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 2rem;
-      justify-content: center;
-      margin-top: 2rem;
-    }
-
-    .card {
-      background: rgba(255, 255, 255, 0.1);
-      padding: 1.5rem;
-      border-radius: 10px;
-      width: 280px;
-      text-align: center;
-      transition: transform 0.3s ease;
-    }
-
-    .card:hover {
-      transform: translateY(-5px);
-      background: rgba(255, 255, 255, 0.15);
-    }
-
-    .card h3 {
-      margin-bottom: 0.5rem;
-    }
-
-    .card p {
-      font-size: 0.95rem;
-      color: #ddd;
+    .card button:hover {
+      background: linear-gradient(to right, #fb8c00, #f57c00);
     }
 
     footer {
-      background-color: #111;
       text-align: center;
-      padding: 1rem;
-      font-size: 0.9rem;
-      color: #aaa;
-      margin-top: 2rem;
+      padding: 1.2rem;
+      font-size: 0.95rem;
+      color: #bbb;
+      background-color: rgba(0, 0, 0, 0.4);
+      margin-top: 3rem;
     }
 
-    @media (max-width: 768px) {
-      .services {
-        flex-direction: column;
-        align-items: center;
-      }
-
+    @media (max-width: 500px) {
       header h1 {
-        font-size: 2rem;
+        font-size: 2.2rem;
       }
 
-      .cta button {
-        width: 80%;
+      .card h3 {
+        font-size: 1.1rem;
+      }
+
+      .card button {
+        width: 100%;
       }
     }
   </style>
 </head>
 <body>
+
   <header>
     <h1>Visa Quotations</h1>
     <p>Your trusted partner for visa processing and global travel support</p>
   </header>
 
   <div class="container">
-    <div class="cta">
-      <h2>Check Visa Pricing Sheets</h2>
-      <p>View real-time updates and country-specific visa processing fees</p>
-      <button onclick="window.open('https://docs.google.com/spreadsheets/d/1t6kOkjQ5hP6ptjijfB3ZozP2XTHhkNdw/edit?usp=sharing', '_blank')">
-        Open Tripstore Rate Sheet
-      </button>
+    <h2>Open Visa Rate Sheets</h2>
+    <div class="grid">
+      <div class="card">
+        <img src="https://logo.clearbit.com/tripstoreholidays.com" alt="Tripstore Logo" class="logo" />
+        <h3>Tripstore Rate Sheet</h3>
+        <button onclick="window.open('https://docs.google.com/spreadsheets/d/1t6kOkjQ5hP6ptjijfB3ZozP2XTHhkNdw/edit?usp=sharing', '_blank')">Open</button>
+      </div>
 
-      <button onclick="window.open('https://docs.google.com/spreadsheets/d/1hHckgHg1kz8u6EqijOl8uwMdsjTUYeui/edit?usp=sharing', '_blank')">
-        Open Satguru Rate Sheet
-      </button>
+      <div class="card">
+        <img src="https://logo.clearbit.com/satgurutravel.com" alt="Satguru Logo" class="logo" />
+        <h3>Satguru Rate Sheet</h3>
+        <button onclick="window.open('https://docs.google.com/spreadsheets/d/1hHckgHg1kz8u6EqijOl8uwMdsjTUYeui/edit?usp=sharing', '_blank')">Open</button>
+      </div>
 
-      <button onclick="window.open('https://drive.google.com/file/d/1qcGXJjXpqNj-7MGbO5tJOeoJGQu1XDmO/view?usp=sharing', '_blank')">
-        Open Atlas Rate Sheet
-      </button>
+      <div class="card">
+        <img src="https://files.gallabox.com/642163ce9a1b3d11e7a3205c/36f7ca79-9779-4113-a27e-5cf188a8bb41-WHITE.png" alt="Atlas Logo" class="logo" />
+        <h3>Atlas Rate Sheet</h3>
+        <button onclick="window.open('https://drive.google.com/file/d/1qcGXJjXpqNj-7MGbO5tJOeoJGQu1XDmO/view?usp=sharing', '_blank')">Open</button>
+      </div>
+
+      <div class="card">
+        <img src="https://logo.clearbit.com/atlys.com" alt="Atlys Logo" class="logo" />
+        <h3>Atlys Rate Sheet</h3>
+        <button onclick="window.open('https://www.atlys.com/en-IN', '_blank')">Open</button>
+      </div>
+
+      <div class="card">
+        <img src="https://logo.clearbit.com/akbartravels.com" alt="Akbar Travels Logo" class="logo" />
+        <h3>Akbar Travels Rate Sheet</h3>
+        <button onclick="window.open('https://www.akbartravels.com/visa', '_blank')">Open</button>
+      </div>
+
+      <div class="card">
+        <img src="https://stampthepassport.com/assets/images/logo.webp" alt="Stamp the Passport Logo" class="logo" />
+        <h3>Stamp the Passport</h3>
+        <button onclick="window.open('https://stampthepassport.com/', '_blank')">Open</button>
+      </div>
+
+      <div class="card">
+        <img src="https://stampmyvisa.com/assets/images/logo-with-name.svg" alt="StampMyVisa Logo" class="logo" />
+        <h3>StampMyVisa</h3>
+        <button onclick="window.open('https://stampmyvisa.com/', '_blank')">Open</button>
+      </div>
     </div>
-
-    <section class="services">
-      <div class="card">
-        <h3>Tourist Visas</h3>
-        <p>Fast and reliable visa processing for your dream destinations.</p>
-      </div>
-      <div class="card">
-        <h3>Student Visas</h3>
-        <p>Guidance and paperwork for studying abroad made simple.</p>
-      </div>
-      <div class="card">
-        <h3>Business Visas</h3>
-        <p>Quick processing for global business meetings and events.</p>
-      </div>
-      <div class="card">
-        <h3>Immigration Help</h3>
-        <p>Support for permanent residency and citizenship pathways.</p>
-      </div>
-    </section>
   </div>
 
   <footer>
     &copy; 2025 AsTours International. All rights reserved.
   </footer>
+
 </body>
 </html>
