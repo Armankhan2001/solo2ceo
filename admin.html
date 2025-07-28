@@ -5,66 +5,179 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Login | Solo2CEO Admin</title>
   <style>
-    body {
+
+     /* Password overlay */
+    #passwordOverlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: black;
+      z-index: 9999;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      background: #f1f5f9;
-      font-family: Arial, sans-serif;
+      flex-direction: column;
     }
 
-    .login-box {
-      background: #fff;
-      padding: 40px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      text-align: center;
-    }
-
-    input[type="password"] {
-      padding: 10px;
-      width: 100%;
-      margin: 10px 0;
+    #passwordOverlay input {
+      padding: 12px;
       border-radius: 5px;
-      border: 1px solid #ccc;
+      border: none;
+      width: 250px;
+      margin-bottom: 15px;
+      font-size: 16px;
     }
 
-    button {
+    #passwordOverlay button {
       padding: 10px 20px;
-      background: #3b82f6;
+      background: #ffa726;
       border: none;
-      color: white;
+      color: #fff;
+      font-size: 16px;
       border-radius: 5px;
       cursor: pointer;
     }
 
-    .error {
+    #passwordOverlay p {
       color: red;
       margin-top: 10px;
+      font-size: 14px;
+    }
+
+     body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4f6f9;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #1e293b;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-size: 1.8rem;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 40px;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      text-align: center;
+      transition: 0.3s ease;
+    }
+
+    .card:hover {
+      transform: scale(1.02);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    }
+
+    .card h3 {
+      margin-bottom: 10px;
+      font-size: 1.4rem;
+      color: #1e293b;
+    }
+
+    .card a {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 10px 20px;
+      background-color: #3b82f6;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+    }
+
+    .card a:hover {
+      background-color: #2563eb;
+    }
+
+    @media (max-width: 600px) {
+      header {
+        font-size: 1.3rem;
+      }
+
+      .card h3 {
+        font-size: 1.1rem;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="login-box">
-    <h2>Solo2CEO Admin Login</h2>
-    <input type="password" id="password" placeholder="Enter password" />
-    <button onclick="checkPassword()">Login</button>
-    <div class="error" id="errorMsg"></div>
+
+   <!-- Password Prompt Overlay -->
+  <div id="passwordOverlay">
+    <input type="password" id="adminPassword" placeholder="Enter Password" />
+    <button onclick="checkPassword()">Unlock</button>
+    <p id="errorMessage"></p>
   </div>
 
-  <script>
-    const correctPassword = atob('YWRtaW4yMDI1'); // base64 = "yourpassword"
+  <header>
+  Solo2CEO Admin Dashboard
+</header>
 
-    function checkPassword() {
-      const input = document.getElementById('password').value;
-      if (input === correctPassword) {
-        window.location.href = "login.html";
-      } else {
-        document.getElementById('errorMsg').innerText = "Incorrect password.";
-      }
+
+  <div class="container">
+  <div class="card">
+    <h3>📁 Catalogues</h3>
+    <a href="https://drive.google.com/drive/folders/1YcXcojBUVVXuF3yme_lEjQG-I8BnVO2c" target="_blank">Open Folder</a>
+  </div>
+  <div class="card">
+    <h3>📝 Proposals</h3>
+    <a href="https://drive.google.com/drive/folders/1YatQws3BAZvistGbaskNTB5AwYAGkxoV" target="_blank">Open Folder</a>
+  </div>
+  <div class="card">
+    <h3>💰 Invoices</h3>
+    <a href="https://drive.google.com/drive/folders/1Z0VwkJnMDiu-rbaHu7eCfLYY0savkoGs" target="_blank">Open Folder</a>
+  </div>
+  <div class="card">
+    <h3>🎨 Logo Assets</h3>
+    <a href="https://drive.google.com/drive/folders/1V-7bL20upCpWjjgA2AxAzuUve8wt0fOY" target="_blank">Open Folder</a>
+  </div>
+  <div class="card">
+    <h3>🎨 Web proposal</h3>
+    <a href="proposal.html" target="_blank">Open Folder</a>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+   <script>
+  // Base64-encoded password:
+  const encoded = 'YWRtaW4yMDI1';
+
+  function checkPassword() {
+    const input = document.getElementById("adminPassword").value;
+    const correctPassword = atob(encoded); // Decode from Base64
+
+    if (input === correctPassword) {
+      document.getElementById("passwordOverlay").style.display = "none";
+      document.querySelector("header").classList.add("visible");
+      document.querySelector(".container").classList.add("visible");
+      document.querySelector("footer").classList.add("visible");
+    } else {
+      document.getElementById("errorMessage").textContent = "Incorrect password. Try again.";
     }
-  </script>
+  }
+</script>
 </body>
 </html>
 
