@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Solo2CEO Admin Dashboard</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4f6f9;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #1e293b;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-size: 1.8rem;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 40px;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      text-align: center;
+      transition: 0.3s ease;
+    }
+
+    .card:hover {
+      transform: scale(1.02);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    }
+
+    .card h3 {
+      margin-bottom: 10px;
+      font-size: 1.4rem;
+      color: #1e293b;
+    }
+
+    .card a {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 10px 20px;
+      background-color: #3b82f6;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+    }
+
+    .card a:hover {
+      background-color: #2563eb;
+    }
+
+    @media (max-width: 600px) {
+      header {
+        font-size: 1.3rem;
+      }
+
+      .card h3 {
+        font-size: 1.1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  Solo2CEO Admin Dashboard
+</header>
+
+<div class="container">
+  <div class="card">
+    <h3>📁 Catalogues</h3>
+    <a href="https://drive.google.com/drive/folders/1YcXcojBUVVXuF3yme_lEjQG-I8BnVO2c" target="_blank">Open Folder</a>
+  </div>
+  <div class="card">
+    <h3>📝 Proposals</h3>
+    <a href="https://drive.google.com/drive/folders/1YatQws3BAZvistGbaskNTB5AwYAGkxoV" target="_blank">Open Folder</a>
+  </div>
+  <div class="card">
+    <h3>💰 Invoices</h3>
+    <a href="https://drive.google.com/drive/folders/1Z0VwkJnMDiu-rbaHu7eCfLYY0savkoGs" target="_blank">Open Folder</a>
+  </div>
+  <div class="card">
+    <h3>🎨 Logo Assets</h3>
+    <a href="https://drive.google.com/drive/folders/1V-7bL20upCpWjjgA2AxAzuUve8wt0fOY" target="_blank">Open Folder</a>
+  </div>
+</div>
+
+</body>
+</html>
