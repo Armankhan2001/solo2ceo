@@ -12,6 +12,46 @@
       font-family: "Segoe UI", sans-serif;
     }
 
+     /* Password overlay */
+    #passwordOverlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: black;
+      z-index: 9999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    #passwordOverlay input {
+      padding: 12px;
+      border-radius: 5px;
+      border: none;
+      width: 250px;
+      margin-bottom: 15px;
+      font-size: 16px;
+    }
+
+    #passwordOverlay button {
+      padding: 10px 20px;
+      background: #ffa726;
+      border: none;
+      color: #fff;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #passwordOverlay p {
+      color: red;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+
+
     body {
       background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
       color: white;
@@ -130,6 +170,13 @@
 </head>
 <body>
 
+     <!-- Password Prompt Overlay -->
+  <div id="passwordOverlay">
+    <input type="password" id="adminPassword" placeholder="Enter Password" />
+    <button onclick="checkPassword()">Unlock</button>
+    <p id="errorMessage"></p>
+  </div>
+
   <header>
     <h1>Visa Quotations</h1>
     <p>Your trusted partner for visa processing and global travel support</p>
@@ -186,6 +233,8 @@
         <button onclick="window.open('https://www.prominentvisa.com/visainfo.aspx', '_blank')">Open</button>
       </div>
 
+      
+
        <div class="card">
         <img src="https://scontent.fbom50-1.fna.fbcdn.net/v/t39.30808-6/449208497_911403994335085_6835855480433638017_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=6DaRvhq6HgkQ7kNvwFIxdJ6&_nc_oc=AdmHqvGJeE-LD-s6fpP5NpVp0jVkFYhxz7zeW4iyAeQfmUc5KCJSBI0FYRlcbTVAxXA&_nc_zt=23&_nc_ht=scontent.fbom50-1.fna&_nc_gid=I885l85J1WMW9g1cK8gRLw&oh=00_AfT5-vBGlOWU-LFk7T4WwukBjxyQDdvPePG5-hwpYrT0-g&oe=6886B92C" alt="Sanskrutitravels Logo" class="logo" />
         <h3>Sanskruti Travels</h3>
@@ -200,6 +249,25 @@
   <footer>
     &copy; 2025 AsTours International. All rights reserved.
   </footer>
+
+  <script>
+  // Base64-encoded password:
+  const encoded = 'Sm91cm5leUAyNQ==';
+
+  function checkPassword() {
+    const input = document.getElementById("adminPassword").value;
+    const correctPassword = atob(encoded); // Decode from Base64
+
+    if (input === correctPassword) {
+      document.getElementById("passwordOverlay").style.display = "none";
+      document.querySelector("header").classList.add("visible");
+      document.querySelector(".container").classList.add("visible");
+      document.querySelector("footer").classList.add("visible");
+    } else {
+      document.getElementById("errorMessage").textContent = "Incorrect password. Try again.";
+    }
+  }
+</script>
 
 </body>
 </html>
