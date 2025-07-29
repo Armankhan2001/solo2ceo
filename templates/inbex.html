@@ -1,539 +1,149 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Solo2CEO - Transforming Self-Employed Businesses</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #fafafa;
-            color: #222;
-            overflow-x: hidden;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contact Us | Solo2CEO</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #6a11cb;
+      --secondary: #2575fc;
+      --accent: #ffcc00;
+      --bg: #f4f7fc;
+      --text: #222;
+      --white: #fff;
+    }
 
-        .navbar {
-            background: linear-gradient(135deg, #6a11cb, #2575fc);
-            padding: 15px;
-            transition: 0.3s;
-        }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg);
+      margin: 0;
+      color: var(--text);
+    }
 
-        .navbar-brand, .nav-link {
-            font-family: 'Montserrat', sans-serif;
-            color: white !important;
-            font-weight: bold;
-            transition: 0.3s;
-        }
+    header {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      padding: 100px 20px 80px;
+      text-align: center;
+      color: var(--white);
+    }
 
-        .nav-link:hover {
-            color: #ffcc00 !important;
-            transform: scale(1.1);
-        }
+    header h1 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 3rem;
+      font-weight: 600;
+    }
 
-        header {
-            background: linear-gradient(135deg, #6a11cb, #2575fc);
-            color: #fff;
-            padding: 80px 20px;
-            text-align: center;
-        }
+    header p {
+      font-size: 1.25rem;
+      margin-top: 10px;
+    }
 
-        header h1 {
-            font-size: 3.5rem;
-            font-weight: bold;
-            font-family: 'Montserrat', sans-serif;
-        }
+    .contact-section {
+      padding: 60px 20px;
+      text-align: center;
+    }
 
-        header h2 {
-            font-size: 1.6rem;
-            margin-top: 10px;
-            font-weight: 300;
-        }
+    .contact-section h2 {
+      font-size: 2rem;
+      margin-bottom: 30px;
+    }
 
-        section {
-            padding: 60px 20px;
-            text-align: center;
-        }
+    .contact-cards {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 25px;
+    }
 
-        .services-container, .testimonials {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 20px;
-            align-items: stretch;
-        }
-        .service-card, .testimonial {
-            background: white;
-            padding: 25px;
-            border-radius: 15px;
-            width: 320px;
-            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            font-weight: 400;
-        }
+    .contact-card {
+      background: var(--white);
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+      padding: 30px 20px;
+      width: 280px;
+      transition: transform 0.3s ease;
+    }
 
-        .service-card:hover, .testimonial:hover {
-            transform: scale(1.08);
-        }
+    .contact-card:hover {
+      transform: translateY(-8px);
+    }
 
-        .testimonial {
-            position: relative;
-            text-align: left;
-            font-style: italic;
-        }
+    .contact-card h4 {
+      font-size: 1.25rem;
+      margin-bottom: 10px;
+      color: var(--primary);
+    }
 
-        .testimonial::before {
-            content: "\201C";
-            font-size: 50px;
-            position: absolute;
-            top: -10px;
-            left: 10px;
-            color: #6a11cb;
-        }
+    .contact-card p {
+      font-size: 1rem;
+      margin-bottom: 0;
+    }
 
-        .testimonial-author {
-            font-weight: bold;
-            margin-top: 10px;
-            color: #2575fc;
-        }
+    .contact-card a {
+      color: var(--secondary);
+      text-decoration: none;
+      font-weight: bold;
+    }
 
-        footer {
-            background: #222;
-            color: white;
-            padding: 30px;
-            text-align: center;
-            margin-top: 50px;
-        }
+    footer {
+      background: #111;
+      color: var(--white);
+      text-align: center;
+      padding: 30px 20px;
+      font-size: 1rem;
+    }
 
-        footer p {
-            font-size: 1.1rem;
-        }
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
 
-        footer a {
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-            transition: color 0.3s ease;
-        }
-
-        footer a:hover {
-            color: #ffcc00;
-        }
-        @keyframes marquee {
-            0% { transform: translateX(100%); }
-            100% { transform: translateX(-100%); }
-          }
-          
-          .navbar-brand {
-            display: inline-block;
-            white-space: nowrap;
-            overflow: hidden;
-            animation: marquee 10s linear infinite;
-          }
-
-          .container {
-            padding: 60px 20px;
-            text-align: center;
-        }
-
-        .highlight {
-            color: #6a11cb;
-            font-weight: bold;
-        }
-
-          
-          
-    </style>
+    @media (max-width: 768px) {
+      .contact-card {
+        width: 100%;
+      }
+    }
+  </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="index.html">Solo2CEO</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav ms-auto">
-            <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
-            <li class="nav-item"><a class="nav-link" href="\services.html">Services</a></li>
-            <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
-            <li class="nav-item"><a class="nav-link" href="domain.html">Domain</a></li>
-          </ul>
-        </div>
-      </div>
-    </nav>
 
-    <header>
-        <h1>Solo2CEO</h1>
-        <h2>Transforming Self-Employed Hustles into Recognized Business Brands!</h2>
-    </header>
-    <div class="container">
-        <h2>About Us</h2>
-        <p>
-            <span class="highlight">Solo2CEO</span> was born out of the struggles of small-scale self-employed individuals. We noticed that many local business owners believe they are running a <strong>"business,"</strong> but in reality, they are self-employed—working tirelessly without scaling or competing in the modern market. Large corporations and well-established brands dominate the industry, leaving small businesses struggling to survive.
-        </p>
-        <p>
-            ✨ <strong>We believe in transformation.</strong> The only way for self-employed individuals to break free from this cycle is by turning their small-scale work into a <span class="highlight">recognized business</span> through social media, branding, and strategic marketing. <span class="highlight">Solo2CEO</span> provides the <strong>time, strategy, and expertise</strong> that small business owners lack, offering affordable, result-driven solutions to help them scale their business online.
-        </p>
+<header>
+  <h1>📬 Get in Touch</h1>
+  <p>We'd love to hear from you — Let's build your brand together!</p>
+</header>
+
+<section class="contact-section">
+  <h2>Contact Options</h2>
+  <div class="contact-cards">
+    <div class="contact-card">
+      <h4>📩 Email Us</h4>
+      <p><a href="mailto:solo2ceoo@gmail.com">solo2ceoo@gmail.com</a></p>
     </div>
+    <div class="contact-card">
+      <h4>📞 Call Us</h4>
+      <p>+91 7021360582</p>
+    </div>
+    <div class="contact-card">
+      <h4>💬 WhatsApp</h4>
+      <p><a href="https://wa.me/917021360582" target="_blank">Chat Now</a></p>
+    </div>
+  </div>
+</section>
 
-    <section id="services">
-        <h3>Our Services</h3>
-        <div class="services-container">
-            <div class="service-card">Social Media Management<br><small>We handle your Instagram, LinkedIn other social platforms, and branding.</small></div>
-            <div class="service-card">Business Growth Strategy<br><small>One-on-one strategy to scale your business.</small></div>
-            <div class="service-card">Brand Building<br><small>Transforming your small hustle into a recognized brand.</small></div>
-            <div class="service-card">Marketing Consultation<br><small>Expert advice on increasing reach and engagement.</small></div>
-        </div>
-    </section>
+<footer>
+  <p>&copy; 2025 Solo2CEO. All rights reserved.</p>
+  <p><a href="https://www.instagram.com/solo2_ceo" target="_blank">📷 Follow us on Instagram</a></p>
+</footer>
 
-    <section id="testimonials">
-        <h3>Testimonials</h3>
-        <div class="testimonials">
-            <div class="testimonial">"Solo2CEO took my online store from zero to viral!"<br><span class="testimonial-author">- Amit</span></div>
-            <div class="testimonial">"Their growth strategy skyrocketed my boutique sales!"<br><span class="testimonial-author">- Priya</span></div>
-            <div class="testimonial">"Marketing magic! I gained 10k+ followers in weeks."<br><span class="testimonial-author">- Rahul</span></div>
-            <div class="testimonial">"Highly recommend! My food business now trends regularly."<br><span class="testimonial-author">- Neha</span></div>
-        </div>
-    </section>
-    <section id="contact">
-        <h3> 📞 Contact Us</h3>
-        <p>🚀 Ready to take your business to the next level? Let’s make your brand shine!</p>
-        <a href="mailto:solo2ceo@gmail.com" class="btn btn-dark">📩 Email Us</a>
-        <p style="font-size: 1.3rem; margin-top: 20px; font-weight: bold; color: #222;">Or reach us at:</p>
-        <p>📞 +91 7021360582</p>
-    </section>
-    
-    
-
-    <footer>
-        <p>&copy; 2025 Solo2CEO - Elevating Your Business to Brand Status</p>
-        <p><a href="https://www.instagram.com/astourinternational" target="_blank">Follow Us on Instagram</a></p>
-    </footer>
-    <script>
-        // Navbar Animation
-        gsap.from(".navbar", { y: -50, opacity: 0, duration: 1, ease: "power3.out" });
-    
-        // Header Animation
-        gsap.from("header h1", { scale: 0.5, opacity: 0, duration: 1.2, ease: "back.out(1.7)" });
-    
-        // Ensure all service cards start at the same height instantly before animation
-        document.querySelectorAll(".service-card").forEach(card => {
-            card.style.transform = "translateY(0)";
-            card.style.opacity = "1";
-        });
-    
-        // Service Cards Animation (Instantly align first, then animate)
-        gsap.set(".service-card", { y: 0, opacity: 1 }); // Prevents the first card issue
-        gsap.from(".service-card", { opacity: 0, y: 30, duration: 1, stagger: 0.15, ease: "power3.out" });
-    
-        // Testimonials Animation
-        gsap.set(".testimonial", { y: 0, opacity: 1 });
-        gsap.from(".testimonial", { opacity: 0, y: 30, duration: 1, stagger: 0.15, ease: "power3.out" });
-    
-        // Hover Effect - Smooth 3D Effect
-        document.querySelectorAll(".service-card, .testimonial").forEach(el => {
-            el.addEventListener("mouseenter", () => {
-                gsap.to(el, { scale: 1.05, rotationX: 5, boxShadow: "0px 15px 25px rgba(0, 0, 0, 0.2)", duration: 0.3, ease: "power2.out" });
-            });
-            el.addEventListener("mouseleave", () => {
-                gsap.to(el, { scale: 1, rotationX: 0, boxShadow: "0px 4px 15px rgba(0, 0, 0, 0.1)", duration: 0.3, ease: "power2.out" });
-            });
-        });
-    </script>
-    
-
-    
-</body>
-</html>
-
-
-
-
-
-
-
-
-
-
-<!-- <iframe src="templates/services.html" width="100%" height="80px" frameborder="0"></iframe> -->
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
-    <title>Solo2Ceo</title>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  </head>
-  <body class="p-3 m-0 border-0 bd-example m-0 border-0">
-
-    <!-- Example Code -->
-    
-        
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="index.html">Home</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-          <div class="navbar-nav">
-            <a class="nav-link active" aria-current="page" href="templates/about.html">About</a>
-            <a class="nav-link" href="services.html">Services</a>
-            <a class="nav-link" href="#contact">Contact</a>
-            <a class="nav-link" href="templates/domain.html">Domain</a>
-          </div>
-        </div>
-      </div>
-    </nav>
-    
-      
-    <!-- End Example Code -->
-  </body>
-</html>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Solo2CEO - Transforming Self-Employed Businesses</title>
-
-    <style>
-        /* General Reset */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #f0f4f8;
-            color: #333;
-            overflow-x: hidden;
-            line-height: 1.6;
-        }
-
-        /* Smooth Scrolling */
-        html {
-            scroll-behavior: smooth;
-        }
-
-        /* Header */
-        header {
-            background: linear-gradient(135deg, #ff5c8d, #00d2ff);
-            color: #fff;
-            padding: 80px 20px;
-            text-align: center;
-            border-bottom: 4px solid #fff;
-        }
-
-        header h1 {
-            font-size: 3.5rem;
-            margin-bottom: 10px;
-            font-weight: bold;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-        }
-
-        header h2 {
-            font-size: 1.6rem;
-            margin-top: 10px;
-            font-weight: 300;
-        }
-
-        /* Section Styles */
-        section {
-            padding: 60px 20px;
-            margin-top: 20px;
-            text-align: center;
-        }
-
-        section h3 {
-            font-size: 2.5rem;
-            color: #222;
-            font-weight: bold;
-            margin-bottom: 30px;
-            letter-spacing: 1px;
-        }
-
-        section p {
-            font-size: 1.2rem;
-            color: #555;
-            line-height: 1.8;
-            margin-bottom: 30px;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        /* Buttons */
-        .btn {
-            padding: 12px 25px;
-            background: #ff5c8d;
-            color: white;
-            font-size: 1.1rem;
-            text-transform: uppercase;
-            border-radius: 30px;
-            font-weight: bold;
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        .btn:hover {
-            background: #00d2ff;
-            transform: scale(1.05);
-        }
-
-        /* Testimonial Styles */
-        .testimonials {
-            display: flex;
-            justify-content: space-between;
-            gap: 40px;
-            margin-top: 50px;
-            flex-wrap: wrap;
-        }
-
-        .testimonial {
-            background: #fff;
-            border-radius: 10px;
-            padding: 30px;
-            width: 30%;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-            text-align: left;
-            font-size: 1.1rem;
-        }
-
-        .testimonial:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
-        }
-
-        .testimonial p {
-            font-style: italic;
-            color: #444;
-            margin-bottom: 20px;
-        }
-
-        .testimonial strong {
-            color: #ff5c8d;
-            display: block;
-            margin-top: 15px;
-        }
-
-        /* Footer */
-        footer {
-            background: #333;
-            color: white;
-            padding: 30px;
-            text-align: center;
-            margin-top: 50px;
-        }
-
-        footer p {
-            font-size: 1.1rem;
-        }
-
-        footer a {
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-            transition: color 0.3s ease;
-        }
-
-        footer a:hover {
-            color: #ff5c8d;
-        }
-
-        /* Responsive Design */
-        @media screen and (max-width: 768px) {
-            .testimonials {
-                flex-direction: column;
-                align-items: center;
-                gap: 20px;
-            }
-
-            .testimonial {
-                width: 80%;
-            }
-        }
-
-        /* Toggle content */
-        .more-content {
-            display: none;
-            text-align: left;
-            font-size: 1.1rem;
-            margin-top: 20px;
-            color: #555;
-        }
-
-        .service-btn:focus + .more-content {
-            display: block;
-        }
-
-    </style>
-</head>
-<body class="p-3 m-0 border-0 bd-example m-0 border-0">
-    <header>
-        <h1>Solo2CEO</h1>
-        <h2>Transforming Self-Employed Hustles into Recognized Business Brands!</h2>
-    </header>
-    <section>
-        <h3>About Us</h3>
-        <p>Are you a self-employed, local business owner, or startup looking to grow your Business into a recognized brand? Solo2CEO specializes in turning small-scale businesses into big names through expert branding, social media management, and one-on-one business growth strategies
-            From Instagram page creation to engaging reels, strategic promotions, and customized business coaching, we provide everything you need to scale up!
-            We offer all of this at unbelievably cheap rates-- ! You’ll only pay from what you earn through our services.</p>
-            <br>
-        <a href="#contact" class="btn">Get Started Today!</a>
-    </section>
-
-    <section>
-        <h3>Our Services</h3>
-        <p>We offer comprehensive services including social media management, content creation, business strategy, advertising, and customer engagement to ensure you grow your business the right way.</p>
-        <br>
-        <a href="services.html" class="btn">Learn More</a>
-    </section>
-
-    <section>
-        <h3>Testimonials</h3>
-        <div class="testimonials">
-            <div class="testimonial">
-                <p>"Solo2CEO completely transformed my business. From a local store to a brand known across social media. Their strategies are effective and tailored to my business needs!"</p>
-                <strong>- Amit Sharma, Bakery Owner</strong>
-            </div>
-            <div class="testimonial">
-                <p>"Working with Solo2CEO was the best decision I made for my boutique. They helped me grow my online presence and made my business more profitable in just a few months!"</p>
-                <strong>- Priya Mehta, Boutique Owner</strong>
-            </div>
-            <div class="testimonial">
-                <p>"Solo2CEO helped me scale my handicrafts business with amazing content and strategic marketing. The team is super responsive and creative!"</p>
-                <strong>- Rahul Verma, Handicrafts Business Owner</strong>
-            </div>
-        </div>
-    </section>
-
-    <section id="contact">
-        <h3>Contact Us</h3>
-        <p>If you're ready to take your business to the next level, get in touch with us today. Let's make your brand stand out and grow!</p>
-        <a href="mailto:solo2ceo@gmail.com" class="btn">Email Us</a>
-        <p>Or reach us at:</p>
-        <p><strong>Phone:</strong> +91 7021360582</p>
-    </section>
-
-    <footer>
-        <p>Solo2CEO - Elevating Your Business to Brand Status</p>
-        <p><a href="https://www.instagram.com/astourinternational" target="_blank">Follow Us on Instagram</a></p>
-    </footer>
+<script>
+  gsap.from("header h1", { opacity: 0, y: -30, duration: 1, ease: "power2.out" });
+  gsap.from(".contact-card", { opacity: 0, y: 20, duration: 1, stagger: 0.2 });
+</script>
 
 </body>
 </html>
-
-
-
