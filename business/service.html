@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Service Based Business</title>
+<style>
+    body {
+        font-family: 'Segoe UI', sans-serif;
+        background: linear-gradient(135deg, #f0f4f8, #d9e4f5);
+        margin: 0;
+        padding: 0;
+    }
+    header {
+        text-align: center;
+        padding: 30px;
+        background: #2c3e50;
+        color: white;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    h1 {
+        margin: 0;
+        font-size: 2rem;
+    }
+    p {
+        margin: 5px 0 0;
+        font-size: 1rem;
+        opacity: 0.8;
+    }
+    .card-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 20px;
+        padding: 30px;
+    }
+    .card {
+        background: white;
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        text-align: center;
+        cursor: pointer;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .card:hover {
+        transform: translateY(-7px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    }
+    .card-icon {
+        font-size: 45px;
+        margin-bottom: 10px;
+    }
+    .card h3 {
+        margin: 10px 0 5px;
+    }
+    .card p {
+        font-size: 0.9rem;
+        color: #555;
+    }
+</style>
+</head>
+<body>
+
+<header>
+    <h1>Service Based Businesses</h1>
+    <p>Select your service category to explore options</p>
+</header>
+
+<div class="card-container">
+    <div class="card" onclick="location.href='https://nikaahpbh.onrender.com/'">
+        <div class="card-icon">👰🤵</div>
+        <h3>Marriage Hub</h3>
+        <p>Shaadi , Marriage , Materimonial Solutions</p>
+    </div>
+    <div class="card" onclick="location.href='it-services.html'">
+        <div class="card-icon">💻</div>
+        <h3>IT & Software</h3>
+        <p>Web development, apps, and IT solutions</p>
+    </div>
+    <div class="card" onclick="location.href='consulting.html'">
+        <div class="card-icon">📊</div>
+        <h3>Consulting</h3>
+        <p>Business, finance, and legal advisory</p>
+    </div>
+    <div class="card" onclick="location.href='marketing.html'">
+        <div class="card-icon">📢</div>
+        <h3>Marketing & Branding</h3>
+        <p>Digital campaigns and brand building</p>
+    </div>
+    <div class="card" onclick="location.href='education.html'">
+        <div class="card-icon">📚</div>
+        <h3>Education & Training</h3>
+        <p>Online courses and professional training</p>
+    </div>
+    <div class="card" onclick="location.href='healthcare.html'">
+        <div class="card-icon">🏥</div>
+        <h3>Healthcare Services</h3>
+        <p>Clinics, therapy, and wellness programs</p>
+    </div>
+    <div class="card" onclick="location.href='event-management.html'">
+        <div class="card-icon">🎉</div>
+        <h3>Event Management</h3>
+        <p>Planning and executing memorable events</p>
+    </div>
+</div>
+
+</body>
+</html>
