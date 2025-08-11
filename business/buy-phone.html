@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buy Refurbished Phones</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f7f7f7;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #1a73e8;
+      color: white;
+      padding: 15px;
+      text-align: center;
+      font-size: 1.5em;
+    }
+    .phone-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 15px;
+      padding: 20px;
+    }
+    .card {
+      background-color: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      text-align: center;
+      transition: transform 0.2s;
+    }
+    .card:hover {
+      transform: scale(1.05);
+    }
+    .card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+    .card h3 {
+      margin: 10px 0;
+    }
+    .form-section {
+      background-color: white;
+      margin: 20px;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .form-section h2 {
+      text-align: center;
+      color: #1a73e8;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      font-weight: bold;
+    }
+    input, textarea, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      background-color: #1a73e8;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 1em;
+    }
+    button:hover {
+      background-color: #1558b0;
+    }
+  </style>
+</head>
+<body>
+
+<header>📱 Buy Refurbished Phones</header>
+
+<section class="phone-grid">
+  <div class="card">
+    <img src="https://m.media-amazon.com/images/I/61uA2UVnYWL._SL1500_.jpg" alt="iPhone 12">
+    <h3>iPhone 12</h3>
+    <p>Refurbished - Excellent Condition</p>
+  </div>
+  <div class="card">
+    <img src="https://m.media-amazon.com/images/I/71geVdy6-OS._SL1500_.jpg" alt="oppo A74">
+    <h3>oppo A74</h3>
+    <p>Refurbished - Like New</p>
+  </div>
+  <div class="card">
+    <img src="https://m.media-amazon.com/images/I/71jG+e7roXL._SL1500_.jpg" alt="Mac Book">
+    <h3>Mac Book</h3>
+    <p>Refurbished - Premium Quality</p>
+  </div>
+</section>
+
+<section class="form-section">
+  <h2>📩 Tell Us Your Phone Requirement</h2>
+  <form id="phoneForm">
+    <div class="form-group">
+      <label for="name">Your Name</label>
+      <input type="text" id="name" placeholder="Enter your name" required>
+    </div>
+    <div class="form-group">
+      <label for="phone">Your Contact Number</label>
+      <input type="tel" id="phone" placeholder="Enter your number" required>
+    </div>
+    <div class="form-group">
+      <label for="demand">Phone Model You Want</label>
+      <textarea id="demand" placeholder="e.g. iPhone 13 Pro, Samsung S22 Ultra..." rows="3" required></textarea>
+    </div>
+    <button type="submit">Send on WhatsApp</button>
+  </form>
+</section>
+
+<script>
+  document.getElementById('phoneForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    let name = document.getElementById('name').value;
+    let phone = document.getElementById('phone').value;
+    let demand = document.getElementById('demand').value;
+    let whatsappNumber = "919999999999"; // Replace with your WhatsApp number
+    let message = `Hello, my name is ${name}. My contact is ${phone}. I want to buy: ${demand}`;
+    let url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+    window.open(url, '_blank');
+  });
+</script>
+
+</body>
+</html>
