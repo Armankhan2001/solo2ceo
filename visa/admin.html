@@ -211,9 +211,10 @@
               <img src="https://flagcdn.com/w40/${(row["Code"] || "").toLowerCase()}.png" alt="flag">
               ${row["Countries"]}
             </h5>
-            <p class="info-line"><i class="fa-solid fa-coins"></i><strong>Fees:</strong> ${row["Fees"] || "N/A"}</p>
+            <p class="info-line"><i class="fa-solid fa-coins"></i><strong>Fees:</strong> ${row["Visa Fees"] || "N/A"}</p>
             <p class="info-line"><i class="fa-solid fa-file-invoice"></i><strong>Service Charge:</strong> ${row["Service Charge"] || "N/A"}</p>
             <p class="info-line"><i class="fa-solid fa-shield-halved"></i><strong>Insurance:</strong> ${row["Insurance"] || "N/A"}</p>
+            <p class="info-line"><i class="fa-solid fa-building-columns"></i><strong>VFS Fees:</strong> ${row["Vfs Fees"] || "N/A"}</p>
             ${row["Links"] ? `<a href="${row["Links"]}" target="_blank" class="btn btn-sm btn-primary btn-custom">
               <i class="fa-solid fa-link"></i> Official Link</a>` : ""}
           </div>
