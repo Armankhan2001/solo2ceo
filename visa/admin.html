@@ -182,14 +182,22 @@
 
     // Parse CSV into JSON
     function parseCSV(csv) {
-      const rows = csv.split("\n").map(r => r.split(","));
-      const headers = rows[0];
-      return rows.slice(1).map(row => {
-        let obj = {};
-        headers.forEach((h, i) => obj[h.trim()] = row[i]?.trim());
-        return obj;
-      }).filter(r => r["Countries"]);
-    }
+  const rows = csv
+    .split("\n")
+    .map(row => row.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g)); // ✅ handles commas inside quotes
+
+  if (!rows || rows.length < 2) return [];
+
+  const headers = rows[0].map(h => h.replace(/^"|"$/g, "").trim());
+  return rows.slice(1).map(row => {
+    let obj = {};
+    headers.forEach((h, i) => {
+      obj[h] = row[i] ? row[i].replace(/^"|"$/g, "").trim() : "";
+    });
+    return obj;
+  }).filter(r => r["Countries"]);
+}
+
 
     // Render Cards
     function renderCards(data) {
