@@ -158,6 +158,7 @@
     <div id="cardsContainer" class="row g-4 mt-3"></div>
   </div>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
   <script>
     // Sheet URLs
     const sheets = {
@@ -173,45 +174,47 @@
       try {
         const res = await fetch(sheets[sheetKey]);
         const csvText = await res.text();
-        visaData = parseCSV(csvText);
-        renderCards(visaData);
+
+        const parsed = Papa.parse(csvText, {
+          header: true,
+          skipEmptyLines: true
+        });
+
+        visaData = parsed.data;
+        renderCards(visaData, sheetKey);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     }
 
-    // Parse CSV into JSON
-    function parseCSV(csv) {
-  const rows = csv
-    .split("\n")
-    .map(row => row.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g)); // ✅ handles commas inside quotes
-
-  if (!rows || rows.length < 2) return [];
-
-  const headers = rows[0].map(h => h.replace(/^"|"$/g, "").trim());
-  return rows.slice(1).map(row => {
-    let obj = {};
-    headers.forEach((h, i) => {
-      obj[h] = row[i] ? row[i].replace(/^"|"$/g, "").trim() : "";
-    });
-    return obj;
-  }).filter(r => r["Countries"]);
-}
-
-
     // Render Cards
-    function renderCards(data) {
+    function renderCards(data, sheetKey) {
       const container = document.getElementById("cardsContainer");
       container.innerHTML = "";
 
-      if (data.length === 0) {
+      if (!data || data.length === 0) {
         container.innerHTML = `<p class="text-center text-muted">No data found</p>`;
         return;
       }
 
       data.forEach(row => {
+        if (!row["Countries"]) return; // skip empty rows
+
         const card = document.createElement("div");
         card.className = "col-md-4";
+
+        // Different columns shown for main vs schengen
+        let detailsHTML = `
+          <p class="info-line"><i class="fa-solid fa-coins"></i><strong>Fees:</strong> ${row["Visa Fees"] || "N/A"}</p>
+          <p class="info-line"><i class="fa-solid fa-file-invoice"></i><strong>Service Charge:</strong> ${row["Service Charge"] || "N/A"}</p>
+          <p class="info-line"><i class="fa-solid fa-shield-halved"></i><strong>Insurance:</strong> ${row["Insurance"] || "N/A"}</p>
+        `;
+
+        if (sheetKey === "schengen") {
+          detailsHTML += `
+            <p class="info-line"><i class="fa-solid fa-building-columns"></i><strong>VFS Fees:</strong> ${row["Vfs Fees"] || "N/A"}</p>
+          `;
+        }
 
         card.innerHTML = `
           <div class="card h-100 p-3">
@@ -219,10 +222,7 @@
               <img src="https://flagcdn.com/w40/${(row["Code"] || "").toLowerCase()}.png" alt="flag">
               ${row["Countries"]}
             </h5>
-            <p class="info-line"><i class="fa-solid fa-coins"></i><strong>Fees:</strong> ${row["Visa Fees"] || "N/A"}</p>
-            <p class="info-line"><i class="fa-solid fa-file-invoice"></i><strong>Service Charge:</strong> ${row["Service Charge"] || "N/A"}</p>
-            <p class="info-line"><i class="fa-solid fa-shield-halved"></i><strong>Insurance:</strong> ${row["Insurance"] || "N/A"}</p>
-            <p class="info-line"><i class="fa-solid fa-building-columns"></i><strong>VFS Fees:</strong> ${row["Vfs Fees"] || "N/A"}</p>
+            ${detailsHTML}
             ${row["Links"] ? `<a href="${row["Links"]}" target="_blank" class="btn btn-sm btn-primary btn-custom">
               <i class="fa-solid fa-link"></i> Official Link</a>` : ""}
           </div>
@@ -235,9 +235,9 @@
     document.getElementById("searchInput").addEventListener("input", (e) => {
       const searchText = e.target.value.toLowerCase();
       const filtered = visaData.filter(row =>
-        row["Countries"].toLowerCase().includes(searchText)
+        (row["Countries"] || "").toLowerCase().includes(searchText)
       );
-      renderCards(filtered);
+      renderCards(filtered, activeSheet);
     });
 
     // Tab Switch
