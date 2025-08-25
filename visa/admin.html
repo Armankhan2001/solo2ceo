@@ -158,102 +158,134 @@
     <div id="cardsContainer" class="row g-4 mt-3"></div>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
-  <script>
-    // Sheet URLs
-    const sheets = {
-      main: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTlxPfTzCMV6uTWORDivHZ01Zh_XKENWEVXybN0qK__KzkbccW7Z1Kntth6XlZtWAzUdGtF9YOJM6Fe/pub?output=csv",
-      schengen: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTlxPfTzCMV6uTWORDivHZ01Zh_XKENWEVXybN0qK__KzkbccW7Z1Kntth6XlZtWAzUdGtF9YOJM6Fe/pub?gid=1635340433&single=true&output=csv"
-    };
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<script>
+  // Sheet URLs
+  const sheets = {
+    main: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTlxPfTzCMV6uTWORDivHZ01Zh_XKENWEVXybN0qK__KzkbccW7Z1Kntth6XlZtWAzUdGtF9YOJM6Fe/pub?output=csv",
+    schengen: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTlxPfTzCMV6uTWORDivHZ01Zh_XKENWEVXybN0qK__KzkbccW7Z1Kntth6XlZtWAzUdGtF9YOJM6Fe/pub?gid=1635340433&single=true&output=csv"
+  };
 
-    let visaData = [];
-    let activeSheet = "main";
+  let visaData = [];
+  let activeSheet = "main";
 
-    // Fetch & Parse CSV
-    async function fetchVisaData(sheetKey) {
-      try {
-        const res = await fetch(sheets[sheetKey]);
-        const csvText = await res.text();
+  // Fetch & Parse CSV
+  async function fetchVisaData(sheetKey) {
+    try {
+      const res = await fetch(sheets[sheetKey]);
+      const csvText = await res.text();
 
-        const parsed = Papa.parse(csvText, {
-          header: true,
-          skipEmptyLines: true
-        });
+      const parsed = Papa.parse(csvText, {
+        header: true,
+        skipEmptyLines: true
+      });
 
-        visaData = parsed.data;
-        renderCards(visaData, sheetKey);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
+      visaData = parsed.data;
+      renderCards(visaData, sheetKey);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  }
+
+  // Render Cards
+  function renderCards(data, sheetKey) {
+    const container = document.getElementById("cardsContainer");
+    container.innerHTML = "";
+
+    if (!data || data.length === 0) {
+      container.innerHTML = `<p class="text-center text-muted">No data found</p>`;
+      return;
     }
 
-    // Render Cards
-    function renderCards(data, sheetKey) {
-      const container = document.getElementById("cardsContainer");
-      container.innerHTML = "";
+    data.forEach(row => {
+      if (!row["Countries"]) return; // skip empty rows
 
-      if (!data || data.length === 0) {
-        container.innerHTML = `<p class="text-center text-muted">No data found</p>`;
-        return;
+      const card = document.createElement("div");
+      card.className = "col-md-4";
+
+      // Details
+      let detailsHTML = `
+        <p class="info-line"><i class="fa-solid fa-coins"></i><strong>Fees:</strong> ${row["Visa Fees"] || "N/A"}</p>
+        <p class="info-line"><i class="fa-solid fa-file-invoice"></i><strong>Service Charge:</strong> ${row["Service Charge"] || "N/A"}</p>
+        <p class="info-line"><i class="fa-solid fa-shield-halved"></i><strong>Insurance:</strong> ${row["Insurance"] || "N/A"}</p>
+      `;
+
+      if (sheetKey === "schengen") {
+        detailsHTML += `
+          <p class="info-line"><i class="fa-solid fa-building-columns"></i><strong>VFS Fees:</strong> ${row["Vfs Fees"] || "N/A"}</p>
+        `;
       }
 
-      data.forEach(row => {
-        if (!row["Countries"]) return; // skip empty rows
-
-        const card = document.createElement("div");
-        card.className = "col-md-4";
-
-        // Different columns shown for main vs schengen
-        let detailsHTML = `
-          <p class="info-line"><i class="fa-solid fa-coins"></i><strong>Fees:</strong> ${row["Visa Fees"] || "N/A"}</p>
-          <p class="info-line"><i class="fa-solid fa-file-invoice"></i><strong>Service Charge:</strong> ${row["Service Charge"] || "N/A"}</p>
-          <p class="info-line"><i class="fa-solid fa-shield-halved"></i><strong>Insurance:</strong> ${row["Insurance"] || "N/A"}</p>
-        `;
-
-        if (sheetKey === "schengen") {
-          detailsHTML += `
-            <p class="info-line"><i class="fa-solid fa-building-columns"></i><strong>VFS Fees:</strong> ${row["Vfs Fees"] || "N/A"}</p>
-          `;
-        }
-
-        card.innerHTML = `
-          <div class="card h-100 p-3">
-            <h5 class="country-name">
-              <img src="https://flagcdn.com/w40/${(row["Code"] || "").toLowerCase()}.png" alt="flag">
-              ${row["Countries"]}
-            </h5>
-            ${detailsHTML}
-            ${row["Links"] ? `<a href="${row["Links"]}" target="_blank" class="btn btn-sm btn-primary btn-custom">
-              <i class="fa-solid fa-link"></i> Official Link</a>` : ""}
-          </div>
-        `;
-        container.appendChild(card);
-      });
-    }
-
-    // Search Filter
-    document.getElementById("searchInput").addEventListener("input", (e) => {
-      const searchText = e.target.value.toLowerCase();
-      const filtered = visaData.filter(row =>
-        (row["Countries"] || "").toLowerCase().includes(searchText)
-      );
-      renderCards(filtered, activeSheet);
+      card.innerHTML = `
+        <div class="card h-100 p-3 position-relative">
+          ${row["Checklists"] ? `
+            <a href="${row["Checklists"]}" target="_blank" class="Checklists-ribbon" title="Visa Checklists">
+              <i class="fa-solid fa-clipboard-check"></i>
+            </a>` : ""}
+          <h5 class="country-name">
+            <img src="https://flagcdn.com/w40/${(row["Code"] || "").toLowerCase()}.png" alt="flag">
+            ${row["Countries"]}
+          </h5>
+          ${detailsHTML}
+          ${row["Links"] ? `<a href="${row["Links"]}" target="_blank" class="btn btn-sm btn-primary btn-custom">
+            <i class="fa-solid fa-link"></i> Official Link</a>` : ""}
+        </div>
+      `;
+      container.appendChild(card);
     });
+  }
 
-    // Tab Switch
-    document.querySelectorAll("#sheetTabs button").forEach(btn => {
-      btn.addEventListener("click", () => {
-        document.querySelectorAll("#sheetTabs button").forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-        activeSheet = btn.getAttribute("data-sheet");
-        fetchVisaData(activeSheet);
-        document.getElementById("searchInput").value = ""; // reset search
-      });
+  // Search Filter
+  document.getElementById("searchInput").addEventListener("input", (e) => {
+    const searchText = e.target.value.toLowerCase();
+    const filtered = visaData.filter(row =>
+      (row["Countries"] || "").toLowerCase().includes(searchText)
+    );
+    renderCards(filtered, activeSheet);
+  });
+
+  // Tab Switch
+  document.querySelectorAll("#sheetTabs button").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll("#sheetTabs button").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      activeSheet = btn.getAttribute("data-sheet");
+      fetchVisaData(activeSheet);
+      document.getElementById("searchInput").value = ""; // reset search
     });
+  });
 
-    // Load default sheet
-    fetchVisaData("main");
-  </script>
+  // Load default sheet
+  fetchVisaData("main");
+</script>
+
+<style>
+  /* Checklists Ribbon */
+  .Checklists-ribbon {
+    position: absolute;
+    top: 10px;
+    right: -10px;
+    background: #28a745;
+    color: white !important;
+    padding: 6px 10px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 0 6px 6px 0;
+    text-decoration: none;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    transition: background 0.3s;
+  }
+  .Checklists-ribbon:hover {
+    background: #218838;
+    text-decoration: none;
+    color: white !important;
+  }
+  .Checklists-ribbon i {
+    font-size: 16px;
+  }
+</style>
+
+
 </body>
 <script>
   // Base64-encoded password:
