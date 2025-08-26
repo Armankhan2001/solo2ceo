@@ -213,14 +213,17 @@
 
       let detailsHTML = `
         <p class="info-line"><i class="fa-solid fa-coins"></i><strong>Fees:</strong> ${row["Visa Fees"] || "N/A"}</p>
-        <p class="info-line"><i class="fa-solid fa-file-invoice"></i><strong>Service Charge:</strong> ${row["Service Charge"] || "N/A"}</p>
         <p class="info-line"><i class="fa-solid fa-shield-halved"></i><strong>Insurance:</strong> ${row["Insurance"] || "N/A"}</p>
-      `;
+        <p class="info-line"><i class="fa-solid fa-file-invoice"></i><strong>Service Charge:</strong> ${row["Service Charge"] || "N/A"}</p>
+        <p class="info-line"><i class="fa-solid fa-file-invoice"></i><strong>Processing Time:</strong> ${row["Processing Time"] || "N/A"}</p>
+        `;
 
       // Add VFS Fees if sheet is Schengen
       if (sheetKey === "schengen" && row["Vfs Fees"]) {
         detailsHTML += `<p class="info-line"><i class="fa-solid fa-building-columns"></i><strong>VFS Fees:</strong> ${row["Vfs Fees"]}</p>`;
       }
+
+      
 
       card.innerHTML = `
         <div class="card h-100 p-3 position-relative">
