@@ -56,6 +56,7 @@
       border-radius: 10px;
       font-weight: 500;
       padding: 6px 12px;
+      margin-top: 6px;
     }
     .search-box input {
       border-radius: 12px;
@@ -73,107 +74,102 @@
       color: white;
     }
 
-      /* Password overlay */
-    #passwordOverlay {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100%;
-      background: black;
-      z-index: 9999;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-    }
-
-    #passwordOverlay input {
-      padding: 12px;
-      border-radius: 5px;
-      border: none;
-      width: 250px;
-      margin-bottom: 15px;
-      font-size: 16px;
-    }
-
-    #passwordOverlay button {
-      padding: 10px 20px;
-      background: #ffa726;
-      border: none;
-      color: #fff;
-      font-size: 16px;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    #passwordOverlay p {
-      color: red;
-      margin-top: 10px;
+    /* Checklists Ribbon */
+    .Checklists-ribbon {
+      position: absolute;
+      top: 10px;
+      right: -10px;
+      background: #28a745;
+      color: white !important;
+      padding: 6px 10px;
       font-size: 14px;
+      font-weight: bold;
+      border-radius: 0 6px 6px 0;
+      text-decoration: none;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      transition: background 0.3s;
+    }
+    .Checklists-ribbon:hover {
+      background: #218838;
+      text-decoration: none;
+      color: white !important;
+    }
+    .Checklists-ribbon i {
+      font-size: 16px;
     }
   </style>
 </head>
 <body>
-     <!-- Password Prompt Overlay -->
-  <div id="passwordOverlay">
-    <input type="password" id="adminPassword" placeholder="Enter Password" />
-    <button onclick="checkPassword()">Unlock</button>
-    <p id="errorMessage"></p>
-  </div>
+
   <div class="container py-4">
     <h2 class="text-center mb-4">🌍 Visa Data Admin Panel</h2>
 
     <!-- Navigation Tabs -->
     <ul class="nav nav-tabs justify-content-center mb-4" id="sheetTabs">
+      <li class="nav-item"><button class="nav-link active" data-sheet="DUBAI">🏙️ DUBAI e-VISA</button></li>
+      <li class="nav-item"><button class="nav-link" data-sheet="EVISA">🛂 e-VISA</button></li>
+      <li class="nav-item"><button class="nav-link" data-sheet="AFRICA">🌍 AFRICA</button></li>
+      <li class="nav-item"><button class="nav-link" data-sheet="ASIA">🌏 ASIA</button></li>
+      <li class="nav-item"><button class="nav-link" data-sheet="AUSNZ">🇦🇺 AUS & NZ</button></li>
+      <li class="nav-item"><button class="nav-link" data-sheet="CIS">🌏 CIS COUNTRIES</button></li>
       <li class="nav-item">
-        <button class="nav-link active" data-sheet="main">🌐 Main Visa Data</button>
+        <button class="nav-link" data-sheet="EUROPE">🌍 EUROPE</button>
       </li>
       <li class="nav-item">
-        <button class="nav-link" data-sheet="schengen">🇪🇺 Schengen 29 Countries</button>
+        <button class="nav-link" data-sheet="USACANADA">🇺🇸 USA & CANADA</button>
       </li>
-    </ul>
-    <!-- Tabs -->
-<ul class="nav nav-tabs justify-content-center mb-4" id="sheetTabs">
-  <li class="nav-item">
-    <button class="nav-link" data-sheet="Evisa">🛂 E-visa</button>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" href="adminvisadatabase.html">
-      📄 Add VisaDatabase.json
-    </a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" href="adminvisaquote.html">
-      📄 Visa Quotations
-    </a>
-  </li>
-</ul>
+      <li class="nav-item">
+        <button class="nav-link" data-sheet="LATINAMERICA">🌎 LATIN AMERICA</button>
+      </li>
 
-    <!-- Search -->
-    <div class="search-box">
+      <li class="nav-item"><a class="nav-link" href="adminvisadatabase.html">📄 Add VisaDatabase.json</a></li>
+      <li class="nav-item"><a class="nav-link" href="adminvisaquote.html">📄 Visa Quotations</a></li>
+    </ul>
+
+    <!-- Search Box -->
+    <div class="search-box mb-3">
       <input type="text" id="searchInput" class="form-control" placeholder="🔍 Search country...">
     </div>
 
-    <!-- Cards -->
+    <!-- Cards Container -->
     <div id="cardsContainer" class="row g-4 mt-3"></div>
   </div>
 
 <script>
-  const SHEET_ID = "1F9RGurjNDCxjw0ydzQPtBuoueLRrNH99uK-fhu3BAQs";
+  const SHEET_ID = "1xH5s_U8muAzJFyQXEAOB6hCFcGxegMPCyQ_y418TSzo"; // Your spreadsheet ID
   const API_KEY = "AIzaSyD9f_BNJQ77S-K9LJTXVBtHoXlvHyZS3HQ";
 
+  // Sheet names for fetching
   const sheets = {
-    main: "VISA FEES & LINKS",
-    schengen: "Visa Fees Schengen 29 Countries",
-    Evisa: "E-visas",
+    DUBAI: "DUBAI e-VISA",
+    EVISA: "e-VISA",
+    AFRICA: "AFRICA",
+    ASIA: "ASIA",
+    AUSNZ: "AUS & NZ",
+    CIS: "CIS COUNTRIES",
+    EUROPE: "EUROPE",
+    USACANADA: "USA & CANADA",
+    LATINAMERICA: "LATIN AMERICA"
+  };
+
+  // Corresponding Google Sheet links for badge
+  const sheetLinks = {
+    DUBAI: "https://docs.google.com/spreadsheets/d/1xH5s_U8muAzJFyQXEAOB6hCFcGxegMPCyQ_y418TSzo/edit#gid=1099384453",
+    EVISA: "https://docs.google.com/spreadsheets/d/1xH5s_U8muAzJFyQXEAOB6hCFcGxegMPCyQ_y418TSzo/edit#gid=2006712566",
+    AFRICA: "https://docs.google.com/spreadsheets/d/1xH5s_U8muAzJFyQXEAOB6hCFcGxegMPCyQ_y418TSzo/edit#gid=136631942",
+    ASIA: "https://docs.google.com/spreadsheets/d/1xH5s_U8muAzJFyQXEAOB6hCFcGxegMPCyQ_y418TSzo/edit#gid=1793054489",
+    AUSNZ: "https://docs.google.com/spreadsheets/d/1xH5s_U8muAzJFyQXEAOB6hCFcGxegMPCyQ_y418TSzo/edit#gid=1042635079",
+    CIS: "https://docs.google.com/spreadsheets/d/1xH5s_U8muAzJFyQXEAOB6hCFcGxegMPCyQ_y418TSzo/edit#gid=591556463",
+    EUROPE: "https://docs.google.com/spreadsheets/d/1xH5s_U8muAzJFyQXEAOB6hCFcGxegMPCyQ_y418TSzo/edit#gid=238015973",
+    USACANADA: "https://docs.google.com/spreadsheets/d/1xH5s_U8muAzJFyQXEAOB6hCFcGxegMPCyQ_y418TSzo/edit#gid=78023625",
+    LATINAMERICA: "https://docs.google.com/spreadsheets/d/1xH5s_U8muAzJFyQXEAOB6hCFcGxegMPCyQ_y418TSzo/edit#gid=1149016873"
   };
 
   let visaData = [];
-  let activeSheet = "main";
+  let activeSheet = "DUBAI";
 
   async function fetchVisaData(sheetKey) {
     const range = sheets[sheetKey];
-
     try {
       const res = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(range)}?key=${API_KEY}`);
       const data = await res.json();
@@ -183,8 +179,10 @@
         return;
       }
 
-      const headers = data.values[0];
-      visaData = data.values.slice(1).map(row => {
+      // Skip empty rows at the top
+      let firstRowIndex = data.values.findIndex(row => row.some(cell => cell && cell.trim() !== ""));
+      const headers = data.values[firstRowIndex];
+      visaData = data.values.slice(firstRowIndex + 1).map(row => {
         const obj = {};
         headers.forEach((header, i) => obj[header] = row[i] || "");
         return obj;
@@ -207,69 +205,50 @@
     }
 
     data.forEach(row => {
-      if (!row["Countries"]) return;
+      if (!row["Country"]) return;
 
       const card = document.createElement("div");
       card.className = "col-md-4";
 
       let detailsHTML = `
-        <p class="info-line"><i class="fa-solid fa-coins"></i><strong>Fees:</strong> ${row["Visa Fees"] || "N/A"}</p>
-        <p class="info-line"><i class="fa-solid fa-shield-halved"></i><strong>Insurance:</strong> ${row["Insurance"] || "N/A"}</p>
-        <p class="info-line"><i class="fa-solid fa-file-invoice"></i><strong>Service Charge:</strong> ${row["Service Charge"] || "N/A"}</p>
-        <p class="info-line"><i class="fa-solid fa-file-invoice"></i><strong>Processing Time:</strong> ${row["Processing Time"] || "N/A"}</p>
-        `;
+        ${row["Visa Type"] ? `<p class="info-line"><i class="fa-solid fa-passport"></i><strong>Visa Type:</strong> ${row["Visa Type"]}</p>` : ""}
+        ${row["Category"] ? `<p class="info-line"><i class="fa-solid fa-layer-group"></i><strong>Category:</strong> ${row["Category"]}</p>` : ""}
+        ${row["Visa Fee"] ? `<p class="info-line"><i class="fa-solid fa-coins"></i><strong>Visa Fee:</strong> ${row["Visa Fee"]}</p>` : ""}
+        ${row["Service Charges"] ? `<p class="info-line"><i class="fa-solid fa-file-invoice-dollar"></i><strong>Service Charges:</strong> ${row["Service Charges"]}</p>` : ""}
+        ${row["Processing Time"] ? `<p class="info-line"><i class="fa-solid fa-clock"></i><strong>Processing Time:</strong> ${row["Processing Time"]}</p>` : ""}
+        ${row["Documents Required"] ? `<p class="info-line"><i class="fa-solid fa-file-alt"></i><strong>Documents Required:</strong> ${row["Documents Required"]}</p>` : ""}
+      `;
 
-      // Add VFS Fees if sheet is Schengen
-      if (sheetKey === "schengen" && row["Vfs Fees"]) {
-        detailsHTML += `<p class="info-line"><i class="fa-solid fa-building-columns"></i><strong>VFS Fees:</strong> ${row["Vfs Fees"]}</p>`;
+      if (sheetKey === "EVISA") {
+        if (row["3rd Party Name"]) detailsHTML = `<p class="info-line"><i class="fa-solid fa-user-tie"></i><strong>3rd Party Name:</strong> ${row["3rd Party Name"]}</p>` + detailsHTML;
+        if (row["Required Docs"]) detailsHTML += `<p class="info-line"><i class="fa-solid fa-file-alt"></i><strong>Required Docs:</strong> ${row["Required Docs"]}</p>`;
+        if (row["Sales Manager"]) detailsHTML += `<p class="info-line"><i class="fa-solid fa-user"></i><strong>Sales Manager:</strong> ${row["Sales Manager"]}</p>`;
+        if (row["Sales Manager Mail Id"]) detailsHTML += `<p class="info-line"><i class="fa-solid fa-envelope"></i><strong>Sales Manager Mail Id:</strong> ${row["Sales Manager Mail Id"]}</p>`;
+        if (row["3rd Party Mail Id"]) detailsHTML += `<p class="info-line"><i class="fa-solid fa-envelope-circle-check"></i><strong>3rd Party Mail Id:</strong> ${row["3rd Party Mail Id"]}</p>`;
       }
-      if (sheetKey === "Evisa") {
-  // 3rd Party Name at the top
-    if (row["3rd Party Name"]) {
-            detailsHTML += `<p class="info-line"><i class="fa-solid fa-user-tie"></i><strong>3rd Party Name:</strong> ${row["3rd Party Name"]}</p>`;
-        }
-
-        if (row["Required Docs"]) {
-            detailsHTML += `<p class="info-line"><i class="fa-solid fa-file-alt"></i><strong>Required Docs:</strong> ${row["Required Docs"]}</p>`;
-        }
-        if (row["Sales Manager"]) {
-            detailsHTML += `<p class="info-line"><i class="fa-solid fa-user"></i><strong>Sales Manager:</strong> ${row["Sales Manager"]}</p>`;
-        }
-        if (row["Sales Manager Mail Id"]) {
-            detailsHTML += `<p class="info-line"><i class="fa-solid fa-envelope"></i><strong>Sales Manager Mail Id:</strong> ${row["Sales Manager Mail Id"]}</p>`;
-        }
-        if (row["3rd Party Mail Id"]) {
-            detailsHTML += `<p class="info-line"><i class="fa-solid fa-envelope-circle-check"></i><strong>3rd Party Mail Id:</strong> ${row["3rd Party Mail Id"]}</p>`;
-        }
-    }
-
-      
 
       card.innerHTML = `
         <div class="card h-100 p-3 position-relative">
-          ${row["Checklists"] ? `<a href="${row["Checklists"]}" target="_blank" class="Checklists-ribbon" title="Visa Checklists">
-            <i class="fa-solid fa-clipboard-check"></i>
-          </a>` : ""}
+          <!-- Google Sheet Badge -->
+          <a href="${sheetLinks[sheetKey]}" target="_blank" class="Checklists-ribbon" title="View Google Sheet">
+            <i class="fa-solid fa-link"></i> Sheet
+          </a>
           <h5 class="country-name">
             ${row["Code"] ? `<img src="https://flagcdn.com/w40/${row["Code"].toLowerCase()}.png" alt="flag">` : ""}
-            ${row["Countries"]}
+            ${row["Country"]}
           </h5>
           ${detailsHTML}
-          ${row["Links"] ? `<a href="${row["Links"]}" target="_blank" class="btn btn-sm btn-primary btn-custom">
-            <i class="fa-solid fa-link"></i> Official Link</a>` : ""}
+          ${row["Links"] ? `<a href="${row["Links"]}" target="_blank" class="btn btn-sm btn-primary btn-custom"><i class="fa-solid fa-link"></i> Official Link</a>` : ""}
         </div>
       `;
-
       container.appendChild(card);
     });
   }
 
   // Search Filter
-  document.getElementById("searchInput").addEventListener("input", (e) => {
+  document.getElementById("searchInput").addEventListener("input", e => {
     const searchText = e.target.value.toLowerCase();
-    const filtered = visaData.filter(row =>
-      (row["Countries"] || "").toLowerCase().includes(searchText)
-    );
+    const filtered = visaData.filter(row => (row["Country"] || "").toLowerCase().includes(searchText));
     renderCards(filtered, activeSheet);
   });
 
@@ -285,14 +264,11 @@
   });
 
   // Load default sheet
-  fetchVisaData("main");
+  fetchVisaData(activeSheet);
 </script>
 
-
-
-
 <style>
-  /* Checklists Ribbon */
+  /* Google Sheet Ribbon */
   .Checklists-ribbon {
     position: absolute;
     top: 10px;
@@ -309,32 +285,15 @@
   }
   .Checklists-ribbon:hover {
     background: #218838;
-    text-decoration: none;
     color: white !important;
+    text-decoration: none;
   }
   .Checklists-ribbon i {
     font-size: 16px;
+    margin-right: 4px;
   }
 </style>
 
 
 </body>
-<script>
-  // Base64-encoded password:
-  const encoded = 'Sm91cm5leUAyNQ==';
-
-  function checkPassword() {
-    const input = document.getElementById("adminPassword").value;
-    const correctPassword = atob(encoded); // Decode from Base64
-
-    if (input === correctPassword) {
-      document.getElementById("passwordOverlay").style.display = "none";
-      document.querySelector("header").classList.add("visible");
-      document.querySelector(".container").classList.add("visible");
-      document.querySelector("footer").classList.add("visible");
-    } else {
-      document.getElementById("errorMessage").textContent = "Incorrect password. Try again.";
-    }
-  }
-</script>
 </html>
