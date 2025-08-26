@@ -158,38 +158,44 @@
     <div id="cardsContainer" class="row g-4 mt-3"></div>
   </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 <script>
-  // Sheet URLs
+  const SHEET_ID = "1F9RGurjNDCxjw0ydzQPtBuoueLRrNH99uK-fhu3BAQs";
+  const API_KEY = "AIzaSyD9f_BNJQ77S-K9LJTXVBtHoXlvHyZS3HQ";
+
   const sheets = {
-      main: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTlxPfTzCMV6uTWORDivHZ01Zh_XKENWEVXybN0qK__KzkbccW7Z1Kntth6XlZtWAzUdGtF9YOJM6Fe/pub?output=csv",
-      schengen: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTlxPfTzCMV6uTWORDivHZ01Zh_XKENWEVXybN0qK__KzkbccW7Z1Kntth6XlZtWAzUdGtF9YOJM6Fe/pub?gid=1635340433&single=true&output=csv"
-    };
-
-
+    main: "VISA FEES & LINKS",
+    schengen: "Visa Fees Schengen 29 Countries"
+  };
 
   let visaData = [];
   let activeSheet = "main";
 
-  // Fetch & Parse CSV
   async function fetchVisaData(sheetKey) {
-    try {
-      const res = await fetch(sheets[sheetKey]);
-      const csvText = await res.text();
+    const range = sheets[sheetKey];
 
-      const parsed = Papa.parse(csvText, {
-        header: true,
-        skipEmptyLines: true
+    try {
+      const res = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(range)}?key=${API_KEY}`);
+      const data = await res.json();
+
+      if (!data.values || data.values.length === 0) {
+        document.getElementById("cardsContainer").innerHTML = `<p class="text-center text-muted">No data found</p>`;
+        return;
+      }
+
+      const headers = data.values[0];
+      visaData = data.values.slice(1).map(row => {
+        const obj = {};
+        headers.forEach((header, i) => obj[header] = row[i] || "");
+        return obj;
       });
 
-      visaData = parsed.data;
       renderCards(visaData, sheetKey);
     } catch (error) {
       console.error("Error fetching data:", error);
+      document.getElementById("cardsContainer").innerHTML = `<p class="text-center text-danger">Error loading data</p>`;
     }
   }
 
-  // Render Cards
   function renderCards(data, sheetKey) {
     const container = document.getElementById("cardsContainer");
     container.innerHTML = "";
@@ -200,32 +206,29 @@
     }
 
     data.forEach(row => {
-      if (!row["Countries"]) return; // skip empty rows
+      if (!row["Countries"]) return;
 
       const card = document.createElement("div");
       card.className = "col-md-4";
 
-      // Details
       let detailsHTML = `
         <p class="info-line"><i class="fa-solid fa-coins"></i><strong>Fees:</strong> ${row["Visa Fees"] || "N/A"}</p>
         <p class="info-line"><i class="fa-solid fa-file-invoice"></i><strong>Service Charge:</strong> ${row["Service Charge"] || "N/A"}</p>
         <p class="info-line"><i class="fa-solid fa-shield-halved"></i><strong>Insurance:</strong> ${row["Insurance"] || "N/A"}</p>
       `;
 
-      if (sheetKey === "schengen") {
-        detailsHTML += `
-          <p class="info-line"><i class="fa-solid fa-building-columns"></i><strong>VFS Fees:</strong> ${row["Vfs Fees"] || "N/A"}</p>
-        `;
+      // Add VFS Fees if sheet is Schengen
+      if (sheetKey === "schengen" && row["Vfs Fees"]) {
+        detailsHTML += `<p class="info-line"><i class="fa-solid fa-building-columns"></i><strong>VFS Fees:</strong> ${row["Vfs Fees"]}</p>`;
       }
 
       card.innerHTML = `
         <div class="card h-100 p-3 position-relative">
-          ${row["Checklists"] ? `
-            <a href="${row["Checklists"]}" target="_blank" class="Checklists-ribbon" title="Visa Checklists">
-              <i class="fa-solid fa-clipboard-check"></i>
-            </a>` : ""}
+          ${row["Checklists"] ? `<a href="${row["Checklists"]}" target="_blank" class="Checklists-ribbon" title="Visa Checklists">
+            <i class="fa-solid fa-clipboard-check"></i>
+          </a>` : ""}
           <h5 class="country-name">
-            <img src="https://flagcdn.com/w40/${(row["Code"] || "").toLowerCase()}.png" alt="flag">
+            ${row["Code"] ? `<img src="https://flagcdn.com/w40/${row["Code"].toLowerCase()}.png" alt="flag">` : ""}
             ${row["Countries"]}
           </h5>
           ${detailsHTML}
@@ -233,6 +236,7 @@
             <i class="fa-solid fa-link"></i> Official Link</a>` : ""}
         </div>
       `;
+
       container.appendChild(card);
     });
   }
@@ -253,13 +257,16 @@
       btn.classList.add("active");
       activeSheet = btn.getAttribute("data-sheet");
       fetchVisaData(activeSheet);
-      document.getElementById("searchInput").value = ""; // reset search
+      document.getElementById("searchInput").value = "";
     });
   });
 
   // Load default sheet
   fetchVisaData("main");
 </script>
+
+
+
 
 <style>
   /* Checklists Ribbon */
