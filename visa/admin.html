@@ -112,7 +112,7 @@
       font-size: 14px;
     }
 
-    /* Hover effects on Form Country fill click */
+  /* Hover effects on Form Country fill click */
     .card-clickable {
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
@@ -259,13 +259,24 @@
     `;
 
     // Make the whole card clickable
-    const cardElement = card.querySelector(".card-clickable");
-    cardElement.addEventListener("click", () => {
-      const fileName = row["Countries"].toLowerCase().replace(/\s+/g, "") + ".html";
-      window.location.href = `visaforms/${fileName}`;
-    });
+const cardElement = card.querySelector(".card-clickable");
+cardElement.addEventListener("click", async () => {
+  const fileName = row["Countries"].toLowerCase().replace(/\s+/g, "") + ".html";
+  const filePath = `visaforms/${fileName}`;
 
-    container.appendChild(card);
+  try {
+    const res = await fetch(filePath, { method: "HEAD" });
+    if (res.ok) {
+      window.location.href = filePath;
+    } else {
+      alert(`Form for ${row["Countries"]} is not available.`);
+    }
+  } catch (err) {
+    alert(`Unable to open form for ${row["Countries"]}.`);
+  }
+});
+
+container.appendChild(card);
   });
 }
 
