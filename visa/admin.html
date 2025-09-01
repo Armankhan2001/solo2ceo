@@ -111,6 +111,18 @@
       margin-top: 10px;
       font-size: 14px;
     }
+
+    /* Hover effects on Form Country fill click */
+    .card-clickable {
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card-clickable:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
   </style>
 </head>
 <body>
@@ -198,71 +210,65 @@
   }
 
   function renderCards(data, sheetKey) {
-    const container = document.getElementById("cardsContainer");
-    container.innerHTML = "";
+  const container = document.getElementById("cardsContainer");
+  container.innerHTML = "";
 
-    if (!data || data.length === 0) {
-      container.innerHTML = `<p class="text-center text-muted">No data found</p>`;
-      return;
-    }
-
-    data.forEach(row => {
-      if (!row["Countries"]) return;
-
-      const card = document.createElement("div");
-      card.className = "col-md-4";
-
-      let detailsHTML = `
-        <p class="info-line"><i class="fa-solid fa-coins"></i><strong>Fees:</strong> ${row["Visa Fees"] || "N/A"}</p>
-        <p class="info-line"><i class="fa-solid fa-shield-halved"></i><strong>Insurance:</strong> ${row["Insurance"] || "N/A"}</p>
-        <p class="info-line"><i class="fa-solid fa-file-invoice"></i><strong>Service Charge:</strong> ${row["Service Charge"] || "N/A"}</p>
-        <p class="info-line"><i class="fa-solid fa-file-invoice"></i><strong>Processing Time:</strong> ${row["Processing Time"] || "N/A"}</p>
-        `;
-
-      // Add VFS Fees if sheet is Schengen
-      if (sheetKey === "schengen" && row["Vfs Fees"]) {
-        detailsHTML += `<p class="info-line"><i class="fa-solid fa-building-columns"></i><strong>VFS Fees:</strong> ${row["Vfs Fees"]}</p>`;
-      }
-      if (sheetKey === "Evisa") {
-  // 3rd Party Name at the top
-    if (row["3rd Party Name"]) {
-            detailsHTML += `<p class="info-line"><i class="fa-solid fa-user-tie"></i><strong>3rd Party Name:</strong> ${row["3rd Party Name"]}</p>`;
-        }
-
-        if (row["Required Docs"]) {
-            detailsHTML += `<p class="info-line"><i class="fa-solid fa-file-alt"></i><strong>Required Docs:</strong> ${row["Required Docs"]}</p>`;
-        }
-        if (row["Sales Manager"]) {
-            detailsHTML += `<p class="info-line"><i class="fa-solid fa-user"></i><strong>Sales Manager:</strong> ${row["Sales Manager"]}</p>`;
-        }
-        if (row["Sales Manager Mail Id"]) {
-            detailsHTML += `<p class="info-line"><i class="fa-solid fa-envelope"></i><strong>Sales Manager Mail Id:</strong> ${row["Sales Manager Mail Id"]}</p>`;
-        }
-        if (row["3rd Party Mail Id"]) {
-            detailsHTML += `<p class="info-line"><i class="fa-solid fa-envelope-circle-check"></i><strong>3rd Party Mail Id:</strong> ${row["3rd Party Mail Id"]}</p>`;
-        }
-    }
-
-      
-
-      card.innerHTML = `
-        <div class="card h-100 p-3 position-relative">
-          ${row["Checklists"] ? `<a href="${row["Checklists"]}" target="_blank" class="Checklists-ribbon" title="Visa Checklists">
-            <i class="fa-solid fa-clipboard-check"></i>
-          </a>` : ""}
-          <h5 class="country-name">
-            ${row["Code"] ? `<img src="https://flagcdn.com/w40/${row["Code"].toLowerCase()}.png" alt="flag">` : ""}
-            ${row["Countries"]}
-          </h5>
-          ${detailsHTML}
-          ${row["Links"] ? `<a href="${row["Links"]}" target="_blank" class="btn btn-sm btn-primary btn-custom">
-            <i class="fa-solid fa-link"></i> Official Link</a>` : ""}
-        </div>
-      `;
-
-      container.appendChild(card);
-    });
+  if (!data || data.length === 0) {
+    container.innerHTML = `<p class="text-center text-muted">No data found</p>`;
+    return;
   }
+
+  data.forEach(row => {
+    if (!row["Countries"]) return;
+
+    const card = document.createElement("div");
+    card.className = "col-md-4 mb-4";
+
+    let detailsHTML = `
+      <p class="info-line"><i class="fa-solid fa-coins"></i><strong>Fees:</strong> ${row["Visa Fees"] || "N/A"}</p>
+      <p class="info-line"><i class="fa-solid fa-shield-halved"></i><strong>Insurance:</strong> ${row["Insurance"] || "N/A"}</p>
+      <p class="info-line"><i class="fa-solid fa-file-invoice"></i><strong>Service Charge:</strong> ${row["Service Charge"] || "N/A"}</p>
+      <p class="info-line"><i class="fa-solid fa-file-invoice"></i><strong>Processing Time:</strong> ${row["Processing Time"] || "N/A"}</p>
+    `;
+
+    if (sheetKey === "schengen" && row["Vfs Fees"]) {
+      detailsHTML += `<p class="info-line"><i class="fa-solid fa-building-columns"></i><strong>VFS Fees:</strong> ${row["Vfs Fees"]}</p>`;
+    }
+
+    if (sheetKey === "Evisa") {
+      if (row["3rd Party Name"]) detailsHTML += `<p class="info-line"><i class="fa-solid fa-user-tie"></i><strong>3rd Party Name:</strong> ${row["3rd Party Name"]}</p>`;
+      if (row["Required Docs"]) detailsHTML += `<p class="info-line"><i class="fa-solid fa-file-alt"></i><strong>Required Docs:</strong> ${row["Required Docs"]}</p>`;
+      if (row["Sales Manager"]) detailsHTML += `<p class="info-line"><i class="fa-solid fa-user"></i><strong>Sales Manager:</strong> ${row["Sales Manager"]}</p>`;
+      if (row["Sales Manager Mail Id"]) detailsHTML += `<p class="info-line"><i class="fa-solid fa-envelope"></i><strong>Sales Manager Mail Id:</strong> ${row["Sales Manager Mail Id"]}</p>`;
+      if (row["3rd Party Mail Id"]) detailsHTML += `<p class="info-line"><i class="fa-solid fa-envelope-circle-check"></i><strong>3rd Party Mail Id:</strong> ${row["3rd Party Mail Id"]}</p>`;
+    }
+
+    card.innerHTML = `
+      <div class="card h-100 p-3 position-relative card-clickable">
+        ${row["Checklists"] ? `<a href="${row["Checklists"]}" target="_blank" class="Checklists-ribbon" title="Visa Checklists">
+          <i class="fa-solid fa-clipboard-check"></i>
+        </a>` : ""}
+        <h5 class="country-name">
+          ${row["Code"] ? `<img src="https://flagcdn.com/w40/${row["Code"].toLowerCase()}.png" alt="flag">` : ""}
+          ${row["Countries"]}
+        </h5>
+        ${detailsHTML}
+        ${row["Links"] ? `<a href="${row["Links"]}" target="_blank" class="btn btn-sm btn-primary btn-custom">
+          <i class="fa-solid fa-link"></i> Official Link</a>` : ""}
+      </div>
+    `;
+
+    // Make the whole card clickable
+    const cardElement = card.querySelector(".card-clickable");
+    cardElement.addEventListener("click", () => {
+      const fileName = row["Countries"].toLowerCase().replace(/\s+/g, "") + ".html";
+      window.location.href = `visaforms/${fileName}`;
+    });
+
+    container.appendChild(card);
+  });
+}
+
 
   // Search Filter
   document.getElementById("searchInput").addEventListener("input", (e) => {
