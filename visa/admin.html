@@ -225,15 +225,23 @@
     card.className = "col-md-4 mb-4";
 
     let detailsHTML = `
-      <p class="info-line"><i class="fa-solid fa-coins"></i><strong>Fees:</strong> ${row["Visa Fees"] || "N/A"}</p>
+      <p class="info-line"><i class="fa-solid fa-coins"></i><strong>Visa Fees:</strong> ${row["Visa Fees"] || "N/A"}</p>
       <p class="info-line"><i class="fa-solid fa-shield-halved"></i><strong>Insurance:</strong> ${row["Insurance"] || "N/A"}</p>
       <p class="info-line"><i class="fa-solid fa-file-invoice"></i><strong>Service Charge:</strong> ${row["Service Charge"] || "N/A"}</p>
       <p class="info-line"><i class="fa-solid fa-file-invoice"></i><strong>Processing Time:</strong> ${row["Processing Time"] || "N/A"}</p>
     `;
 
-    if (sheetKey === "schengen" && row["Vfs Fees"]) {
-      detailsHTML += `<p class="info-line"><i class="fa-solid fa-building-columns"></i><strong>VFS Fees:</strong> ${row["Vfs Fees"]}</p>`;
+    if (sheetKey === "main") {
+      if (row["Docs Scanning & Uploading Charges"]) detailsHTML += `<p class="info-line"><i class="fa-solid fa-user-tie"></i><strong>Docs Scanning & Uploading Charges:</strong> ${row["Docs Scanning & Uploading Charges"]}</p>`;
     }
+
+    if (sheetKey === "schengen") {
+      if (row["Vfs Fees"]) detailsHTML += `<p class="info-line"><i class="fa-solid fa-user-tie"></i><strong>Vfs Fees:</strong> ${row["Vfs Fees"]}</p>`;
+      if (row["Courier Charges"]) detailsHTML += `<p class="info-line"><i class="fa-solid fa-file-alt"></i><strong>Courier Charges:</strong> ${row["Courier Charges"]}</p>`;
+      if (row["If We Submit"]) detailsHTML += `<p class="info-line"><i class="fa-solid fa-user"></i><strong>If We Submit:</strong> ${row["If We Submit"]}</p>`;
+      if (row["Special Note"]) detailsHTML += `<p class="info-line"><i class="fa-solid fa-user"></i><strong>Special Note:</strong> ${row["Special Note"]}</p>`;
+    }
+
 
     if (sheetKey === "Evisa") {
       if (row["3rd Party Name"]) detailsHTML += `<p class="info-line"><i class="fa-solid fa-user-tie"></i><strong>3rd Party Name:</strong> ${row["3rd Party Name"]}</p>`;
