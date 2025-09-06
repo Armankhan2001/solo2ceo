@@ -265,25 +265,53 @@
           <i class="fa-solid fa-link"></i> Official Link</a>` : ""}
       </div>
     `;
-// ddd
+
     // Make the whole card clickable
-const cardElement = card.querySelector(".card-clickable");
-cardElement.addEventListener("click", async () => {
-  const fileName = row["Countries"].toLowerCase().replace(/\s+/g, "") + ".html";
-  const filePath = `visaforms/Cardforms/${fileName}`;
+// const cardElement = card.querySelector(".card-clickable");
+// cardElement.addEventListener("click", async () => {
+//   const fileName = row["Countries"].toLowerCase().replace(/\s+/g, "") + ".html";
+//   const filePath = `visaforms/cardforms/${fileName}`;
 
 
-  try {
-    const res = await fetch(filePath, { method: "HEAD" });
-    if (res.ok) {
-      window.location.href = filePath;
+//   try {
+//     const res = await fetch(filePath, { method: "HEAD" });
+//     if (res.ok) {
+//       window.location.href = filePath;
+//     } else {
+//       alert(`Form for ${row["Countries"]} is not available.`);
+//     }
+//   } catch (err) {
+//     alert(`Unable to open form for ${row["Countries"]}.`);
+//   }
+// });
+
+// Make the whole card clickable
+  const cardElement = card.querySelector(".card-clickable");
+  cardElement.addEventListener("click", async () => {
+    let fileName;
+
+    // If this card belongs to the Schengen sheet → always open denmark.html
+    if (sheetKey === "schengen") {
+      fileName = "denmark.html";
     } else {
-      alert(`Form for ${row["Countries"]} is not available.`);
+      // Default behaviour for other sheets
+      fileName = row["Countries"].toLowerCase().replace(/\s+/g, "") + ".html";
     }
-  } catch (err) {
-    alert(`Unable to open form for ${row["Countries"]}.`);
-  }
-});
+
+    const filePath = `visaforms/cardforms/${fileName}`;
+
+    try {
+      const res = await fetch(filePath, { method: "HEAD" });
+      if (res.ok) {
+        window.location.href = filePath;
+      } else {
+        alert(`Form for ${row["Countries"]} is not available.`);
+      }
+    } catch (err) {
+      alert(`Unable to open form for ${row["Countries"]}.`);
+    }
+  });
+
 
 container.appendChild(card);
   });
