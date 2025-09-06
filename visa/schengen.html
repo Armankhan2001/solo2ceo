@@ -78,7 +78,7 @@
           ${item.visaTypes.map(v => `
             <div class="mb-3">
               <h3 class="text-sm font-semibold text-green-600">${v.type}</h3>
-              <p class="text-sm text-gray-600">⏱️ ${v.processingTime} | 🕒 Validity: ${v.visaValidity} | 🛏️ Stay: ${v.stayValidity} | 💶 Fees: ${v.visaFees}</p>
+              <p class="text-sm text-gray-600">⏱️ ${v.processingTime} | 🕒 Validity: ${v.visaValidity} | 🛏️ Max-Stay: ${v.maxStay} | 💶 Fees: ${v.visaFees}</p>
               <button onclick="toggleDocs(this)" class="mt-2 text-blue-600 text-sm underline">View Documents</button>
               <ul class="hidden mt-2 ml-4 list-disc text-sm text-gray-700">
                 ${v.documentsRequired.map(doc => `<li>${doc}</li>`).join('')}
