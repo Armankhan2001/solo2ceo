@@ -228,45 +228,64 @@
 
 
 
-  function shareWhatsApp() {
-    let text = "Hello, please find your invoice details below:\n\n";
-    text += document.getElementById("invoiceContent").innerText;
-    let url = "https://wa.me/?text=" + encodeURIComponent(text);
-    window.open(url, "_blank");
-  }
+  async function shareWhatsApp() {
+  const element = document.getElementById("invoiceContent");
+  const invoiceNo = document.getElementById('invoiceNo').value || "invoice";
 
-  function shareEmail() {
+  const opt = {
+    margin: [15, 15, 15, 15],
+    filename: `${invoiceNo}.pdf`,
+    image: { type: 'jpeg', quality: 1 },
+    html2canvas: { scale: 3, useCORS: true },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+  };
+
+  // Generate PDF blob
+  const pdfBlob = await html2pdf().set(opt).from(element).outputPdf('blob');
+  const file = new File([pdfBlob], `${invoiceNo}.pdf`, { type: "application/pdf" });
+
+  if (navigator.canShare && navigator.canShare({ files: [file] })) {
+    await navigator.share({
+      title: "Invoice",
+      text: "Here is your invoice from Solo2CEO",
+      files: [file]
+    });
+  } else {
+    // Fallback → Upload PDF to server or show download link
+    alert("Your browser/device does not support direct WhatsApp file sharing. Please download and share manually.");
+  }
+}
+
+async function shareEmail() {
+  const element = document.getElementById("invoiceContent");
+  const invoiceNo = document.getElementById('invoiceNo').value || "invoice";
+
+  const opt = {
+    margin: [15, 15, 15, 15],
+    filename: `${invoiceNo}.pdf`,
+    image: { type: 'jpeg', quality: 1 },
+    html2canvas: { scale: 3, useCORS: true },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+  };
+
+  // Generate PDF blob
+  const pdfBlob = await html2pdf().set(opt).from(element).outputPdf('blob');
+  const file = new File([pdfBlob], `${invoiceNo}.pdf`, { type: "application/pdf" });
+
+  if (navigator.canShare && navigator.canShare({ files: [file] })) {
+    await navigator.share({
+      title: "Invoice",
+      text: "Please find attached invoice.",
+      files: [file]
+    });
+  } else {
+    // Fallback: Open default mail client with subject/body, user attaches PDF manually
     let subject = "Invoice from Solo2CEO";
-    let body = document.getElementById("invoiceContent").innerText;
+    let body = "Please find your invoice attached. (Download it from the app and attach manually if not auto-attached)";
     window.location.href = "mailto:?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
   }
+}
 
-  async function shareNative() {
-    const element = document.getElementById("invoiceContent");
-    const invoiceNo = document.getElementById('invoiceNo').value || "invoice";
-    const opt = {
-      margin: 10,
-      filename: `${invoiceNo}.pdf`,
-      image: { type: 'jpeg', quality: 1 },
-      html2canvas: { scale: 3, useCORS: true },
-      jsPDF: { unit: 'pt', format: 'a4', orientation: 'portrait' }
-    };
-    const pdfBlob = await html2pdf().set(opt).from(element).outputPdf('blob');
-    if (navigator.canShare && navigator.canShare({ files: [new File([pdfBlob], `${invoiceNo}.pdf`, { type: 'application/pdf' })] })) {
-      const file = new File([pdfBlob], `${invoiceNo}.pdf`, { type: "application/pdf" });
-      try {
-        await navigator.share({
-          title: "Invoice",
-          text: "Here is your invoice from Solo2CEO",
-          files: [file]
-        });
-      } catch (err) {
-        console.log("Share canceled:", err);
-      }
-    } else {
-      alert("Your browser/device does not support PDF sharing. Please download and share manually.");
-    }
-  }
 </script>
 
 </body>
