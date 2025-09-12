@@ -141,6 +141,38 @@
     .muted{ color:var(--muted); font-size:0.9rem; }
     .pill{ background:#f1f5f9;color:#0b1220;padding:6px 10px;border-radius:999px;font-weight:700;font-size:0.85rem; }
 
+
+    .brand {
+  display: flex;
+  align-items: center;
+  gap: 15px; /* space between logo and text */
+  padding: 10px 20px;
+  background-color: #f8f9fa; /* soft background */
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  max-width: 400px;
+}
+
+.logo img {
+  height: 60px; /* adjust size */
+  width: auto;
+  border-radius: 10px; /* subtle rounded corners */
+}
+
+.brand-text h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #2c3e50;
+}
+
+.brand-text .tagline {
+  margin: 2px 0 0 0;
+  font-size: 0.9rem;
+  color: #7f8c8d;
+  font-weight: 500;
+}
+
   </style>
 </head>
 <body>
@@ -148,13 +180,17 @@
   <div class="container">
     <!-- Header -->
     <header class="topbar" role="banner">
-      <div class="brand">
-        <div class="logo">MC</div>
-        <div>
-          <h1>MediCart</h1>
-          <div class="small">Simple ordering — WhatsApp checkout</div>
-        </div>
-      </div>
+      <!-- Logo Section -->
+<div class="brand">
+  <div class="logo">
+    <img src="../image/MediCart.png" alt="MediCart Logo">
+  </div>
+  <div class="brand-text">
+    <!-- <h1>MediCart</h1> -->
+    <!-- <p class="tagline">Simple ordering — WhatsApp checkout</p> -->
+  </div>
+</div>
+
 
       <div class="controls">
         <div class="pill small" id="totalAmountPill">Total: ₹0</div>
