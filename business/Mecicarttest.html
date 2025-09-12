@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MediCart - Online Medical Store</title>
+  <script src="https://unpkg.com/papaparse@5.3.2/papaparse.min.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f5f7fa;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 { margin-bottom: 15px; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .card {
+      background: linear-gradient(135deg, #e0f7fa, #b2ebf2);
+      border-radius: 20px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.2), inset 0 0 12px rgba(255,255,255,0.4);
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 12px 35px rgba(0,0,0,0.3), inset 0 0 18px rgba(255,255,255,0.6);
+    }
+    .card img { width: 100%; height: 180px; object-fit: cover; }
+    .card-body { padding: 15px; flex-grow: 1; }
+    .title { font-size: 1.2rem; font-weight: bold; color: #333; margin-bottom: 8px; }
+    .price { font-size: 1rem; color: #d32f2f; font-weight: bold; margin-bottom: 10px; }
+    .details { font-size: 0.9rem; color: #555; margin-bottom: 10px; }
+    .btn {
+      display: inline-block;
+      background: #0077b6;
+      color: white;
+      padding: 8px 14px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: background 0.3s;
+      cursor: pointer;
+      text-align: center;
+      margin-top: 5px;
+    }
+    .btn:hover { background: #023e8a; }
+    input[type=number] {
+      width: 60px;
+      padding: 5px;
+      font-size: 0.9rem;
+      margin-bottom: 5px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    /* Cart Panel */
+    #cartPanel {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      width: 300px;
+      max-height: 80vh;
+      background: #ffffff;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+      padding: 15px;
+      overflow-y: auto;
+      z-index: 999;
+    }
+    #cartPanel h3 { margin-top: 0; }
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+      align-items: center;
+    }
+    .cart-item span { font-weight: bold; }
+    .cart-item input { width: 50px; }
+    #cartTotal { margin-top: 10px; font-weight: bold; }
+    #checkoutBtn {
+      display: block;
+      width: 100%;
+      margin-top: 10px;
+      padding: 10px;
+      background: #25D366;
+      color: white;
+      text-align: center;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    #checkoutBtn:hover { background: #128c7e; }
+  </style>
+</head>
+<body>
+  <h1>💊 MediCart - Online Medical Store</h1>
+  <div id="cardsContainer" class="grid"></div>
+
+  <!-- Cart Panel -->
+  <div id="cartPanel">
+    <h3>🛒 Your Cart</h3>
+    <div id="cartItems"></div>
+    <div id="cartTotal">Total: ₹0</div>
+    <a id="checkoutBtn" href="#" target="_blank">Checkout via WhatsApp</a>
+  </div>
+
+  <script>
+    const sheetUrl = "YOUR_GOOGLE_SHEET_CSV_LINK_HERE"; // replace with your CSV link
+    let allData = [];
+    let cart = [];
+
+    function renderCards(data) {
+      const container = document.getElementById("cardsContainer");
+      container.innerHTML = "";
+      if (data.length === 0) {
+        container.innerHTML = "<p>No items available.</p>";
+        return;
+      }
+
+      data.forEach((row, index) => {
+        if (!row['Item Name']) return;
+
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+          <img src="${row['Image URL']}" alt="${row['Item Name']}">
+          <div class="card-body">
+            <div class="title">${row['Item Name']}</div>
+            <div class="price">₹${row['Price']}</div>
+            <div class="details">${row['Description'] || ''}</div>
+            <label>Qty: <input type="number" min="1" value="1" id="qty-${index}"></label>
+            <div class="btn" onclick="addToCart(${index})">Add to Cart</div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function addToCart(index) {
+      const item = allData[index];
+      const qty = Number(document.getElementById(`qty-${index}`).value);
+      const existing = cart.find(i => i['Item Name'] === item['Item Name']);
+      if (existing) {
+        existing.qty += qty;
+      } else {
+        item.qty = qty;
+        cart.push(item);
+      }
+      updateCart();
+    }
+
+    function updateCart() {
+      const cartItemsDiv = document.getElementById("cartItems");
+      cartItemsDiv.innerHTML = "";
+      let total = 0;
+      cart.forEach((item, i) => {
+        const subtotal = Number(item['Price']) * item.qty;
+        total += subtotal;
+
+        const div = document.createElement("div");
+        div.className = "cart-item";
+        div.innerHTML = `
+          ${item['Item Name']} - ₹${item['Price']} x 
+          <input type="number" min="1" value="${item.qty}" onchange="updateQty(${i}, this.value)"> 
+          = ₹${subtotal}
+        `;
+        cartItemsDiv.appendChild(div);
+      });
+      document.getElementById("cartTotal").textContent = "Total: ₹" + total;
+
+      // WhatsApp link
+      const message = encodeURIComponent(
+        "Hello, I want to order:\n" +
+        cart.map(item => `${item['Item Name']} - ₹${item['Price']} x ${item.qty} = ₹${item['Price']*item.qty}`).join("\n") +
+        `\nTotal: ₹${total}`
+      );
+      document.getElementById("checkoutBtn").href = `https://wa.me/91702360582?text=${message}`;
+    }
+
+    function updateQty(index, value) {
+      cart[index].qty = Number(value);
+      updateCart();
+    }
+
+    Papa.parse(sheetUrl, {
+      download: true,
+      header: true,
+      complete: function(results) {
+        allData = results.data.filter(r => r['Item Name']);
+        renderCards(allData);
+      }
+    });
+  </script>
+</body>
+</html>
