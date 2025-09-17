@@ -3,123 +3,190 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sell Your Mobile Phone</title>
+<title>NextPhone — Buy & Sell Phones</title>
+
+<!-- PapaParse for CSV -->
+<script src="https://unpkg.com/papaparse@5.3.2/papaparse.min.js"></script>
+
 <style>
-  body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    margin: 0;
-    padding: 0;
-  }
-  header {
-    background: #007bff;
-    color: white;
-    padding: 20px;
-    text-align: center;
-  }
-  .container {
-    padding: 20px;
-    max-width: 600px;
-    margin: auto;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  }
-  label {
-    font-weight: bold;
-    margin-top: 10px;
-    display: block;
-  }
-  input, textarea, select {
-    width: 100%;
-    padding: 10px;
-    margin-top: 5px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  .submit-btn {
-    background: #25D366;
-    color: white;
-    padding: 12px;
-    border: none;
-    border-radius: 5px;
-    margin-top: 15px;
-    font-size: 16px;
-    cursor: pointer;
-  }
-  .submit-btn:hover {
-    background: #20b358;
-  }
+:root{
+  --bg:#f4f6f9; --card:#ffffff; --accent:#0077b6; --accent-strong:#023e8a;
+  --success:#25d366; --muted:#6b7280; --radius:12px; --shadow:0 6px 20px rgba(2,6,23,0.04);
+  --max-width:1200px;
+}
+body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:#0f172a;}
+.container{max-width:var(--max-width);margin:20px auto;padding:0 16px;}
+header{background:linear-gradient(90deg,var(--accent),var(--accent-strong));padding:16px;border-radius:12px;color:white;display:flex;align-items:center;justify-content:space-between;}
+.brand{display:flex;align-items:center;gap:12px;}
+.brand img{height:50px;border-radius:10px;}
+.filters{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px;padding:14px;background:var(--card);border-radius:12px;}
+.filters input, .filters select{padding:8px 12px;border-radius:10px;border:1px solid #e6edf3;background:white;flex:1;min-width:150px;}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:18px;}
+@media(max-width:1100px){.grid{grid-template-columns:repeat(3,1fr);}}
+@media(max-width:800px){.grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:520px){.grid{grid-template-columns:1fr;}}
+.card{background:var(--card);border-radius:12px;overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;transition: transform .22s;}
+.card:hover{transform:translateY(-6px);}
+.card-media{width:100%;padding:12px;display:grid;place-items:center;background:#fafafa;border-bottom:1px solid #f0f4f8;}
+.card-media img{max-width:100%;height:220px;object-fit:contain;}
+.card-body{padding:14px;display:flex;flex-direction:column;gap:8px;}
+.title{font-weight:700;font-size:1rem;display:flex;justify-content:space-between;}
+.price{font-weight:800;color:#d5393b;font-size:1.05rem;}
+.stock{font-size:0.85rem;color:var(--muted);}
+.btn-primary{background:var(--accent);color:white;border:0;padding:10px 12px;border-radius:10px;cursor:pointer;font-weight:700;}
+.sell-form{background:var(--card);padding:20px;margin-top:30px;border-radius:12px;box-shadow:var(--shadow);}
+.sell-form h2{margin-top:0;color:var(--accent-strong);}
+.sell-form label{display:block;margin-top:10px;font-weight:600;}
+.sell-form input, .sell-form textarea, .sell-form select{width:100%;padding:10px;margin-top:5px;border:1px solid #ccc;border-radius:8px;}
+.sell-form button{margin-top:15px;background:var(--success);color:white;padding:12px;border:none;border-radius:8px;font-size:16px;cursor:pointer;}
 </style>
 </head>
 <body>
 
-<header>
-  <h1>Sell Your Mobile Phone</h1>
-  <p>Fill in your phone details and send them directly on WhatsApp</p>
-</header>
-
 <div class="container">
-  <label>Brand</label>
-  <input type="text" id="brand" placeholder="e.g. Apple, Samsung, Xiaomi">
+  <header>
+    <div class="brand">
+      <img src="../image/NextPhone.png" alt="NextPhone Logo">
+      <h1>NextPhone — Buy & Sell Phones</h1>
+    </div>
+  </header>
 
-  <label>Model</label>
-  <input type="text" id="model" placeholder="e.g. iPhone 14 Pro Max">
+  <!-- Filters -->
+  <div class="filters">
+    <input type="search" id="searchInput" placeholder="Search phones...">
+    <select id="categoryFilter"><option value="">All Brands</option></select>
+    <select id="sortSelect">
+      <option value="relevance">Sort: Relevance</option>
+      <option value="price-asc">Price Low → High</option>
+      <option value="price-desc">Price High → Low</option>
+      <option value="name-asc">Name A → Z</option>
+    </select>
+  </div>
 
-  <label>Condition</label>
-  <select id="condition">
-    <option value="">Select Condition</option>
-    <option value="Like New">Like New</option>
-    <option value="Good">Good</option>
-    <option value="Fair">Fair</option>
-    <option value="Needs Repair">Needs Repair</option>
-  </select>
+  <!-- Products Grid -->
+  <div id="cardsContainer" class="grid"></div>
 
-  <label>Storage</label>
-  <input type="text" id="storage" placeholder="e.g. 128GB">
-
-  <label>Price Expectation</label>
-  <input type="text" id="price" placeholder="e.g. ₹45,000">
-
-  <label>Additional Details</label>
-  <textarea id="details" placeholder="Write any extra details..."></textarea>
-
-  <label>Upload Images (you will send them in WhatsApp)</label>
-  <input type="file" id="images" accept="image/*" multiple>
-
-  <button class="submit-btn" onclick="sendToWhatsApp()">Send on WhatsApp</button>
+  <!-- Sell Your Phone Form -->
+  <div class="sell-form">
+    <h2>Sell Your Phone — Get Instant Price</h2>
+    <label>Brand</label>
+    <select id="sellBrand">
+      <option value="">Select Brand</option>
+      <option>Apple</option><option>Samsung</option><option>Xiaomi</option><option>OnePlus</option><option>Oppo</option>
+    </select>
+    <label>Model</label>
+    <input type="text" id="sellModel" placeholder="e.g. iPhone 14 Pro Max">
+    <label>Condition</label>
+    <select id="sellCondition">
+      <option value="">Select Condition</option>
+      <option>Like New</option><option>Good</option><option>Fair</option><option>Needs Repair</option>
+    </select>
+    <label>Storage</label>
+    <input type="text" id="sellStorage" placeholder="e.g. 128GB">
+    <label>Price Expectation</label>
+    <input type="text" id="sellPrice" placeholder="₹">
+    <label>Additional Details</label>
+    <textarea id="sellDetails" placeholder="Write phone details..."></textarea>
+    <label>Upload Photos</label>
+    <input type="file" id="sellImages" accept="image/*" multiple>
+    <button onclick="sellViaWhatsApp()">Sell via WhatsApp</button>
+  </div>
 </div>
 
+<script src="https://unpkg.com/papaparse@5.3.2/papaparse.min.js"></script>
 <script>
-function sendToWhatsApp() {
-    const brand = document.getElementById('brand').value;
-    const model = document.getElementById('model').value;
-    const condition = document.getElementById('condition').value;
-    const storage = document.getElementById('storage').value;
-    const price = document.getElementById('price').value;
-    const details = document.getElementById('details').value;
+const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT8hPpfEC4RkO23iJe9iKA6hxiKRd85uOjcpPB28Gyvle6OnY8-f0hU-Lf5fN_3KUgXM_uNCEGErni3/pub?output=csv";
+const whatsappNumber = "917021360582";
+let allData = [], filteredData = [];
 
-    if (!brand || !model) {
-        alert("Please enter at least brand and model");
-        return;
-    }
+const cardsContainer = document.getElementById("cardsContainer");
+const categoryFilter = document.getElementById("categoryFilter");
+const searchInput = document.getElementById("searchInput");
+const sortSelect = document.getElementById("sortSelect");
 
-    // Replace with your WhatsApp number in international format (no + sign, no spaces)
-    const phoneNumber = "917021360582";
+// Fetch Sheet
+Papa.parse(sheetUrl, {
+  download:true, header:true, skipEmptyLines:true,
+  complete: function(results){
+    allData = results.data.map((r,i)=>({
+      id: i,
+      brand: r['Brand'] || '',
+      model: r['Model'] || '',
+      category: r['Brand'] || '',
+      price: r['Price'] || '0',
+      image: r['Image URL'] || '',
+      description: r['Description'] || '',
+      stock: Number(r['Stock'] || 1)
+    }));
+    filteredData = [...allData];
+    populateCategoryFilter();
+    renderCards(filteredData);
+  }
+});
 
-    let message = `📱 *Phone Selling Details* \n\n`;
-    message += `*Brand:* ${brand}\n`;
-    message += `*Model:* ${model}\n`;
-    message += `*Condition:* ${condition}\n`;
-    message += `*Storage:* ${storage}\n`;
-    message += `*Expected Price:* ${price}\n`;
-    message += `*More Details:* ${details}\n\n`;
-    message += `📷 *Please find attached the phone images.*`;
+function populateCategoryFilter(){
+  const brands = [...new Set(allData.map(p=>p.brand).filter(Boolean))].sort();
+  brands.forEach(b=>{ let o=document.createElement('option'); o.value=b; o.textContent=b; categoryFilter.appendChild(o); });
+}
 
-    const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-    window.open(url, '_blank');
+// Render product cards
+function renderCards(data){
+  cardsContainer.innerHTML="";
+  if(!data.length){ cardsContainer.innerHTML="<p>No phones found</p>"; return; }
+  data.forEach(p=>{
+    const card=document.createElement("div");
+    card.className="card";
+    card.innerHTML=`
+      <div class="card-media"><img src="${p.image}" alt="${p.model}" onerror="this.src='https://via.placeholder.com/220x220?text=No+Image'"></div>
+      <div class="card-body">
+        <div class="title">${p.brand} ${p.model}</div>
+        <div class="price">₹${p.price}</div>
+        <div class="desc">${p.description}</div>
+        <button class="btn-primary" onclick="buyPhone('${p.brand}','${p.model}','${p.price}')">Buy via WhatsApp</button>
+      </div>`;
+    cardsContainer.appendChild(card);
+  });
+}
+
+// Filters
+searchInput.addEventListener('input', ()=>{ applyFilters(); });
+categoryFilter.addEventListener('change', ()=>{ applyFilters(); });
+sortSelect.addEventListener('change', ()=>{ applyFilters(); });
+
+function applyFilters(){
+  let q = searchInput.value.toLowerCase();
+  let cat = categoryFilter.value;
+  filteredData = allData.filter(p=>{
+    let matchBrand = !cat || p.brand===cat;
+    let matchSearch = !q || (p.model+p.brand+p.description).toLowerCase().includes(q);
+    return matchBrand && matchSearch;
+  });
+  if(sortSelect.value==='price-asc') filteredData.sort((a,b)=>Number(a.price)-Number(b.price));
+  else if(sortSelect.value==='price-desc') filteredData.sort((a,b)=>Number(b.price)-Number(a.price));
+  else if(sortSelect.value==='name-asc') filteredData.sort((a,b)=>a.model.localeCompare(b.model));
+  renderCards(filteredData);
+}
+
+// WhatsApp Buy
+function buyPhone(brand,model,price){
+  let msg = `Hello, I want to buy this phone:\nBrand: ${brand}\nModel: ${model}\nPrice: ₹${price}`;
+  window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(msg)}`,'_blank');
+}
+
+// Sell form
+function sellViaWhatsApp(){
+  const brand = document.getElementById('sellBrand').value;
+  const model = document.getElementById('sellModel').value;
+  const condition = document.getElementById('sellCondition').value;
+  const storage = document.getElementById('sellStorage').value;
+  const price = document.getElementById('sellPrice').value;
+  const details = document.getElementById('sellDetails').value;
+
+  if(!brand || !model){ alert("Please enter at least brand and model"); return; }
+
+  let msg = `📱 I want to sell my phone\nBrand: ${brand}\nModel: ${model}\nCondition: ${condition}\nStorage: ${storage}\nExpected Price: ₹${price}\nDetails: ${details}`;
+  window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(msg)}`,'_blank');
 }
 </script>
-
 </body>
 </html>
