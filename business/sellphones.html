@@ -4,10 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NextPhone — Buy & Sell Phones</title>
-
-<!-- PapaParse for CSV -->
 <script src="https://unpkg.com/papaparse@5.3.2/papaparse.min.js"></script>
-
 <style>
 :root{
   --bg:#f4f6f9; --card:#ffffff; --accent:#0077b6; --accent-strong:#023e8a;
@@ -93,9 +90,8 @@ header{background:linear-gradient(90deg,var(--accent),var(--accent-strong));padd
   </div>
 </div>
 
-<script src="https://unpkg.com/papaparse@5.3.2/papaparse.min.js"></script>
 <script>
-const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT8hPpfEC4RkO23iJe9iKA6hxiKRd85uOjcpPB28Gyvle6OnY8-f0hU-Lf5fN_3KUgXM_uNCEGErni3/pub?output=csv";
+const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vT8hPpfEC4RkO23iJe9iKA6hxiKRd85uOjcpPB28Gyvle6OnY8-f0hU-Lf5fN_3KUgXM_uNCEGErni3/pub?output=csv"; // replace with your Google Sheet CSV link
 const whatsappNumber = "917021360582";
 let allData = [], filteredData = [];
 
@@ -112,8 +108,9 @@ Papa.parse(sheetUrl, {
       id: i,
       brand: r['Brand'] || '',
       model: r['Model'] || '',
-      category: r['Brand'] || '',
-      price: r['Price'] || '0',
+      storage: r['Storage'] || '',
+      condition: r['Condition'] || '',
+      price: r['Buy Price (₹)'] || '0',
       image: r['Image URL'] || '',
       description: r['Description'] || '',
       stock: Number(r['Stock'] || 1)
@@ -129,7 +126,6 @@ function populateCategoryFilter(){
   brands.forEach(b=>{ let o=document.createElement('option'); o.value=b; o.textContent=b; categoryFilter.appendChild(o); });
 }
 
-// Render product cards
 function renderCards(data){
   cardsContainer.innerHTML="";
   if(!data.length){ cardsContainer.innerHTML="<p>No phones found</p>"; return; }
@@ -139,7 +135,7 @@ function renderCards(data){
     card.innerHTML=`
       <div class="card-media"><img src="${p.image}" alt="${p.model}" onerror="this.src='https://via.placeholder.com/220x220?text=No+Image'"></div>
       <div class="card-body">
-        <div class="title">${p.brand} ${p.model}</div>
+        <div class="title">${p.brand} ${p.model} — ${p.storage} (${p.condition})</div>
         <div class="price">₹${p.price}</div>
         <div class="desc">${p.description}</div>
         <button class="btn-primary" onclick="buyPhone('${p.brand}','${p.model}','${p.price}')">Buy via WhatsApp</button>
@@ -148,17 +144,16 @@ function renderCards(data){
   });
 }
 
-// Filters
-searchInput.addEventListener('input', ()=>{ applyFilters(); });
-categoryFilter.addEventListener('change', ()=>{ applyFilters(); });
-sortSelect.addEventListener('change', ()=>{ applyFilters(); });
+searchInput.addEventListener('input', applyFilters);
+categoryFilter.addEventListener('change', applyFilters);
+sortSelect.addEventListener('change', applyFilters);
 
 function applyFilters(){
   let q = searchInput.value.toLowerCase();
   let cat = categoryFilter.value;
   filteredData = allData.filter(p=>{
     let matchBrand = !cat || p.brand===cat;
-    let matchSearch = !q || (p.model+p.brand+p.description).toLowerCase().includes(q);
+    let matchSearch = !q || (p.model+p.brand+p.storage+p.condition+p.description).toLowerCase().includes(q);
     return matchBrand && matchSearch;
   });
   if(sortSelect.value==='price-asc') filteredData.sort((a,b)=>Number(a.price)-Number(b.price));
@@ -167,13 +162,11 @@ function applyFilters(){
   renderCards(filteredData);
 }
 
-// WhatsApp Buy
 function buyPhone(brand,model,price){
   let msg = `Hello, I want to buy this phone:\nBrand: ${brand}\nModel: ${model}\nPrice: ₹${price}`;
   window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(msg)}`,'_blank');
 }
 
-// Sell form
 function sellViaWhatsApp(){
   const brand = document.getElementById('sellBrand').value;
   const model = document.getElementById('sellModel').value;
