@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login | Solo2CEO Admin</title>
+  <style>
+    /* Password overlay */
+    #passwordOverlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: black;
+      z-index: 9999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    #passwordOverlay input {
+      padding: 12px;
+      border-radius: 5px;
+      border: none;
+      width: 250px;
+      margin-bottom: 15px;
+      font-size: 16px;
+    }
+
+    #passwordOverlay button {
+      padding: 10px 20px;
+      background: #ffa726;
+      border: none;
+      color: #fff;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #passwordOverlay p {
+      color: red;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4f6f9;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #1e293b;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-size: 1.8rem;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 40px;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      text-align: center;
+      transition: 0.3s ease;
+    }
+
+    .card:hover {
+      transform: scale(1.02);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    }
+
+    .card h3 {
+      margin-bottom: 10px;
+      font-size: 1.4rem;
+      color: #1e293b;
+    }
+
+    .card a {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 10px 20px;
+      background-color: #3b82f6;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      transition: background 0.3s ease;
+    }
+
+    .card a:hover {
+      background-color: #2563eb;
+    }
+
+    @media (max-width: 600px) {
+      header {
+        font-size: 1.3rem;
+      }
+      .card h3 {
+        font-size: 1.1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+   <!-- Password Prompt Overlay -->
+  <div id="passwordOverlay">
+    <input type="password" id="adminPassword" placeholder="Enter Password" />
+    <button onclick="checkPassword()">Unlock</button>
+    <p id="errorMessage"></p>
+  </div>
+
+  <header>
+    Solo2CEO Admin Dashboard
+  </header>
+
+  <div class="container">
+    <div class="card">
+      <h3>📁 Catalogues</h3>
+      <a href="https://drive.google.com/drive/folders/1YcXcojBUVVXuF3yme_lEjQG-I8BnVO2c" target="_blank">Open Folder</a>
+    </div>
+    <div class="card">
+      <h3>📝 Proposals</h3>
+      <a href="https://drive.google.com/drive/folders/1YatQws3BAZvistGbaskNTB5AwYAGkxoV" target="_blank">Open Folder</a>
+    </div>
+    <div class="card">
+      <h3>💰 Invoices</h3>
+      <a href="invoice.html" target="_blank">Open Invoice</a>
+    </div>
+    <div class="card">
+      <h3>🎨 Logo Assets</h3>
+      <a href="https://drive.google.com/drive/folders/1V-7bL20upCpWjjgA2AxAzuUve8wt0fOY" target="_blank">Open Folder</a>
+    </div>
+    <div class="card">
+      <h3>📑 Web Proposal</h3>
+      <a href="proposal.html" target="_blank">Open Folder</a>
+    </div>
+    <div class="card">
+      <h3>🧑‍💼 Resume of CEO</h3>
+      <a href="login.html" target="_blank">Open Folder</a>
+    </div>
+    <!-- ✅ New Medical Section -->
+    <div class="card">
+      <h3>🩺 Medical</h3>
+      <a href="https://docs.google.com/spreadsheets/d/11pa12RX1F-Tyjal5HtO_Gu7APpm75HYNBWJ30Xg7cjg/edit?usp=sharing" target="_blank">Open Sheet</a>
+    </div>
+
+    <div class="card">
+      <h3>📱 NextPhone</h3>
+      <a href="https://docs.google.com/spreadsheets/d/1ZQw_XqY3fJKA2QYWxOSa8EtXTzUnLdwwE1SbzjA3970/edit?gid=0#gid=0" target="_blank">Open Sheet</a>
+</div>
+
+  </div>
+
+  <script>
+    // Base64-encoded password:
+    const encoded = 'YWRtaW4yMDI1'; // admin2025
+
+    function checkPassword() {
+      const input = document.getElementById("adminPassword").value;
+      const correctPassword = atob(encoded); // Decode from Base64
+
+      if (input === correctPassword) {
+        document.getElementById("passwordOverlay").style.display = "none";
+      } else {
+        document.getElementById("errorMessage").textContent = "Incorrect password. Try again.";
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Business Categories</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f6f8;
+        margin: 0;
+        padding: 0;
+    }
+    header {
+        text-align: center;
+        padding: 30px;
+        background: #2c3e50;
+        color: white;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    h1 {
+        text-align: center;
+        margin-top: 20px;
+    }
+    .card-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 20px;
+        padding: 20px;
+    }
+    .card {
+        background: white;
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        text-align: center;
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+    .card-icon {
+        font-size: 40px;
+        margin-bottom: 10px;
+    }
+    
+</style>
+</head>
+<body>
+
+<header>
+    <h1>Product Based Businesses</h1>
+    <p>Select your service category to explore options</p>
+</header>
+<div class="card-container">
+    <div class="card" onclick="location.href='mobiles.html'">
+        <div class="card-icon">📱</div>
+        <h3>Mobile Business</h3>
+    </div>
+    <div class="card" onclick="location.href='realestate.html'">
+        <div class="card-icon">🏠</div>
+        <h3>Real Estate</h3>
+    </div>
+    <div class="card" onclick="location.href='restaurants.html'">
+        <div class="card-icon">🍽</div>
+        <h3>Restaurants</h3>
+    </div>
+    <div class="card" onclick="location.href='Medicart.html'">
+        <div class="card-icon">🏥</div>
+        <h3>Medical</h3>
+    </div>
+    <div class="card" onclick="location.href='fashion.html'">
+        <div class="card-icon">👗</div>
+        <h3>Fashion</h3>
+    </div>
+</div>
+
+</body>
+</html>

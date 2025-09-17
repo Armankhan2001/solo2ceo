@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Itinerary Generator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f6f6f6;
+      margin: 0;
+      padding: 20px;
+    }
+    .container { display: flex; gap: 20px; }
+    form {
+      flex: 1;
+      background: #fff;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      max-height: 95vh;
+      overflow-y: auto;
+    }
+    input, textarea {
+      width: 100%; margin: 6px 0 12px; padding: 8px;
+      border: 1px solid #ccc; border-radius: 4px;
+    }
+    button {
+      padding: 8px 14px;
+      border: none;
+      background: #333;
+      color: #fff;
+      border-radius: 4px;
+      cursor: pointer;
+      margin: 4px 0;
+    }
+    .preview {
+      flex: 2; background: #fff; padding: 25px;
+      border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      max-height: none;       /* allow content to expand */
+      overflow: visible;      /* prevent clipping */
+    }
+    .logo { max-height: 60px; }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 15px;
+      word-break: break-word;  /* allow wrapping */
+    }
+    table, th, td { 
+      border: 1px solid black;
+      white-space: normal;     /* allow wrapping */
+    }
+    th, td {
+      padding: 6px;
+      text-align: left;
+      vertical-align: top;
+    }
+    .footer { margin-top: 20px; font-size: 12px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Input Form -->
+    <form id="itineraryForm">
+      <h2>Itinerary Generator</h2> 
+
+      <h3>Logo</h3>
+      <input type="file" id="logoUpload" accept="image/*">
+      <input type="text" id="logoUrl" placeholder="Or paste logo URL">
+
+      <h3>Header Info</h3>
+      <input type="text" id="companyName" placeholder="Company Name">
+      <input type="text" id="confirmationNo" placeholder="Confirmation No.">
+      <textarea id="passengerDetails" rows="3" placeholder="Passenger Details (one per line)"></textarea>
+
+      <h3>Hotels</h3>
+      <div id="hotels"></div>
+      <button type="button" onclick="addHotel()">+ Add Hotel</button>
+
+      <h3>Day-wise Schedule (auto-generated)</h3>
+      <div id="schedule"></div>
+
+      <h3>Footer Info</h3>
+      <input type="text" id="footerCompany" placeholder="Company Footer Name">
+      <textarea id="footerAddress" rows="2" placeholder="Address"></textarea>
+      <input type="text" id="footerWebsite" placeholder="Website">
+      <input type="text" id="footerEmail" placeholder="Email">
+
+      <button type="button" onclick="generateItinerary()">Generate</button>
+      <button type="button" onclick="downloadPDF()">Print / Save PDF</button>
+    </form>
+
+    <!-- Preview -->
+    <div class="preview">
+      <div id="itineraryPreview" class="itinerary">
+        <p>Fill the form to generate itinerary...</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let logoData = "";
+
+    function addHotel() {
+      const div = document.createElement("div");
+      div.innerHTML = `
+        <input type="text" placeholder="City" class="hotel-city">
+        <input type="date" placeholder="Check In" class="hotel-in">
+        <input type="date" placeholder="Check Out" class="hotel-out">
+        <input type="text" placeholder="Hotel" class="hotel-name">
+        <hr>`;
+      document.getElementById("hotels").appendChild(div);
+    }
+
+    // Handle logo upload
+    document.getElementById("logoUpload").addEventListener("change", function() {
+      const file = this.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          logoData = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    function generateItinerary() {
+      // Handle logo
+      let logoHTML = "";
+      const logoUrl = document.getElementById("logoUrl").value;
+      if (logoData) {
+        logoHTML = `<img src="${logoData}" class="logo"><br>`;
+      } else if (logoUrl) {
+        logoHTML = `<img src="${logoUrl}" class="logo"><br>`;
+      }
+
+      // Header
+      const companyName = document.getElementById("companyName").value;
+      const confirmationNo = document.getElementById("confirmationNo").value;
+      const passengerDetails = document.getElementById("passengerDetails").value
+        .split("\n").map(p => `<div>${p}</div>`).join("");  // bullet points inside divs
+
+      // Hotels table
+      let hotels = [];
+      let hotelsHTML = "<table><tr><th>City</th><th>Check In</th><th>Check Out</th><th>Hotel</th></tr>";
+      document.querySelectorAll("#hotels > div").forEach(div => {
+        const city = div.querySelector(".hotel-city").value;
+        const checkin = div.querySelector(".hotel-in").value;
+        const checkout = div.querySelector(".hotel-out").value;
+        const hotel = div.querySelector(".hotel-name").value;
+        if (city && checkin && checkout && hotel) {
+          hotels.push({ city, checkin, checkout, hotel });
+          hotelsHTML += `<tr><td>${city}</td><td>${checkin}</td><td>${checkout}</td><td>${hotel}</td></tr>`;
+        }
+      });
+      hotelsHTML += "</table>";
+
+      // Auto-generate schedule
+      let scheduleHTML = "<table><tr><th>Date</th><th>Day Wise Schedule</th></tr>";
+      if (hotels.length > 0) {
+        const startDate = new Date(hotels[0].checkin);
+        const endDate = new Date(hotels[hotels.length - 1].checkout);
+        let currentDate = new Date(startDate);
+
+        while (currentDate <= endDate) {
+          let dateStr = currentDate.toISOString().split("T")[0];
+          let assignedHotel = hotels.find(h => new Date(h.checkin) <= currentDate && new Date(h.checkout) > currentDate);
+
+          let detail;
+          if (assignedHotel) {
+            detail = `Stay in ${assignedHotel.city} at ${assignedHotel.hotel}`;
+          } else if (dateStr === hotels[hotels.length - 1].checkout) {
+            detail = `Departure (Check-out from ${hotels[hotels.length - 1].city} - ${hotels[hotels.length - 1].hotel})`;
+          } else {
+            detail = "Travel";
+          }
+
+          scheduleHTML += `<tr>
+            <td>${dateStr}</td>
+            <td contenteditable="true" style="white-space: normal;">${detail}</td>
+          </tr>`;
+          currentDate.setDate(currentDate.getDate() + 1);
+        }
+      }
+      scheduleHTML += "</table>";
+
+      // Footer
+      const footerCompany = document.getElementById("footerCompany").value;
+      const footerAddress = document.getElementById("footerAddress").value.replace(/\n/g, "<br>");
+      const footerWebsite = document.getElementById("footerWebsite").value;
+      const footerEmail = document.getElementById("footerEmail").value;
+
+      const preview = `
+        ${logoHTML}
+        <p>Dear Sir/Ma’am,</p>
+        <p>Greetings from ${companyName}!!</p>
+        <p>As per our discussion, we are pleased to confirm the below itinerary for you.</p>
+        <p><b>Confirmation No.: ${confirmationNo}</b></p>
+        <p><b>Passenger Details:</b></p>
+        ${passengerDetails}
+        ${hotelsHTML}
+        ${scheduleHTML}
+        <div class="footer">
+          <p><b>${footerCompany}</b></p>
+          <p>${footerAddress}</p>
+          <p>Website: ${footerWebsite} | Email: ${footerEmail}</p>
+        </div>
+      `;
+
+      document.getElementById("itineraryPreview").innerHTML = preview;
+    }
+
+    function downloadPDF() {
+      const element = document.getElementById("itineraryPreview");
+      const opt = {
+        margin: 0.5,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 3 },
+        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+      };
+      // Open in new window for Print/Save
+      html2pdf().set(opt).from(element).toPdf().output('dataurlnewwindow');
+    }
+  </script>
+</body>
+</html>

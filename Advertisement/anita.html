@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>International Exams & Language Coaching - Dr. Anita Purohit</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+<style>
+body {
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+  background: linear-gradient(to right, #f5f7fa, #c3cfe2);
+  color: #333;
+}
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  text-align: center;
+}
+.header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 40px;
+}
+.header img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 3px solid #4b6cb7;
+}
+.header h1 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 2.5rem;
+  color: #1a1a1a;
+}
+.subtitle {
+  font-size: 1.2rem;
+  margin-bottom: 40px;
+  color: #555;
+}
+h2.section-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 2rem;
+  margin: 40px 0 20px 0;
+  color: #4b6cb7;
+}
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+.card {
+  background: #fff;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  width: 280px;
+  padding: 25px 20px;
+  transition: transform 0.3s, box-shadow 0.3s;
+  text-align: left;
+  cursor: pointer;
+}
+.card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.2);
+}
+.card h3 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  color: #4b6cb7;
+}
+.card p {
+  font-size: 0.95rem;
+  color: #555;
+  margin-bottom: 15px;
+}
+.flags {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 15px;
+}
+.flags img {
+  width: 25px;
+  height: 18px;
+  border-radius: 3px;
+}
+.footer {
+  margin-top: 50px;
+  font-size: 0.9rem;
+  color: #666;
+}
+@media (max-width: 900px) {
+  .cards {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+/* Modal Styles */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background: rgba(0,0,0,0.7);
+}
+.modal-content {
+  position: relative;
+  margin: 50px auto;
+  width: 90%;
+  max-width: 500px;
+  background: yellowgreen;
+  color: #333;
+  border-radius: 20px;
+  padding: 25px 20px;
+  text-align: center;
+  font-family: 'Poppins', sans-serif;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+.modal-content img.profile {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 3px solid #4b6cb7;
+  object-fit: cover;
+  margin-bottom: 20px;
+}
+.modal-content h2 {
+  font-size: 1.8rem;
+  margin-bottom: 15px;
+  color: #4b6cb7;
+}
+.modal-content .flags {
+  justify-content: center;
+  margin-bottom: 15px;
+}
+.modal-content .flags img {
+  width: 30px;
+  height: 22px;
+  margin: 0 5px;
+}
+.modal-content p.description {
+  font-size: 1rem;
+  line-height: 1.5;
+  margin-bottom: 15px;
+  text-align: justify;
+}
+.modal-content p.ad-text {
+  font-weight: bold;
+  font-size: 1rem;
+  margin-bottom: 25px;
+  color: #182848;
+}
+.modal-content button {
+  background: #4b6cb7;
+  color: #fff;
+  font-weight: bold;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.3s;
+}
+.modal-content button:hover {
+  background: #3753a3;
+}
+.close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #333;
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <!-- Header -->
+  <div class="header">
+    <img src="image.png" alt="Dr. Anita Purohit">
+    <h1>International Exams & Language Coaching</h1>
+  </div>
+  <div class="subtitle">
+    Multilingual PhD in Neurophysics | Expert guidance for International Exams & Foreign Languages
+  </div>
+
+  <!-- International Exams Section -->
+  <h2 class="section-title">International Exams</h2>
+  <div class="cards" id="examCards">
+    <div class="card" data-title="IELTS" data-description="English proficiency test for study, work, or migration in UK, Australia, Canada, and more." data-ad="Achieve top scores in IELTS with personalized guidance from Dr. Anita Purohit." data-flags="https://flagcdn.com/w20/gb.png,https://flagcdn.com/w20/au.png,https://flagcdn.com/w20/ca.png">
+      <h3>IELTS</h3>
+      <p>English proficiency test for UK, Australia, Canada, and more.</p>
+      <div class="flags">
+        <img src="https://flagcdn.com/w20/gb.png" alt="UK">
+        <img src="https://flagcdn.com/w20/au.png" alt="Australia">
+        <img src="https://flagcdn.com/w20/ca.png" alt="Canada">
+      </div>
+    </div>
+    <div class="card" data-title="TOEFL" data-description="English proficiency exam recognized by thousands of universities worldwide." data-ad="Get your TOEFL score to enter top universities worldwide! Personalized coaching by Dr. Anita Purohit ensures success." data-flags="https://flagcdn.com/w20/us.png,https://flagcdn.com/w20/ca.png">
+      <h3>TOEFL</h3>
+      <p>English proficiency exam recognized by thousands of universities worldwide.</p>
+      <div class="flags">
+        <img src="https://flagcdn.com/w20/us.png" alt="USA">
+        <img src="https://flagcdn.com/w20/ca.png" alt="Canada">
+      </div>
+    </div>
+    <div class="card" data-title="GRE" data-description="Graduate admission test for USA and other countries." data-ad="Prepare for GRE to excel in Verbal, Quantitative, and Analytical Writing sections." data-flags="https://flagcdn.com/w20/us.png,https://flagcdn.com/w20/gb.png">
+      <h3>GRE</h3>
+      <p>Graduate admission test for USA and other countries.</p>
+      <div class="flags">
+        <img src="https://flagcdn.com/w20/us.png" alt="USA">
+        <img src="https://flagcdn.com/w20/gb.png" alt="UK">
+      </div>
+    </div>
+    <div class="card" data-title="GMAT" data-description="Business school test accepted worldwide for MBA programs." data-ad="Prepare for GMAT to gain admission to top business schools globally." data-flags="https://flagcdn.com/w20/us.png,https://flagcdn.com/w20/sg.png">
+      <h3>GMAT</h3>
+      <p>Business school test accepted worldwide for MBA programs.</p>
+      <div class="flags">
+        <img src="https://flagcdn.com/w20/us.png" alt="USA">
+        <img src="https://flagcdn.com/w20/sg.png" alt="Singapore">
+      </div>
+    </div>
+    <div class="card" data-title="PTE" data-description="English test for Australia, New Zealand, and other countries." data-ad="Pearson Test of English coaching ensures high scores for study and migration purposes." data-flags="https://flagcdn.com/w20/au.png,https://flagcdn.com/w20/nz.png">
+      <h3>PTE</h3>
+      <p>English test for Australia, New Zealand, and other countries.</p>
+      <div class="flags">
+        <img src="https://flagcdn.com/w20/au.png" alt="Australia">
+        <img src="https://flagcdn.com/w20/nz.png" alt="New Zealand">
+      </div>
+    </div>
+    <div class="card" data-title="SAT" data-description="Standardized test for undergraduate admission in USA." data-ad="Achieve top SAT scores with expert coaching and unlock undergraduate opportunities in the USA." data-flags="https://flagcdn.com/w20/us.png">
+      <h3>SAT</h3>
+      <p>Standardized test for undergraduate admission in USA.</p>
+      <div class="flags">
+        <img src="https://flagcdn.com/w20/us.png" alt="USA">
+      </div>
+    </div>
+    <div class="card" data-title="DELF/DALF" data-description="French proficiency exams for France and Francophone countries." data-ad="French coaching helps you succeed academically and professionally." data-flags="https://flagcdn.com/w20/fr.png">
+      <h3>DELF/DALF</h3>
+      <p>French proficiency exams for France and Francophone countries.</p>
+      <div class="flags">
+        <img src="https://flagcdn.com/w20/fr.png" alt="France">
+      </div>
+    </div>
+    <div class="card" data-title="DELE" data-description="Spanish proficiency exam for Spain and Latin America." data-ad="Spanish language coaching ensures fluency in reading, writing, speaking, and comprehension." data-flags="https://flagcdn.com/w20/es.png">
+      <h3>DELE</h3>
+      <p>Spanish proficiency exam for Spain and Latin America.</p>
+      <div class="flags">
+        <img src="https://flagcdn.com/w20/es.png" alt="Spain">
+      </div>
+    </div>
+    <div class="card" data-title="HSK" data-description="Chinese language proficiency test." data-ad="HSK coaching for Mandarin Chinese proficiency. Speak, write, and read Chinese confidently." data-flags="https://flagcdn.com/w20/cn.png">
+      <h3>HSK</h3>
+      <p>Chinese language proficiency test.</p>
+      <div class="flags">
+        <img src="https://flagcdn.com/w20/cn.png" alt="China">
+      </div>
+    </div>
+    <div class="card" data-title="JLPT" data-description="Japanese Language Proficiency Test." data-ad="Japanese coaching for JLPT exams. Learn Kanji, vocabulary, and grammar efficiently." data-flags="https://flagcdn.com/w20/jp.png">
+      <h3>JLPT</h3>
+      <p>Japanese Language Proficiency Test.</p>
+      <div class="flags">
+        <img src="https://flagcdn.com/w20/jp.png" alt="Japan">
+      </div>
+    </div>
+  </div>
+
+  <!-- Foreign Languages Section -->
+  <h2 class="section-title">Foreign Languages</h2>
+  <div class="cards" id="langCards">
+    <div class="card" data-title="English" data-description="Master English for global communication and career opportunities." data-ad="Learn grammar, conversation, and academic skills with expert guidance." data-flags="https://flagcdn.com/w20/gb.png,https://flagcdn.com/w20/us.png">
+      <h3>English</h3>
+      <p>Master English for global communication and career opportunities.</p>
+      <div class="flags">
+        <img src="https://flagcdn.com/w20/gb.png" alt="UK">
+        <img src="https://flagcdn.com/w20/us.png" alt="USA">
+      </div>
+    </div>
+    <div class="card" data-title="French" data-description="Learn French for studies and work in France and Francophone countries." data-ad="Focus on speaking, reading, writing, and comprehension skills." data-flags="https://flagcdn.com/w20/fr.png">
+      <h3>French</h3>
+      <p>Learn French for studies and work in France and Francophone countries.</p>
+      <div class="flags">
+        <img src="https://flagcdn.com/w20/fr.png" alt="France">
+      </div>
+    </div>
+    <div class="card" data-title="Spanish" data-description="Spanish for communication, business, and travel." data-ad="Acquire Spanish skills efficiently for Spain and Latin America." data-flags="https://flagcdn.com/w20/es.png">
+      <h3>Spanish</h3>
+      <p>Spanish for communication, business, and travel.</p>
+      <div class="flags">
+        <img src="https://flagcdn.com/w20/es.png" alt="Spain">
+      </div>
+    </div>
+    <div class="card" data-title="German" data-description="German language coaching for academic and professional purposes." data-ad="Enhance speaking, reading, and comprehension skills effectively." data-flags="https://flagcdn.com/w20/de.png">
+      <h3>German</h3>
+      <p>German language coaching for academic and professional purposes.</p>
+      <div class="flags">
+        <img src="https://flagcdn.com/w20/de.png" alt="Germany">
+      </div>
+    </div>
+    <div class="card" data-title="Chinese" data-description="Mandarin coaching for study, business, and travel." data-ad="Master Mandarin Chinese pronunciation, writing, and conversational skills." data-flags="https://flagcdn.com/w20/cn.png">
+      <h3>Chinese</h3>
+      <p>Mandarin coaching for study, business, and travel.</p>
+      <div class="flags">
+        <img src="https://flagcdn.com/w20/cn.png" alt="China">
+      </div>
+    </div>
+    <div class="card" data-title="Japanese" data-description="Japanese language learning for academic and professional use." data-ad="Gain proficiency in speaking, reading, writing, and comprehension efficiently." data-flags="https://flagcdn.com/w20/jp.png">
+      <h3>Japanese</h3>
+      <p>Japanese language learning for academic and professional use.</p>
+      <div class="flags">
+        <img src="https://flagcdn.com/w20/jp.png" alt="Japan">
+      </div>
+    </div>
+    <div class="card" data-title="Italian" data-description="Italian for travel, work, and studies in Italy." data-ad="Develop conversational fluency and understanding of grammar, vocabulary, and culture." data-flags="https://flagcdn.com/w20/it.png">
+      <h3>Italian</h3>
+      <p>Italian for travel, work, and studies in Italy.</p>
+      <div class="flags">
+        <img src="https://flagcdn.com/w20/it.png" alt="Italy">
+      </div>
+    </div>
+    <div class="card" data-title="Russian" data-description="Russian language learning for effective communication." data-ad="Master Russian for reading, writing, listening, and conversational skills." data-flags="https://flagcdn.com/w20/ru.png">
+      <h3>Russian</h3>
+      <p>Russian language learning for effective communication.</p>
+      <div class="flags">
+        <img src="https://flagcdn.com/w20/ru.png" alt="Russia">
+      </div>
+    </div>
+    <div class="card" data-title="Arabic" data-description="Arabic for professional, academic, or travel purposes." data-ad="Gain skills in speaking, reading, writing, and comprehension in Middle East and North Africa." data-flags="https://flagcdn.com/w20/sa.png">
+      <h3>Arabic</h3>
+      <p>Arabic for professional, academic, or travel purposes.</p>
+      <div class="flags">
+        <img src="https://flagcdn.com/w20/sa.png" alt="Saudi Arabia">
+      </div>
+    </div>
+    <div class="card" data-title="Korean" data-description="Korean language coaching for study, work, or cultural experiences." data-ad="Improve conversational, reading, and writing skills effectively." data-flags="https://flagcdn.com/w20/kr.png">
+      <h3>Korean</h3>
+      <p>Korean language coaching for study, work, or cultural experiences.</p>
+      <div class="flags">
+        <img src="https://flagcdn.com/w20/kr.png" alt="Korea">
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    &copy; 2025 Dr. Anita Purohit | International Exams & Languages Coaching | All Rights Reserved
+  </div>
+</div>
+
+<!-- Modal -->
+<div id="instaModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <img src="image.png" alt="Dr. Anita Purohit" class="profile">
+    <h2 id="modalTitle">Title</h2>
+    <div class="flags" id="modalFlags"></div>
+    <p class="description" id="modalDescription">Description goes here...</p>
+    <p class="ad-text" id="modalAdText">Advertising text goes here...</p>
+    <button onclick="window.open('https://wa.me/919322698355','_blank')">Enroll Now</button>
+  </div>
+</div>
+
+<script>
+const modal = document.getElementById("instaModal");
+const modalTitle = document.getElementById("modalTitle");
+const modalDescription = document.getElementById("modalDescription");
+const modalAdText = document.getElementById("modalAdText");
+const modalFlags = document.getElementById("modalFlags");
+const closeBtn = document.querySelector(".close");
+
+document.querySelectorAll(".card").forEach(card => {
+  card.addEventListener("click", () => {
+    modal.style.display = "block";
+    modalTitle.textContent = card.dataset.title;
+    modalDescription.textContent = card.dataset.description;
+    modalAdText.textContent = card.dataset.ad;
+    modalFlags.innerHTML = "";
+    const flags = card.dataset.flags.split(",");
+    flags.forEach(url => {
+      const img = document.createElement("img");
+      img.src = url;
+      img.alt = "Flag";
+      modalFlags.appendChild(img);
+    });
+  });
+});
+
+closeBtn.onclick = () => { modal.style.display = "none"; }
+window.onclick = event => { if(event.target === modal) modal.style.display = "none"; }
+</script>
+</body>
+</html>

@@ -1,0 +1,480 @@
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+
+body {
+font-family: 'Poppins', sans-serif;
+background-color: #f9f9f9;
+color: #333;
+line-height: 1.6;
+}
+
+/* Header */
+header {
+background: linear-gradient(45deg, #ff5c8d, #00d2ff);
+color: white;
+padding: 50px 0;
+text-align: center;
+}
+
+header h1 {
+font-size: 3rem;
+margin-bottom: 10px;
+}
+
+header p {
+font-size: 1.2rem;
+margin-bottom: 20px;
+}
+
+button {
+cursor: pointer;
+border: none;
+outline: none;
+transition: all 0.3s ease;
+}
+
+/* Main Button */
+.main-btn {
+padding: 12px 25px;
+background-color: #ff5c8d;
+color: #fff;
+font-size: 1.1rem;
+text-transform: uppercase;
+border-radius: 25px;
+margin-top: 10px;
+}
+
+.main-btn:hover {
+background-color: #00d2ff;
+transform: scale(1.05);
+}
+
+/* Services Section */
+.services {
+background-color: #ffffff;
+padding: 50px 0;
+text-align: center;
+}
+
+.services h2 {
+font-size: 2rem;
+margin-bottom: 30px;
+}
+
+.service-card {
+margin-bottom: 30px;
+}
+
+.service-btn {
+padding: 10px 20px;
+background-color: #ff5c8d;
+color: #fff;
+font-size: 1rem;
+font-weight: 600;
+text-transform: uppercase;
+border-radius: 25px;
+margin-top: 15px;
+}
+
+.service-btn:hover {
+background-color: #00d2ff;
+transform: scale(1.05);
+}
+
+/* Testimonial Section */
+.testimonials {
+background-color: #f3f3f3;
+padding: 50px 0;
+text-align: center;
+}
+
+.testimonials h2 {
+font-size: 2rem;
+margin-bottom: 20px;
+}
+
+.testimonial {
+margin: 20px 0;
+font-style: italic;
+}
+
+.testimonial span {
+display: block;
+margin-top: 5px;
+font-weight: bold;
+}
+
+/* Footer */
+footer {
+background-color: #333;
+color: white;
+padding: 30px 0;
+text-align: center;
+}
+
+footer p {
+margin-bottom: 20px;
+}
+
+.contact-btn {
+padding: 12px 25px;
+background-color: #ff5c8d;
+color: #fff;
+font-size: 1.1rem;
+text-transform: uppercase;
+border-radius: 25px;
+margin-top: 10px;
+}
+
+.contact-btn:hover {
+background-color: #00d2ff;
+transform: scale(1.05);
+}
+
+/* Container */
+.container {
+width: 80%;
+max-width: 1200px;
+margin: 0 auto;
+}
+
+.service-card p {
+font-size: 1.1rem;
+margin-bottom: 15px;
+}
+
+.service-card h3 {
+font-size: 1.6rem;
+font-weight: bold;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+.container {
+width: 90%;
+}
+
+header h1 {
+font-size: 2.5rem;
+}
+
+.services h2 {
+font-size: 1.6rem;
+}
+
+.service-card {
+margin-bottom: 20px;
+}
+/* General Reset */
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+
+body {
+font-family: 'Roboto', sans-serif;
+background-color: #f0f4f8;
+color: #333;
+overflow-x: hidden;
+line-height: 1.6;
+}
+
+/* Smooth Scrolling */
+html {
+scroll-behavior: smooth;
+}
+
+/* Header */
+header {
+background: linear-gradient(135deg, #ff5c8d, #00d2ff);
+color: #fff;
+padding: 80px 20px;
+text-align: center;
+border-bottom: 4px solid #fff;
+}
+
+header h1 {
+font-size: 3.5rem;
+margin-bottom: 10px;
+font-weight: bold;
+text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+header h2 {
+font-size: 1.6rem;
+margin-top: 10px;
+font-weight: 300;
+}
+
+/* Section Styles */
+section {
+padding: 60px 20px;
+margin-top: 20px;
+text-align: center;
+}
+
+section h3 {
+font-size: 2.5rem;
+color: #222;
+font-weight: bold;
+margin-bottom: 30px;
+letter-spacing: 1px;
+}
+
+section p {
+font-size: 1.2rem;
+color: #555;
+line-height: 1.8;
+margin-bottom: 30px;
+max-width: 800px;
+margin: 0 auto;
+}
+
+/* Buttons */
+.btn {
+padding: 12px 25px;
+background: #ff5c8d;
+color: white;
+font-size: 1.1rem;
+text-transform: uppercase;
+border-radius: 30px;
+font-weight: bold;
+text-decoration: none;
+transition: all 0.3s ease;
+}
+
+.btn:hover {
+background: #00d2ff;
+transform: scale(1.05);
+}
+
+/* Testimonial Styles */
+.testimonials {
+display: flex;
+justify-content: space-between;
+gap: 40px;
+margin-top: 50px;
+flex-wrap: wrap;
+}
+
+.testimonial {
+background: #fff;
+border-radius: 10px;
+padding: 30px;
+width: 30%;
+box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+transition: all 0.3s ease;
+text-align: left;
+font-size: 1.1rem;
+}
+
+.testimonial:hover {
+transform: translateY(-10px);
+box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+}
+
+.testimonial p {
+font-style: italic;
+color: #444;
+margin-bottom: 20px;
+}
+
+.testimonial strong {
+color: #ff5c8d;
+display: block;
+margin-top: 15px;
+}
+
+/* Footer */
+footer {
+background: #333;
+color: white;
+padding: 30px;
+text-align: center;
+margin-top: 50px;
+}
+
+footer p {
+font-size: 1.1rem;
+}
+
+footer a {
+color: white;
+text-decoration: none;
+font-weight: bold;
+transition: color 0.3s ease;
+}
+
+footer a:hover {
+color: #ff5c8d;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+.testimonials {
+flex-direction: column;
+align-items: center;
+gap: 20px;
+}
+
+.testimonial {
+width: 80%;
+}
+}
+
+/* Toggle content */
+.more-content {
+display: none;
+text-align: left;
+font-size: 1.1rem;
+margin-top: 20px;
+color: #555;
+}
+
+.service-btn:focus + .more-content {
+display: block;
+}
+}
+
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+/* Header */
+header {
+    background: linear-gradient(135deg, #ff5c8d, #00d2ff);
+    color: white;
+    text-align: center;
+    padding: 50px 0;
+}
+
+header h1 {
+    font-size: 2.8rem;
+    margin-bottom: 10px;
+}
+
+/* Services Section */
+.services {
+    padding: 50px 0;
+    text-align: center;
+}
+
+h2 {
+    font-size: 2.2rem;
+    margin-bottom: 30px;
+}
+
+.service-card {
+    background: white;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin: 15px auto;
+    width: 80%;
+    max-width: 600px;
+    border-radius: 10px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.service-card:hover {
+    transform: scale(1.02);
+}
+
+.service-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.service-btn {
+    padding: 10px 20px;
+    background-color: #ff5c8d;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 25px;
+    margin-top: 15px;
+    transition: background 0.3s ease-in-out;
+}
+
+.service-btn:hover {
+    background-color: #00d2ff;
+}
+
+/* Hidden Details */
+.service-details {
+    display: none;
+    margin-top: 15px;
+    padding: 15px;
+    background: #f3f3f3;
+    border-radius: 10px;
+}
+
+/* Footer */
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 30px 0;
+}
+
+.contact-btn {
+    padding: 12px 25px;
+    background-color: #ff5c8d;
+    color: #fff;
+    font-size: 1.1rem;
+    border-radius: 25px;
+    margin-top: 10px;
+    transition: background 0.3s ease-in-out;
+}
+
+.contact-btn:hover {
+    background-color: #00d2ff;
+}
+
+
+
+
+body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    background-color: #f4f4f9;
+}
+
+h3 {
+    color: #333;
+}
+
+.service-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.3s;
+}
+
+.service-btn:hover {
+    background-color: #0056b3;
+}
+
+.service-details {
+    display: none;
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-left: 4px solid #007bff;
+}

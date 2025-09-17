@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sell Your Mobile Phone</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+  }
+  header {
+    background: #007bff;
+    color: white;
+    padding: 20px;
+    text-align: center;
+  }
+  .container {
+    padding: 20px;
+    max-width: 600px;
+    margin: auto;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+  label {
+    font-weight: bold;
+    margin-top: 10px;
+    display: block;
+  }
+  input, textarea, select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  .submit-btn {
+    background: #25D366;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    margin-top: 15px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  .submit-btn:hover {
+    background: #20b358;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Sell Your Mobile Phone</h1>
+  <p>Fill in your phone details and send them directly on WhatsApp</p>
+</header>
+
+<div class="container">
+  <label>Brand</label>
+  <input type="text" id="brand" placeholder="e.g. Apple, Samsung, Xiaomi">
+
+  <label>Model</label>
+  <input type="text" id="model" placeholder="e.g. iPhone 14 Pro Max">
+
+  <label>Condition</label>
+  <select id="condition">
+    <option value="">Select Condition</option>
+    <option value="Like New">Like New</option>
+    <option value="Good">Good</option>
+    <option value="Fair">Fair</option>
+    <option value="Needs Repair">Needs Repair</option>
+  </select>
+
+  <label>Storage</label>
+  <input type="text" id="storage" placeholder="e.g. 128GB">
+
+  <label>Price Expectation</label>
+  <input type="text" id="price" placeholder="e.g. ₹45,000">
+
+  <label>Additional Details</label>
+  <textarea id="details" placeholder="Write any extra details..."></textarea>
+
+  <label>Upload Images (you will send them in WhatsApp)</label>
+  <input type="file" id="images" accept="image/*" multiple>
+
+  <button class="submit-btn" onclick="sendToWhatsApp()">Send on WhatsApp</button>
+</div>
+
+<script>
+function sendToWhatsApp() {
+    const brand = document.getElementById('brand').value;
+    const model = document.getElementById('model').value;
+    const condition = document.getElementById('condition').value;
+    const storage = document.getElementById('storage').value;
+    const price = document.getElementById('price').value;
+    const details = document.getElementById('details').value;
+
+    if (!brand || !model) {
+        alert("Please enter at least brand and model");
+        return;
+    }
+
+    // Replace with your WhatsApp number in international format (no + sign, no spaces)
+    const phoneNumber = "917021360582";
+
+    let message = `📱 *Phone Selling Details* \n\n`;
+    message += `*Brand:* ${brand}\n`;
+    message += `*Model:* ${model}\n`;
+    message += `*Condition:* ${condition}\n`;
+    message += `*Storage:* ${storage}\n`;
+    message += `*Expected Price:* ${price}\n`;
+    message += `*More Details:* ${details}\n\n`;
+    message += `📷 *Please find attached the phone images.*`;
+
+    const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+    window.open(url, '_blank');
+}
+</script>
+
+</body>
+</html>
