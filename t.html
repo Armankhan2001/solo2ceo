@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solo2CEO - Transforming Self-Employed Businesses</title>
+<link rel="icon" type="image/png" href="image/Solo2ceologo.png">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+<style>
+/* --- Your existing styles preserved --- */
+body { font-family: 'Poppins', sans-serif; background-color:#fafafa; color:#222; overflow-x:hidden; }
+.navbar { background: linear-gradient(135deg,#6a11cb,#2575fc); padding:15px; }
+.navbar-brand, .nav-link { font-family:'Montserrat',sans-serif; color:white !important; font-weight:bold; }
+.nav-link:hover { color:#ffcc00 !important; transform:scale(1.1); }
+header { background:linear-gradient(135deg,#6a11cb,#2575fc); color:#fff; padding:80px 20px; text-align:center; }
+header h1 { font-size:3.5rem; font-weight:bold; }
+header h2 { font-size:1.6rem; margin-top:10px; font-weight:300; }
+section { padding:60px 20px; text-align:center; }
+.services-container, .testimonials { display:flex; flex-wrap:wrap; justify-content:center; gap:20px; align-items:stretch; }
+.service-card, .testimonial { background:white; padding:25px; border-radius:15px; width:320px; box-shadow:0 6px 25px rgba(0,0,0,0.1); transition:transform 0.3s; display:flex; flex-direction:column; justify-content:center; text-align:center; }
+.service-card:hover, .testimonial:hover { transform:scale(1.08); }
+.testimonial { position:relative; text-align:left; font-style:italic; }
+.testimonial::before { content:"\201C"; font-size:50px; position:absolute; top:-10px; left:10px; color:#6a11cb; }
+.testimonial-author { font-weight:bold; margin-top:10px; color:#2575fc; }
+.highlight { color:#6a11cb; font-weight:bold; }
+footer { background:#222; color:white; padding:30px; text-align:center; margin-top:50px; }
+footer a { color:white; text-decoration:none; font-weight:bold; transition:0.3s; }
+footer a:hover { color:#ffcc00; }
+/* --- Popup styles --- */
+#inquiryModal .modal-content { border-radius:20px; padding:20px; }
+#floatingBtn { position:fixed; bottom:25px; right:25px; background:linear-gradient(135deg,#6a11cb,#2575fc); color:white; border:none; border-radius:50px; padding:15px 20px; font-weight:bold; cursor:pointer; box-shadow:0 5px 15px rgba(0,0,0,0.2); z-index:999; display:none; }
+#floatingBtn:hover { transform:scale(1.05); }
+</style>
+</head>
+<body>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="index.html">Solo2CEO</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="templates/about.html">About</a></li>
+        <li class="nav-item"><a class="nav-link" href="services.html">Services</a></li>
+        <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+        <li class="nav-item"><a class="nav-link" href="templates/domain.html">Other-Domains</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Header -->
+<header>
+    <h1>Solo2CEO</h1>
+    <h2>Transforming Self-Employed Hustles into Recognized Business Brands!</h2>
+</header>
+
+<!-- About -->
+<div class="container">
+    <h2>About Us</h2>
+    <p><span class="highlight">Solo2CEO</span> helps small businesses transform into recognized brands through branding, social media, and strategy.</p>
+</div>
+
+<!-- Services -->
+<section id="services">
+    <h3>Our Services</h3>
+    <div class="services-container">
+        <div class="service-card">Social Media Management<br><small>Instagram, LinkedIn, branding</small></div>
+        <div class="service-card">Business Growth Strategy<br><small>One-on-one strategy</small></div>
+        <div class="service-card">Brand Building<br><small>Small hustle into recognized brand</small></div>
+        <div class="service-card">Marketing Consultation<br><small>Expert advice on reach and engagement</small></div>
+    </div>
+</section>
+
+<!-- Testimonials -->
+<section id="testimonials">
+    <h3>Testimonials</h3>
+    <div class="testimonials">
+        <div class="testimonial">"Solo2CEO took my online store from zero to viral!"<br><span class="testimonial-author">- Amit</span></div>
+        <div class="testimonial">"Their growth strategy skyrocketed my boutique sales!"<br><span class="testimonial-author">- Priya</span></div>
+    </div>
+</section>
+
+<!-- Contact -->
+<section id="contact">
+    <h3>📞 Contact Us</h3>
+    <p>🚀 Ready to take your business to the next level? Let’s make your brand shine!</p>
+    <a href="mailto:solo2ceoo@gmail.com" class="btn btn-dark">📩 Email Us</a>
+    <p style="font-size:1.3rem; margin-top:20px; font-weight:bold;">Or reach us at:</p>
+    <p>📞 +91 7021360582</p>
+</section>
+
+<!-- Footer -->
+<footer>
+    <p>&copy; 2025 Solo2CEO - Elevating Your Business to Brand Status</p>
+    <p><a href="https://www.instagram.com/solo2_ceo" target="_blank">Follow Us on Instagram</a></p>
+</footer>
+
+<!-- Inquiry Popup Modal -->
+<div class="modal fade" id="inquiryModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content p-3">
+      <div class="modal-header">
+        <h5 class="modal-title">Join Our Team / Inquiry</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="inquiryForm">
+          <div class="mb-3">
+            <label class="form-label">Name</label>
+            <input type="text" name="name" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" name="email" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Message</label>
+            <textarea name="message" class="form-control" rows="3" required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary w-100">Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Floating Button -->
+<button id="floatingBtn" onclick="openModal()">Inquiry / Join</button>
+
+<script>
+// --- GSAP Animations ---
+gsap.from(".navbar", { y:-50, opacity:0, duration:1, ease:"power3.out" });
+gsap.from("header h1", { scale:0.5, opacity:0, duration:1.2, ease:"back.out(1.7)" });
+gsap.from(".service-card", { opacity:0, y:30, duration:1, stagger:0.15, ease:"power3.out" });
+gsap.from(".testimonial", { opacity:0, y:30, duration:1, stagger:0.15, ease:"power3.out" });
+document.querySelectorAll(".service-card,.testimonial").forEach(el=>{
+  el.addEventListener("mouseenter", ()=>{ gsap.to(el,{ scale:1.05, rotationX:5, boxShadow:"0px 15px 25px rgba(0,0,0,0.2)", duration:0.3 }); });
+  el.addEventListener("mouseleave", ()=>{ gsap.to(el,{ scale:1, rotationX:0, boxShadow:"0px 4px 15px rgba(0,0,0,0.1)", duration:0.3 }); });
+});
+
+// --- Popup logic ---
+const inquiryModal = new bootstrap.Modal(document.getElementById("inquiryModal"));
+const floatingBtn = document.getElementById("floatingBtn");
+
+// Auto open on page load
+window.addEventListener("load", ()=>{ inquiryModal.show(); });
+
+// Show floating button when modal closes
+document.getElementById("inquiryModal").addEventListener("hidden.bs.modal", ()=>{ floatingBtn.style.display="block"; });
+function openModal(){ inquiryModal.show(); }
+
+// Handle form submission
+document.getElementById("inquiryForm").addEventListener("submit", function(e){
+  e.preventDefault();
+  const data = {
+    name: this.name.value,
+    email: this.email.value,
+    message: this.message.value
+  };
+  if(!data.name || !data.email || !data.message){ alert("Please fill all fields!"); return; }
+
+  fetch("https://script.google.com/macros/s/AKfycbwFqA-u1muZ-Fxk6C0AAsmRn-A5_3ImUZlq0e27kv5eat1othlwnPcIWKN7zAFXC2pN/exec",{
+    method:"POST",
+    body: JSON.stringify(data)
+  }).then(res=>res.json())
+    .then(res=>{
+      alert("✅ Thank you! Your info has been submitted.");
+      this.reset();
+      inquiryModal.hide();
+    }).catch(err=>{
+      console.error(err);
+      alert("❌ Error submitting data.");
+    });
+});
+</script>
+</body>
+</html>
