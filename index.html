@@ -150,6 +150,11 @@
             font-weight: bold;
         }
 
+        /* --- Popup styles --- */
+        #inquiryModal .modal-content { border-radius:20px; padding:20px; }
+        #floatingBtn { position:fixed; bottom:25px; right:25px; background:linear-gradient(135deg,#6a11cb,#2575fc); color:white; border:none; border-radius:50px; padding:15px 20px; font-weight:bold; cursor:pointer; box-shadow:0 5px 15px rgba(0,0,0,0.2); z-index:999; display:none; }
+        #floatingBtn:hover { transform:scale(1.05); }
+
           
           
     </style>
@@ -220,6 +225,53 @@
         <p>&copy; 2025 Solo2CEO - Elevating Your Business to Brand Status</p>
         <p><a href="https://www.instagram.com/solo2_ceo" target="_blank">Follow Us on Instagram</a></p>
     </footer>
+
+
+            <!-- Inquiry Popup Modal -->
+        <div class="modal fade" id="inquiryModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content p-3">
+            <div class="modal-header">
+                <h5 class="modal-title">Join Our Team / Inquiry</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="inquiryForm">
+                <div class="mb-3">
+                    <label class="form-label">Name</label>
+                    <input type="text" name="name" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input type="email" name="email" class="form-control" required>
+                </div>
+                 <div class="mb-3">
+                    <label class="form-label">Phone</label>
+                    <input type="tel" name="phone" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Location of Stay</label>
+                    <input type="text" name="location" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Message</label>
+                    <textarea name="message" class="form-control" rows="3" required placeholder="If you want to join our Team or WhatsApp group for updates, write here. Or if you have any inquiry, write here."></textarea></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Submit</button>
+                </form>
+            </div>
+            </div>
+        </div>
+        </div>
+
+        <!-- Floating Button -->
+        <button id="floatingBtn" onclick="openModal()">Inquiry / Join</button>
+
+
+
+
+
+
     <script>
         // Navbar Animation
         gsap.from(".navbar", { y: -50, opacity: 0, duration: 1, ease: "power3.out" });
@@ -250,6 +302,44 @@
                 gsap.to(el, { scale: 1, rotationX: 0, boxShadow: "0px 4px 15px rgba(0, 0, 0, 0.1)", duration: 0.3, ease: "power2.out" });
             });
         });
+
+
+                    // --- Popup logic ---
+            const inquiryModal = new bootstrap.Modal(document.getElementById("inquiryModal"));
+            const floatingBtn = document.getElementById("floatingBtn");
+
+            // Auto open on page load
+            window.addEventListener("load", ()=>{ inquiryModal.show(); });
+
+            // Show floating button when modal closes
+            document.getElementById("inquiryModal").addEventListener("hidden.bs.modal", ()=>{ floatingBtn.style.display="block"; });
+            function openModal(){ inquiryModal.show(); }
+
+            // Handle form submission
+            document.getElementById("inquiryForm").addEventListener("submit", function(e){
+            e.preventDefault();
+            const data = {
+                name: this.name.value,
+                email: this.email.value,
+                message: this.message.value,
+                phone: this.phone.value,
+                location: this.location.value
+            };
+            if(!data.name || !data.email || !data.message || !data.phone || !data.location){ alert("Please fill all fields!"); return; }
+
+            fetch("https://script.google.com/macros/s/AKfycbxv1YwdmFiIsCOlNq6EiyewTfNCoKPyrbvZW-oyofr1_wHolLmUv_QVTzjJdfvMfkv_/exec",{
+                method:"POST",
+                body: JSON.stringify(data)
+            }).then(res=>res.json())
+                .then(res=>{
+                alert("✅ Thank you! Your info has been submitted.");
+                this.reset();
+                inquiryModal.hide();
+                }).catch(err=>{
+                console.error(err);
+                alert("❌ Error submitting data.");
+                });
+            });
     </script>
     
 
