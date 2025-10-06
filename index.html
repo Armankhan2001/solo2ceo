@@ -227,45 +227,75 @@
     </footer>
 
 
-            <!-- Inquiry Popup Modal -->
-        <div class="modal fade" id="inquiryModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content p-3">
-            <div class="modal-header">
-                <h5 class="modal-title">Join Our Team / Inquiry</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <form id="inquiryForm">
-                <div class="mb-3">
-                    <label class="form-label">Name</label>
-                    <input type="text" name="name" class="form-control" required>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Email</label>
-                    <input type="email" name="email" class="form-control" required>
-                </div>
-                 <div class="mb-3">
-                    <label class="form-label">Phone</label>
-                    <input type="tel" name="phone" class="form-control" required>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Location of Stay</label>
-                    <input type="text" name="location" class="form-control" required>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Message</label>
-                    <textarea name="message" class="form-control" rows="3" required placeholder="If you want to join our Team or WhatsApp group for updates, write here. Or if you have any inquiry, write here."></textarea></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary w-100">Submit</button>
-                </form>
-            </div>
-            </div>
-        </div>
-        </div>
+<!-- Inquiry Popup Modal -->
+<div class="modal fade" id="inquiryModal" tabindex="-1" aria-labelledby="inquiryModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content shadow-lg border-0 rounded-4">
+      <div class="modal-header border-0">
+        <h5 class="modal-title fw-bold text-primary" id="inquiryModalLabel">✨ Join Our Team / Inquiry</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body px-4">
+        <form id="inquiryForm" class="needs-validation" novalidate>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Full Name</label>
+            <input type="text" name="name" class="form-control form-control-lg rounded-3" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Email Address</label>
+            <input type="email" name="email" class="form-control form-control-lg rounded-3" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Phone</label>
+            <input type="tel" name="phone" class="form-control form-control-lg rounded-3" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Location of Stay</label>
+            <input type="text" name="location" class="form-control form-control-lg rounded-3" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Message</label>
+            <textarea name="message" class="form-control form-control-lg rounded-3" rows="3" required placeholder="Want to join our team, WhatsApp channel, or have any inquiry? Write here..."></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary btn-lg w-100 rounded-3">🚀 Submit</button>
+        </form>
 
-        <!-- Floating Button -->
-        <button id="floatingBtn" onclick="openModal()">Inquiry / Join</button>
+        <div class="text-center mt-4">
+          <p class="mb-2 fw-semibold">📢 Stay Updated with Our WhatsApp Channel</p>
+          <a href="https://whatsapp.com/channel/0029VbAT0oPBKfi7XQuPnO2L" target="_blank" class="btn btn-success btn-lg w-100 rounded-3">
+            Join WhatsApp Channel
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Floating Button -->
+<style>
+#floatingBtn {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  padding: 14px 24px;
+  font-weight: 600;
+  box-shadow: 0px 8px 20px rgba(0,0,0,0.2);
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  z-index: 1050;
+}
+#floatingBtn:hover {
+  background: linear-gradient(135deg, #0056b3, #00408a);
+  transform: scale(1.05);
+}
+</style>
+
+<button id="floatingBtn" data-bs-toggle="modal" data-bs-target="#inquiryModal">💬 Inquiry / Join</button>
+
 
 
 
