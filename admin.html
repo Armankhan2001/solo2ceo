@@ -1,217 +1,215 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Login | Solo2CEO Admin</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Solo2CEO | Admin Dashboard</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-  <style>
-    /* Reset */
-    * {margin:0; padding:0; box-sizing:border-box;}
+<style>
+/* ------------------- RESET ------------------- */
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:"Poppins",sans-serif;
+  background: radial-gradient(circle at top left,#0f2027,#203a43,#2c5364);
+  color:#fff;
+  min-height:100vh;
+  overflow-x:hidden;
+}
 
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #1e3c72, #2a5298);
-      color: #fff;
-      min-height: 100vh;
-    }
+/* ------------------- OVERLAY ------------------- */
+#passwordOverlay{
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  background:rgba(10,15,30,0.8);
+  backdrop-filter:blur(15px);
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
+  z-index:9999;animation:fadeIn 1s ease forwards;
+}
+#passwordOverlay h1{
+  font-size:2.2rem;margin-bottom:25px;color:#00e1ff;letter-spacing:1px;
+}
+#passwordOverlay input{
+  padding:14px;border:none;border-radius:10px;width:280px;text-align:center;
+  font-size:16px;margin-bottom:20px;outline:none;
+  background:rgba(255,255,255,0.15);color:#fff;
+}
+#passwordOverlay input::placeholder{color:#ccc;}
+#passwordOverlay button{
+  padding:12px 30px;border:none;border-radius:8px;cursor:pointer;
+  font-size:16px;color:#fff;
+  background:linear-gradient(135deg,#00b4db,#0083b0);
+  box-shadow:0 4px 15px rgba(0,132,255,0.3);
+  transition:0.3s;
+}
+#passwordOverlay button:hover{transform:scale(1.05);background:linear-gradient(135deg,#00e1ff,#0077b6);}
+#errorMessage{color:#ff4d4d;margin-top:15px;font-size:14px;}
 
-    /* Password overlay */
-    #passwordOverlay {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      backdrop-filter: blur(10px);
-      background: rgba(0,0,0,0.6);
-      z-index: 9999;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      animation: fadeIn 0.8s ease-in-out;
-    }
-    #passwordOverlay input {
-      padding: 14px;
-      border-radius: 8px;
-      border: none;
-      width: 280px;
-      margin-bottom: 15px;
-      font-size: 16px;
-      outline: none;
-      text-align: center;
-    }
-    #passwordOverlay button {
-      padding: 12px 25px;
-      background: linear-gradient(135deg, #ff9800, #ff5722);
-      border: none;
-      color: #fff;
-      font-size: 16px;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: 0.3s ease;
-    }
-    #passwordOverlay button:hover {
-      background: linear-gradient(135deg, #ff5722, #e91e63);
-    }
-    #passwordOverlay p {
-      color: #ff4d4d;
-      margin-top: 10px;
-      font-size: 14px;
-    }
+/* ------------------- HEADER ------------------- */
+header{
+  text-align:center;
+  padding:25px 10px;
+  font-size:2rem;
+  font-weight:700;
+  background:rgba(255,255,255,0.08);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid rgba(255,255,255,0.15);
+  box-shadow:0 2px 12px rgba(0,0,0,0.3);
+}
+header span{
+  color:#00e1ff;
+}
 
-    header {
-      text-align: center;
-      padding: 25px;
-      font-size: 2rem;
-      font-weight: 600;
-      background: rgba(0,0,0,0.3);
-      backdrop-filter: blur(5px);
-      box-shadow: 0 2px 10px rgba(0,0,0,0.4);
-    }
+/* ------------------- CONTAINER ------------------- */
+.container{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:25px;
+  padding:50px 30px;
+  max-width:1300px;
+  margin:auto;
+}
 
-    .container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 25px;
-      padding: 40px;
-      max-width: 1300px;
-      margin: auto;
-    }
+/* ------------------- CARD ------------------- */
+.card{
+  background:rgba(255,255,255,0.1);
+  border-radius:20px;
+  text-align:center;
+  padding:25px;
+  color:#fff;
+  backdrop-filter:blur(20px);
+  box-shadow:0 8px 32px rgba(0,0,0,0.25);
+  transition:all 0.3s ease;
+  opacity:0;transform:translateY(30px);
+  animation:fadeUp 0.8s ease forwards;
+}
+.card:nth-child(n){animation-delay:calc(0.1s * var(--i));}
 
-    .card {
-      background: rgba(255,255,255,0.1);
-      border-radius: 16px;
-      padding: 25px;
-      text-align: center;
-      color: #fff;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
-      transition: 0.3s ease;
-      transform: translateY(20px);
-      opacity: 0;
-      animation: fadeUp 0.8s ease forwards;
-    }
-    .card:nth-child(1){animation-delay:0.1s;}
-    .card:nth-child(2){animation-delay:0.2s;}
-    .card:nth-child(3){animation-delay:0.3s;}
-    .card:nth-child(4){animation-delay:0.4s;}
-    .card:nth-child(5){animation-delay:0.5s;}
-    .card:nth-child(6){animation-delay:0.6s;}
-    .card:nth-child(7){animation-delay:0.7s;}
-    .card:nth-child(8){animation-delay:0.8s;}
+.card:hover{
+  transform:translateY(-8px) scale(1.05);
+  box-shadow:0 12px 35px rgba(0,255,255,0.25);
+}
+.card h3{
+  margin-bottom:15px;
+  font-size:1.2rem;
+  color:#00e1ff;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:10px;
+}
 
-    .card:hover {
-      transform: scale(1.05);
-      box-shadow: 0 12px 28px rgba(0,0,0,0.4);
-    }
+.card a,.card button{
+  display:inline-block;
+  margin-top:10px;
+  padding:10px 22px;
+  background:linear-gradient(135deg,#00b4db,#0083b0);
+  border:none;border-radius:12px;color:#fff;
+  text-decoration:none;
+  font-weight:500;
+  cursor:pointer;
+  transition:0.3s;
+}
+.card a:hover,.card button:hover{
+  background:linear-gradient(135deg,#00e1ff,#0077b6);
+  transform:scale(1.05);
+}
 
-    .card h3 {
-      margin-bottom: 15px;
-      font-size: 1.3rem;
-      color: #ffeb3b;
-    }
+/* ------------------- ANIMATIONS ------------------- */
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
 
-    .card a, .card button {
-      display: inline-block;
-      margin-top: 10px;
-      padding: 10px 20px;
-      background: linear-gradient(135deg, #2196f3, #03a9f4);
-      color: white;
-      text-decoration: none;
-      border-radius: 10px;
-      border: none;
-      cursor: pointer;
-      transition: 0.3s ease;
-    }
-    .card a:hover, .card button:hover {
-      background: linear-gradient(135deg, #03a9f4, #00bcd4);
-    }
+/* ------------------- FOOTER ------------------- */
+footer{
+  text-align:center;
+  padding:20px;
+  font-size:14px;
+  color:#bbb;
+  border-top:1px solid rgba(255,255,255,0.1);
+  margin-top:20px;
+}
 
-    @keyframes fadeIn {
-      from {opacity:0;}
-      to {opacity:1;}
-    }
-    @keyframes fadeUp {
-      from {opacity:0; transform: translateY(30px);}
-      to {opacity:1; transform: translateY(0);}
-    }
-
-    @media (max-width: 600px) {
-      header { font-size: 1.4rem; }
-      .card h3 { font-size: 1.1rem; }
-    }
-  </style>
+/* ------------------- RESPONSIVE ------------------- */
+@media(max-width:600px){
+  header{font-size:1.5rem;}
+  .card h3{font-size:1.1rem;}
+}
+</style>
 </head>
-<body>
 
-  <!-- Password Prompt Overlay -->
+<body>
+  <!-- PASSWORD OVERLAY -->
   <div id="passwordOverlay">
-    <input type="password" id="adminPassword" placeholder="🔒 Enter Admin Password" />
+    <h1>🔐 Solo2CEO Admin Login</h1>
+    <input type="password" id="adminPassword" placeholder="Enter Admin Password">
     <button onclick="checkPassword()">Unlock</button>
     <p id="errorMessage"></p>
   </div>
 
   <header>
-    🚀 Solo2CEO Admin Dashboard
+    🚀 <span>Solo2CEO</span> Admin Dashboard
   </header>
 
   <div class="container">
-    <div class="card">
+    <div class="card" style="--i:1">
       <h3><i class="fa-solid fa-folder-open"></i> Catalogues</h3>
       <a href="https://drive.google.com/drive/folders/1YcXcojBUVVXuF3yme_lEjQG-I8BnVO2c" target="_blank">Open Folder</a>
     </div>
-    <div class="card">
+    <div class="card" style="--i:2">
       <h3><i class="fa-solid fa-file-signature"></i> Proposals</h3>
       <a href="https://drive.google.com/drive/folders/1YatQws3BAZvistGbaskNTB5AwYAGkxoV" target="_blank">Open Folder</a>
     </div>
-    <div class="card">
+    <div class="card" style="--i:3">
       <h3><i class="fa-solid fa-file-invoice-dollar"></i> Invoices</h3>
       <a href="invoice.html" target="_blank">Open Invoice</a>
     </div>
-    <div class="card">
+    <div class="card" style="--i:4">
       <h3><i class="fa-solid fa-paintbrush"></i> Logo Assets</h3>
       <a href="https://drive.google.com/drive/folders/1V-7bL20upCpWjjgA2AxAzuUve8wt0fOY" target="_blank">Open Folder</a>
     </div>
-    <div class="card">
+    <div class="card" style="--i:5">
       <h3><i class="fa-solid fa-file-alt"></i> Web Proposal</h3>
       <a href="proposal.html" target="_blank">Open Folder</a>
     </div>
-    <div class="card">
+    <div class="card" style="--i:6">
       <h3><i class="fa-solid fa-user-tie"></i> Resume of CEO</h3>
       <a href="login.html" target="_blank">Open File</a>
     </div>
-    <div class="card">
-      <h3><i class="fa-solid fa-stethoscope"></i> Medical</h3>
-      <a href="https://docs.google.com/spreadsheets/d/11pa12RX1F-Tyjal5HtO_Gu7APpm75HYNBWJ30Xg7cjg/edit?usp=sharing" target="_blank">Open Sheet</a>
+    <div class="card" style="--i:7">
+      <h3><i class="fa-solid fa-kit-medical"></i> Medicart</h3>
+      <button onclick="window.open('https://docs.google.com/spreadsheets/d/11pa12RX1F-Tyjal5HtO_Gu7APpm75HYNBWJ30Xg7cjg/edit?gid=0#gid=0', '_blank')">Sheet</button>
+      <button onclick="window.open('./business/medicartadmin.html')">Web</button>
     </div>
-    <div class="card">
+    <div class="card" style="--i:8">
       <h3><i class="fa-solid fa-mobile"></i> NextPhone</h3>
       <a href="https://docs.google.com/spreadsheets/d/1ZQw_XqY3fJKA2QYWxOSa8EtXTzUnLdwwE1SbzjA3970/edit?gid=0#gid=0" target="_blank">Open Sheet</a>
     </div>
-    <div class="card">
-      <h3><i class="fa-solid fa-comments"></i> Customer Review Data</h3>
+    <div class="card" style="--i:9">
+      <h3><i class="fa-solid fa-comments"></i> Customer Reviews</h3>
       <button onclick="window.open('https://docs.google.com/spreadsheets/d/1X5IDJ23z3AwW6N9ZWBt19yMkHvJbkCcCgGohRryCqwY/edit?usp=sharing', '_blank')">Sheet</button>
       <button onclick="window.open('customerreview.html')">Web</button>
     </div>
-    <div class="card">
-      <h3><i class="fa-solid fa-dollar-sign"></i>Education</h3>
+    <div class="card" style="--i:10">
+      <h3><i class="fa-solid fa-book-open"></i> Education</h3>
       <button onclick="window.open('https://docs.google.com/spreadsheets/d/1_4V6trMaMOJ972aazc5wYV9-vI0v6YrhUxm9l8j76Wg/edit?gid=0#gid=0', '_blank')">Sheet</button>
       <button onclick="window.open('./templates/Education/educationadmin.html')">Web</button>
     </div>
   </div>
 
+  <footer>
+    © 2025 Solo2CEO — Empowering Self-Employed Entrepreneurs
+  </footer>
+
   <script>
-    const encoded = 'YWRtaW4yMDI1'; // "admin2025" base64
-    function checkPassword() {
-      const input = document.getElementById("adminPassword").value;
-      const correctPassword = atob(encoded);
-      if (input === correctPassword) {
-        document.getElementById("passwordOverlay").style.display = "none";
-      } else {
-        document.getElementById("errorMessage").textContent = "❌ Incorrect password. Try again.";
-      }
+  const encoded = 'YWRtaW4yMDI1'; // "admin2025"
+  function checkPassword(){
+    const input=document.getElementById("adminPassword").value;
+    const correct=atob(encoded);
+    if(input===correct){
+      document.getElementById("passwordOverlay").style.display="none";
+    }else{
+      document.getElementById("errorMessage").textContent="❌ Incorrect password. Try again.";
     }
+  }
   </script>
 </body>
 </html>

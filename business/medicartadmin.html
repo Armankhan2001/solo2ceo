@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Medicart | Add Product</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#f4f6f9; 
+  --card:#ffffff; 
+  --accent:#0077b6; 
+  --accent-strong:#023e8a;
+  --success:#25d366; 
+  --muted:#6b7280; 
+  --radius:14px; 
+  --shadow:0 8px 30px rgba(15,23,42,0.08);
+}
+
+* { box-sizing:border-box; margin:0; padding:0; }
+body {
+  font-family:'Inter', sans-serif;
+  background:var(--bg);
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+  min-height:100vh;
+  padding:20px;
+}
+
+.container {
+  width:100%;
+  max-width:650px;
+  background:var(--card);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  padding:30px 30px 40px;
+  margin-top:30px;
+}
+
+.header {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:15px;
+  margin-bottom:25px;
+  text-align:center;
+}
+.header img {
+  width:60px;
+  height:60px;
+  border-radius:12px;
+  object-fit:contain;
+}
+.header h1 {
+  font-size:1.8rem;
+  color:var(--accent-strong);
+  font-weight:700;
+}
+.subtext {
+  text-align:center;
+  color:var(--muted);
+  font-size:0.95rem;
+  margin-bottom:30px;
+}
+
+form { display:flex; flex-direction:column; gap:15px; }
+
+label {
+  font-size:0.95rem;
+  margin-bottom:6px;
+  color:var(--muted);
+  font-weight:500;
+}
+
+input, select {
+  padding:12px 14px;
+  border-radius:10px;
+  border:1px solid #e2e8f0;
+  font-size:1rem;
+  width:100%;
+  transition:0.3s;
+  background:#fefefe;
+}
+input:focus, select:focus {
+  outline:none;
+  border-color:var(--accent);
+  box-shadow:0 0 8px rgba(0,123,255,0.15);
+}
+
+button {
+  padding:14px;
+  border:none;
+  border-radius:10px;
+  background:var(--accent);
+  color:#fff;
+  font-size:1.05rem;
+  font-weight:600;
+  cursor:pointer;
+  transition:0.3s;
+}
+button:hover { background:var(--accent-strong); }
+
+.message {
+  display:none;
+  text-align:center;
+  padding:12px;
+  border-radius:10px;
+  color:#155724;
+  background-color:#d4edda;
+  border:1px solid #c3e6cb;
+  font-weight:500;
+  margin-top:15px;
+}
+
+.footer {
+  text-align:center;
+  margin-top:25px;
+  font-size:0.9rem;
+  color:#9ca3af;
+}
+
+@media(max-width:600px){
+  .container{ padding:20px; }
+  .header img { width:50px; height:50px; }
+  .header h1 { font-size:1.5rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Branding Header -->
+  <div class="header">
+    <img src="../image/MediCart.png" alt="Medicart Logo">
+    <h1>Medicart</h1>
+  </div>
+  <p class="subtext">Add new products to your Medicart catalog</p>
+
+  <!-- Form -->
+  <form id="productForm">
+    <div class="form-group">
+      <label>ID</label>
+      <input type="number" id="ProductID" disabled placeholder="Auto-generated ID">
+    </div>
+
+    <div class="form-group">
+      <label for="CategorySelect">Category</label>
+      <select id="CategorySelect"></select>
+    </div>
+
+    <div class="form-group">
+      <label for="NewCategory">Add New Category</label>
+      <input type="text" id="NewCategory" placeholder="Enter new category">
+    </div>
+
+    <div class="form-group">
+      <label for="ProductName">Product Name</label>
+      <input type="text" id="ProductName" placeholder="Enter product name" required>
+    </div>
+
+    <div class="form-group">
+      <label for="Description">Description</label>
+      <input type="text" id="Description" placeholder="Enter description" required>
+    </div>
+
+    <div class="form-group">
+      <label for="Price">Price (₹)</label>
+      <input type="number" id="Price" placeholder="Enter price" required>
+    </div>
+
+    <div class="form-group">
+      <label for="ImageURL">Image URL</label>
+      <input type="text" id="ImageURL" placeholder="Enter image URL">
+    </div>
+
+    <div class="form-group">
+      <label for="Stock">Stock</label>
+      <input type="number" id="Stock" placeholder="Enter stock quantity" required>
+    </div>
+
+    <div class="form-group">
+      <label for="StatusSelect">Status</label>
+      <select id="StatusSelect"></select>
+    </div>
+
+    <div class="form-group">
+      <label for="NewStatus">Add New Status</label>
+      <input type="text" id="NewStatus" placeholder="Enter new status">
+    </div>
+
+    <button type="submit" id="submitBtn">Submit Product</button>
+  </form>
+
+  <div class="message" id="messageBox">Product submitted successfully!</div>
+
+  <div class="footer">
+    © 2025 Medicart | Product Management Dashboard
+  </div>
+</div>
+
+<script>
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzzKOZSYqjPKOdWM1EkOxH5rOho9dWM5FPnAacdLaMH0KTibg48XnsX55-ST5fNyNTZ/exec"; // Replace with your actual web app URL
+
+async function loadDropdowns(){
+  try{
+    const res = await fetch(WEB_APP_URL);
+    const data = await res.json();
+
+    document.getElementById('ProductID').value = data.nextID;
+
+    const categorySelect = document.getElementById('CategorySelect');
+    categorySelect.innerHTML = '<option value="" disabled selected hidden>Select Category</option>';
+    data.categories.forEach(c=>{ const opt=document.createElement('option'); opt.value=c; opt.text=c; categorySelect.add(opt); });
+
+    const statusSelect = document.getElementById('StatusSelect');
+    statusSelect.innerHTML = '<option value="" disabled selected hidden>Select Status</option>';
+    data.statuses.forEach(s=>{ const opt=document.createElement('option'); opt.value=s; opt.text=s; statusSelect.add(opt); });
+  } catch(err){ console.error(err); }
+}
+
+document.getElementById('productForm').addEventListener('submit', async e=>{
+  e.preventDefault();
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true; btn.innerText = 'Submitting...';
+
+  const formData = {
+    ProductName: document.getElementById('ProductName').value.trim(),
+    Category: document.getElementById('NewCategory').value.trim() || document.getElementById('CategorySelect').value,
+    Description: document.getElementById('Description').value.trim(),
+    Price: Number(document.getElementById('Price').value),
+    ImageURL: document.getElementById('ImageURL').value.trim(),
+    Stock: Number(document.getElementById('Stock').value),
+    Status: document.getElementById('NewStatus').value.trim() || document.getElementById('StatusSelect').value
+  };
+
+  try{
+    const res = await fetch(WEB_APP_URL, { method:"POST", body: JSON.stringify(formData) });
+    const result = await res.json();
+    if(result.status === "success"){
+      document.getElementById('messageBox').style.display='block';
+      e.target.reset();
+      setTimeout(()=>{ document.getElementById('messageBox').style.display='none'; }, 3000);
+      await loadDropdowns();
+    } else alert("Error: "+result.message);
+  }catch(err){ alert("Submission failed: "+err); }
+  btn.disabled=false; btn.innerText='Submit Product';
+});
+
+loadDropdowns();
+</script>
+
+</body>
+</html>
