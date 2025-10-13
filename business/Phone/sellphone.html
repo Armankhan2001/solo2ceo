@@ -15,7 +15,7 @@
 We’re looking for passionate <b>Freshers & Students (10th/12th Pass)</b> who are ready to learn, grow, and start their journey!
 </p>
 
-<form id="careerForm" class="space-y-5" enctype="multipart/form-data">
+<form id="careerForm" class="space-y-5">
 
   <input type="text" name="name" placeholder="Full Name" required class="w-full border rounded-lg px-4 py-2" />
   <input type="email" name="email" placeholder="Email Address" required class="w-full border rounded-lg px-4 py-2" />
@@ -57,7 +57,7 @@ We’re looking for passionate <b>Freshers & Students (10th/12th Pass)</b> who a
 </div>
 
 <script>
-const scriptURL = "https://script.google.com/macros/s/AKfycbzAazWzzvrYMenRnkl7Z95mg9HuMsw1R48FfgI3irvsQPMuHP-bYNP6RIi-no7gAw0uPA/exec"; // <-- Replace with your Web App URL
+const scriptURL = "https://script.google.com/macros/s/AKfycbxeI7CoMNCcI5WPY4zH0UBAWiV1HPj1hnjrB_CpyQtPJ-ZE06CY9x072rC0blHRzjr1TA/exec";
 const form = document.getElementById("careerForm");
 const responseMsg = document.getElementById("responseMsg");
 
@@ -66,23 +66,44 @@ form.addEventListener("submit", async (e) => {
   responseMsg.style.color = "blue";
   responseMsg.textContent = "⏳ Submitting...";
 
+  const file = document.getElementById("imageFile").files[0];
+
+  // Convert file to Base64
+  const readFileAsBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      if (!file) resolve({ base64: "", name: "" });
+      const reader = new FileReader();
+      reader.onload = () => resolve({ base64: reader.result, name: file.name });
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  };
+
   try {
+    const imageData = await readFileAsBase64(file);
+
     const formData = new FormData(form);
+    const data = {};
+    formData.forEach((value, key) => data[key] = value);
+
+    data.imageBase64 = imageData.base64;
+    data.imageName = imageData.name;
 
     const resp = await fetch(scriptURL, {
       method: "POST",
-      body: formData
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
     });
 
     const json = await resp.json();
-    if (json.status === "success") {
+    if(json.status === "success") {
       responseMsg.style.color = "green";
       responseMsg.textContent = "✅ Thank you! Your application has been submitted successfully.";
       form.reset();
     } else {
       throw new Error(json.message || "Unknown error");
     }
-  } catch (err) {
+  } catch(err) {
     responseMsg.style.color = "red";
     responseMsg.textContent = "❌ Something went wrong: " + err.message;
     console.error(err);
