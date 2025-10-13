@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Career Opportunities — Join Our Team</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-r from-indigo-100 via-purple-100 to-pink-100 min-h-screen flex items-center justify-center p-6">
+
+<div class="bg-white rounded-3xl shadow-2xl max-w-2xl w-full p-8 transform transition duration-500 hover:scale-105">
+    
+<h1 class="text-4xl font-bold text-center text-indigo-600 mb-4 animate-bounce">🚀 Start Your Career With Us</h1>
+<p class="text-center text-gray-600 mb-8 text-lg">
+We’re looking for passionate <b>Freshers & Students (10th/12th Pass)</b> who are ready to learn, grow, and start their journey!
+</p>
+
+<form id="careerForm" class="space-y-5" enctype="multipart/form-data">
+
+  <input type="text" name="name" placeholder="Full Name" required class="w-full border rounded-lg px-4 py-2" />
+  <input type="email" name="email" placeholder="Email Address" required class="w-full border rounded-lg px-4 py-2" />
+  <input type="tel" name="phone" placeholder="Phone Number" required class="w-full border rounded-lg px-4 py-2" />
+  <input type="text" name="location" placeholder="Your City" required class="w-full border rounded-lg px-4 py-2" />
+
+  <select name="qualification" required class="w-full border rounded-lg px-4 py-2">
+    <option value="">-- Select Qualification --</option>
+    <option value="10th Pass">10th Pass</option>
+    <option value="12th Pass">12th Pass</option>
+    <option value="Graduate">Graduate</option>
+    <option value="Other">Other</option>
+  </select>
+
+  <select name="industry" required class="w-full border rounded-lg px-4 py-2">
+    <option value="">-- Choose Industry --</option>
+    <option value="Travel Industry">Travel Industry</option>
+    <option value="Real Estate Industry">Real Estate Industry</option>
+    <option value="Medical Industry">Medical Industry</option>
+    <option value="Food Branding Industry">Food Branding Industry</option>
+    <option value="Mobile Industry">Mobile Industry</option>
+    <option value="Other Industry">Open to Any Industry</option>
+  </select>
+
+  <select name="jobtype" required class="w-full border rounded-lg px-4 py-2">
+    <option value="">-- Select Job Type --</option>
+    <option value="Internship">Internship</option>
+    <option value="Full Time">Full Time</option>
+    <option value="Part Time">Part Time</option>
+  </select>
+
+  <textarea name="message" rows="3" placeholder="Why should we hire you?" class="w-full border rounded-lg px-4 py-2"></textarea>
+
+  <input type="file" name="image" id="imageFile" accept="image/*" class="w-full border rounded-lg px-4 py-2" />
+
+  <button type="submit" class="w-full bg-indigo-500 text-white py-3 rounded-lg hover:bg-indigo-600">Submit Application</button>
+  <p id="responseMsg" class="text-center mt-3 text-green-600 font-medium"></p>
+</form>
+</div>
+
+<script>
+const scriptURL = "https://script.google.com/macros/s/AKfycbzAazWzzvrYMenRnkl7Z95mg9HuMsw1R48FfgI3irvsQPMuHP-bYNP6RIi-no7gAw0uPA/exec"; // <-- Replace with your Web App URL
+const form = document.getElementById("careerForm");
+const responseMsg = document.getElementById("responseMsg");
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  responseMsg.style.color = "blue";
+  responseMsg.textContent = "⏳ Submitting...";
+
+  try {
+    const formData = new FormData(form);
+
+    const resp = await fetch(scriptURL, {
+      method: "POST",
+      body: formData
+    });
+
+    const json = await resp.json();
+    if (json.status === "success") {
+      responseMsg.style.color = "green";
+      responseMsg.textContent = "✅ Thank you! Your application has been submitted successfully.";
+      form.reset();
+    } else {
+      throw new Error(json.message || "Unknown error");
+    }
+  } catch (err) {
+    responseMsg.style.color = "red";
+    responseMsg.textContent = "❌ Something went wrong: " + err.message;
+    console.error(err);
+  }
+});
+</script>
+
+</body>
+</html>
