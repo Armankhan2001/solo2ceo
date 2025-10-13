@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Career Opportunities — Join Our Team</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-r from-indigo-100 via-purple-100 to-pink-100 min-h-screen flex items-center justify-center p-6">
+
+  <div class="bg-white rounded-3xl shadow-2xl max-w-2xl w-full p-8 transform transition duration-500 hover:scale-105">
+    
+    <h1 class="text-4xl font-bold text-center text-indigo-600 mb-4 animate-bounce">🚀 Start Your Career With Us</h1>
+    <p class="text-center text-gray-600 mb-8 text-lg">
+      We’re looking for passionate <b>Freshers & Students (10th/12th Pass)</b> who are ready to learn, grow, and start their journey in exciting industries!
+    </p>
+
+    <form id="careerForm" class="space-y-5">
+
+      <!-- Name -->
+      <div class="relative">
+        <span class="absolute left-3 top-3 text-gray-400">👤</span>
+        <input type="text" name="name" placeholder="Full Name" required class="w-full border border-gray-300 rounded-lg px-10 py-2 focus:ring-2 focus:ring-indigo-400 focus:outline-none shadow-sm">
+      </div>
+
+      <!-- Email -->
+      <div class="relative">
+        <span class="absolute left-3 top-3 text-gray-400">📧</span>
+        <input type="email" name="email" placeholder="Email Address" required class="w-full border border-gray-300 rounded-lg px-10 py-2 focus:ring-2 focus:ring-indigo-400 focus:outline-none shadow-sm">
+      </div>
+
+      <!-- Phone -->
+      <div class="relative">
+        <span class="absolute left-3 top-3 text-gray-400">📞</span>
+        <input type="tel" name="phone" placeholder="Phone Number" required class="w-full border border-gray-300 rounded-lg px-10 py-2 focus:ring-2 focus:ring-indigo-400 focus:outline-none shadow-sm">
+      </div>
+
+      <!-- Location -->
+      <div class="relative">
+        <span class="absolute left-3 top-3 text-gray-400">📍</span>
+        <input type="text" name="location" placeholder="Your City" required class="w-full border border-gray-300 rounded-lg px-10 py-2 focus:ring-2 focus:ring-indigo-400 focus:outline-none shadow-sm">
+      </div>
+
+      <!-- Qualification -->
+      <div class="relative">
+        <span class="absolute left-3 top-3 text-gray-400">🎓</span>
+        <select name="qualification" required class="w-full border border-gray-300 rounded-lg px-10 py-2 focus:ring-2 focus:ring-indigo-400 focus:outline-none shadow-sm">
+          <option value="">-- Select Qualification --</option>
+          <option value="10th Pass">10th Pass</option>
+          <option value="12th Pass">12th Pass</option>
+          <option value="Graduate">Graduate</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+
+      <!-- Industry -->
+      <div class="relative">
+        <span class="absolute left-3 top-3 text-gray-400">🏭</span>
+        <select name="industry" required class="w-full border border-gray-300 rounded-lg px-10 py-2 focus:ring-2 focus:ring-indigo-400 focus:outline-none shadow-sm">
+          <option value="">-- Choose Industry --</option>
+          <option value="Travel Industry">✈️ Travel Industry</option>
+          <option value="Real Estate Industry">🏠 Real Estate Industry</option>
+          <option value="Medical Industry">⚕️ Medical Industry</option>
+          <option value="Food Branding Industry">🍔 Food Branding Industry</option>
+          <option value="Mobile Industry">📱 Mobile Industry</option>
+          <option value="Other Industry">✨ Open to Any Industry</option>
+        </select>
+      </div>
+
+      <!-- Job Type -->
+      <div class="relative">
+        <span class="absolute left-3 top-3 text-gray-400">💼</span>
+        <select name="jobtype" required class="w-full border border-gray-300 rounded-lg px-10 py-2 focus:ring-2 focus:ring-indigo-400 focus:outline-none shadow-sm">
+          <option value="">-- Select Job Type --</option>
+          <option value="Internship">Internship</option>
+          <option value="Full Time">Full Time</option>
+          <option value="Part Time">Part Time</option>
+        </select>
+      </div>
+
+      <!-- Message -->
+      <div class="relative">
+        <span class="absolute left-3 top-3 text-gray-400">📝</span>
+        <textarea name="message" rows="3" placeholder="Why should we hire you?" class="w-full border border-gray-300 rounded-lg px-10 py-2 focus:ring-2 focus:ring-indigo-400 focus:outline-none shadow-sm"></textarea>
+      </div>
+
+      <!-- Submit -->
+      <button type="submit" class="w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:from-indigo-600 hover:via-purple-600 hover:to-pink-600 text-white font-bold py-3 rounded-xl shadow-lg transform transition duration-300 hover:scale-105">
+        🚀 Submit Application
+      </button>
+
+      <p id="responseMsg" class="text-center mt-3 text-green-600 font-medium"></p>
+    </form>
+  </div>
+
+  <script>
+    const scriptURL = "https://script.google.com/macros/s/AKfycbx4eU_K6gKb_J5PbLebqJ2r2PtMkg0MsBaC_-ewxPR4LNz-ouQLa5GAK-y50F6xu8Pi/exec";
+    const form = document.getElementById("careerForm");
+    const responseMsg = document.getElementById("responseMsg");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      responseMsg.style.color = "blue";
+      responseMsg.textContent = "⏳ Submitting...";
+      try {
+        const resp = await fetch(scriptURL, {
+          method: "POST",
+          body: new FormData(form),
+        });
+        const json = await resp.json();
+        if (json.status === "success") {
+          responseMsg.style.color = "green";
+          responseMsg.textContent = "✅ Thank you! Your application has been submitted successfully.";
+          form.reset();
+        } else {
+          throw new Error(json.message || "Unknown error");
+        }
+      } catch (err) {
+        responseMsg.style.color = "red";
+        responseMsg.textContent = "❌ Something went wrong: " + err.message;
+        console.error(err);
+      }
+    });
+  </script>
+</body>
+</html>

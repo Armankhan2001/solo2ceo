@@ -250,17 +250,40 @@
             <input type="tel" name="phone" class="form-control form-control-lg rounded-3" required>
           </div>
           <div class="mb-3">
+            <label class="form-label fw-semibold">Occupation</label>
+            <select name="occupation" class="form-control form-control-lg rounded-3" required>
+              <option value="">-- Select Occupation --</option>
+              <option value="Student">Student</option>
+              <option value="Self Employed">Self Employed</option>
+              <option value="Salaried">Salaried</option>
+              <option value="Housewife">Housewife</option>
+              <option value="Unemployed">Unemployed</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
             <label class="form-label fw-semibold">Location of Stay</label>
             <input type="text" name="location" class="form-control form-control-lg rounded-3" required>
           </div>
           <div class="mb-3">
             <label class="form-label fw-semibold">Message</label>
-            <textarea name="message" class="form-control form-control-lg rounded-3" rows="3" required placeholder="Want to join our team, WhatsApp channel, or have any inquiry? Write here..."></textarea>
+            <textarea name="message" class="form-control form-control-lg rounded-3" rows="3" required placeholder="IF You Want to join our team, or have any inquiry? Write here..."></textarea>
           </div>
           <button type="submit" id="submitBtn" class="btn btn-primary btn-lg w-100 rounded-3">
             🚀 Submit
           </button>
         </form>
+
+        <!-- CTA Button to apply.html -->
+        <div class="text-center my-4 p-4 bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 rounded-3xl shadow-lg">
+          <p class="mb-4 text-xl font-bold text-gray-700 flex items-center justify-center gap-2">
+            📢  We Are Hiring!
+          </p>
+          <a href="Advertisement/apply.html" target="_blank" class="btn btn-dark btn-lg w-100 rounded-3">
+            Click Me To Work with us !
+          </a>
+        </div>
+
 
         <div class="text-center mt-4">
           <p class="mb-2 fw-semibold">📢 Stay Updated with Our WhatsApp Channel</p>
@@ -376,11 +399,12 @@ document.getElementById("inquiryForm").addEventListener("submit", function(e){
                 email: this.email.value,
                 message: this.message.value,
                 phone: this.phone.value,
+                occupation: this.occupation.value,
                 location: this.location.value
             };
-            if(!data.name || !data.email || !data.message || !data.phone || !data.location){ alert("Please fill all fields!"); return; }
+            if(!data.name || !data.email || !data.message || !data.phone || !data.location || !data.occupation){ alert("Please fill all fields!"); return; }
 
-            fetch("https://script.google.com/macros/s/AKfycbxv1YwdmFiIsCOlNq6EiyewTfNCoKPyrbvZW-oyofr1_wHolLmUv_QVTzjJdfvMfkv_/exec",{
+            fetch("https://script.google.com/macros/s/AKfycbySmtlkyt9L3XuP0XT7BdeP1TfnoNEjFTJvBZIBaVoTYk615PQuRswhAVVPW5rTJG-5/exec",{
                 method:"POST",
                 body: JSON.stringify(data)
             }).then(res=>res.json())

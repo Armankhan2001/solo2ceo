@@ -188,6 +188,11 @@ footer{
       <button onclick="window.open('https://docs.google.com/spreadsheets/d/1X5IDJ23z3AwW6N9ZWBt19yMkHvJbkCcCgGohRryCqwY/edit?usp=sharing', '_blank')">Sheet</button>
       <button onclick="window.open('customerreview.html')">Web</button>
     </div>
+    <div class="card" style="--i:9">
+      <h3><i class="fa-solid fa-comments"></i> Recruitment Details</h3>
+      <button onclick="window.open('https://docs.google.com/spreadsheets/d/1X5IDJ23z3AwW6N9ZWBt19yMkHvJbkCcCgGohRryCqwY/edit?gid=1058827201#gid=1058827201/edit?usp=sharing', '_blank')">Sheet</button>
+      <button onclick="window.open('./Advertisement/recruitmentadmin.html')">Web</button>
+    </div>
     <div class="card" style="--i:10">
       <h3><i class="fa-solid fa-book-open"></i> Education</h3>
       <button onclick="window.open('https://docs.google.com/spreadsheets/d/1_4V6trMaMOJ972aazc5wYV9-vI0v6YrhUxm9l8j76Wg/edit?gid=0#gid=0', '_blank')">Sheet</button>
@@ -200,16 +205,36 @@ footer{
   </footer>
 
   <script>
-  const encoded = 'YWRtaW4yMDI1'; // "admin2025"
-  function checkPassword(){
-    const input=document.getElementById("adminPassword").value;
-    const correct=atob(encoded);
-    if(input===correct){
-      document.getElementById("passwordOverlay").style.display="none";
-    }else{
-      document.getElementById("errorMessage").textContent="❌ Incorrect password. Try again.";
-    }
+const encoded = 'Sm91cm5leUAyNg=='; // Base64 of "Journey@26"
+
+function checkPassword(){
+  const input = document.getElementById("adminPassword").value.trim();
+  const correct = atob(encoded); // decode Base64
+  if(input === correct){
+    // Hide overlay if correct
+    document.getElementById("passwordOverlay").style.display = "none";
+    document.getElementById("errorMessage").textContent = "";
+  } else {
+    // Show error if incorrect
+    document.getElementById("errorMessage").textContent = "❌ Incorrect password. Try again.";
   }
-  </script>
+}
+
+// Make sure the DOM is fully loaded
+document.addEventListener("DOMContentLoaded", function() {
+  const inputField = document.getElementById("adminPassword");
+  
+  // Listen for Enter key
+  inputField.addEventListener("keypress", function(e) {
+    if(e.key === "Enter") checkPassword();
+  });
+
+  // Optional: also allow a button click to unlock
+  const submitBtn = document.getElementById("submitBtn");
+  if(submitBtn) submitBtn.addEventListener("click", checkPassword);
+});
+</script>
+
+
 </body>
 </html>

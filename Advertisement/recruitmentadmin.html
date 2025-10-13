@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Job Applications — Solo2CEO</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+<style>
+  /* Custom scrollbar */
+  #cardsContainer::-webkit-scrollbar { width: 8px; }
+  #cardsContainer::-webkit-scrollbar-track { background: #f0f0f0; border-radius: 4px; }
+  #cardsContainer::-webkit-scrollbar-thumb { background: #a78bfa; border-radius: 4px; }
+</style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 font-[Poppins] min-h-screen p-4 sm:p-6">
+
+<!-- Page Header -->
+<header class="text-center mb-6">
+  <h1 class="text-4xl sm:text-5xl font-bold text-indigo-700 mb-2 flex items-center justify-center gap-3">
+    🚀 Job Applications
+  </h1>
+  <p class="text-gray-700 text-lg sm:text-xl max-w-2xl mx-auto">
+    Explore our talented candidates. Use search and filters to find the perfect match.
+  </p>
+</header>
+
+<!-- Search & Filter Panel -->
+<div class="sticky top-0 z-50 bg-white bg-opacity-90 backdrop-blur-md rounded-3xl shadow-lg max-w-6xl mx-auto p-4 mb-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+  <input id="searchInput" type="text" placeholder="🔍 Search by Name, Email, Location..." class="border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-indigo-400 w-full">
+  
+  <select id="filterIndustry" class="border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-indigo-400 w-full">
+    <option value="">🏢 All Industries</option>
+    <option value="Travel Industry">✈️ Travel Industry</option>
+    <option value="Real Estate Industry">🏠 Real Estate Industry</option>
+    <option value="Medical Industry">⚕️ Medical Industry</option>
+    <option value="Food Branding Industry">🍔 Food Branding Industry</option>
+    <option value="Mobile Industry">📱 Mobile Industry</option>
+    <option value="Other Industry">✨ Other Industry</option>
+  </select>
+
+  <select id="filterJobType" class="border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-indigo-400 w-full">
+    <option value="">💼 All Job Types</option>
+    <option value="Internship">Internship</option>
+    <option value="Full Time">Full Time</option>
+    <option value="Part Time">Part Time</option>
+  </select>
+
+  <select id="filterQualification" class="border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-indigo-400 w-full">
+    <option value="">🎓 All Qualifications</option>
+    <option value="10th Pass">10th Pass</option>
+    <option value="12th Pass">12th Pass</option>
+    <option value="Graduate">Graduate</option>
+    <option value="Other">Other</option>
+  </select>
+</div>
+
+<!-- Loading Spinner -->
+<div id="loadingMessage" class="flex justify-center items-center space-x-2 my-6 text-gray-600">
+  <svg class="animate-spin h-6 w-6 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+  </svg>
+  <span>⏳ Loading applications, please wait...</span>
+</div>
+
+<!-- Cards Container -->
+<div id="cardsContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
+
+<script>
+const csvURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRTzdvmfVRC6ZgkxgLpjkILouwicSPGn3LfGuV2GG2LQ9wwq_XkLj-Oh7kpGYGCdyqTD6KJncJeB7C9/pub?gid=1058827201&single=true&output=csv";
+
+const loadingMessage = document.getElementById("loadingMessage");
+const container = document.getElementById("cardsContainer");
+let allData = [];
+
+// Fetch CSV
+Papa.parse(csvURL, {
+  download: true,
+  header: true,
+  complete: function(results) {
+    loadingMessage.style.display = "none";
+    allData = results.data.filter(row => row.Name);
+    renderCards(allData);
+  },
+  error: function(err) {
+    loadingMessage.style.display = "none";
+    container.innerHTML = "<p class='text-center text-red-500'>❌ Failed to load applications.</p>";
+    console.error("CSV error:", err);
+  }
+});
+
+// Render Cards
+function renderCards(data) {
+  container.innerHTML = "";
+  if(!data.length){
+    container.innerHTML = "<p class='text-center text-red-500 col-span-full'>No matching applications found.</p>";
+    return;
+  }
+
+  const industryColors = {
+    "Travel Industry": "bg-indigo-100 text-indigo-700",
+    "Real Estate Industry": "bg-yellow-100 text-yellow-800",
+    "Medical Industry": "bg-green-100 text-green-700",
+    "Food Branding Industry": "bg-pink-100 text-pink-700",
+    "Mobile Industry": "bg-purple-100 text-purple-700",
+    "Other Industry": "bg-gray-100 text-gray-700"
+  };
+
+  const jobColors = {
+    "Internship": "bg-blue-200 text-blue-900",
+    "Full Time": "bg-green-200 text-green-900",
+    "Part Time": "bg-purple-200 text-purple-900"
+  };
+
+  data.forEach(row => {
+    const card = document.createElement("div");
+    card.className = "bg-white p-6 rounded-3xl shadow-lg transition transform hover:-translate-y-2 hover:scale-105 hover:shadow-2xl flex flex-col justify-between";
+
+    card.innerHTML = `
+      <div>
+        <h2 class="text-2xl font-bold text-indigo-600 mb-2 flex items-center gap-2">👤 ${row.Name || "—"}</h2>
+        <p class="text-gray-600 mb-1 flex items-center gap-2">📧 ${row.Email || "—"}
+          <button onclick="navigator.clipboard.writeText('${row.Email}')" class="ml-2 text-indigo-500 hover:text-indigo-700">📋</button>
+        </p>
+        <p class="text-gray-600 mb-1 flex items-center gap-2">📞 ${row.Phone || "—"}
+          <button onclick="navigator.clipboard.writeText('${row.Phone}')" class="ml-2 text-indigo-500 hover:text-indigo-700">📋</button>
+        </p>
+        <p class="text-gray-600 mb-1 flex items-center gap-2">📍 ${row.Location || "—"}</p>
+        <p class="text-gray-600 mb-1 flex items-center gap-2">🎓 ${row.Qualification || "—"}</p>
+        <p class="mb-2">
+          <span class="inline-block px-3 py-1 rounded-full text-sm font-semibold ${industryColors[row.Industry] || "bg-gray-100 text-gray-700"}">🏢 ${row.Industry || "—"}</span>
+          <span class="inline-block px-3 py-1 rounded-full text-sm font-semibold ${jobColors[row["Job Type"]] || "bg-gray-100 text-gray-700"}">💼 ${row["Job Type"] || "—"}</span>
+        </p>
+      </div>
+      <p class="text-gray-700 mt-2 flex items-start gap-2">📝 ${row.Message || "—"}</p>
+    `;
+    container.appendChild(card);
+  });
+}
+
+// Search & Filters
+const searchInput = document.getElementById("searchInput");
+const filterIndustry = document.getElementById("filterIndustry");
+const filterJobType = document.getElementById("filterJobType");
+const filterQualification = document.getElementById("filterQualification");
+
+function applyFilters() {
+  const searchText = searchInput.value.toLowerCase();
+  const industryVal = filterIndustry.value;
+  const jobTypeVal = filterJobType.value;
+  const qualificationVal = filterQualification.value;
+
+  const filtered = allData.filter(row => {
+    return (
+      (!industryVal || row.Industry === industryVal) &&
+      (!jobTypeVal || row["Job Type"] === jobTypeVal) &&
+      (!qualificationVal || row.Qualification === qualificationVal) &&
+      (!searchText || (
+        row.Name.toLowerCase().includes(searchText) ||
+        (row.Email && row.Email.toLowerCase().includes(searchText)) ||
+        (row.Location && row.Location.toLowerCase().includes(searchText))
+      ))
+    );
+  });
+  renderCards(filtered);
+}
+
+searchInput.addEventListener("input", applyFilters);
+filterIndustry.addEventListener("change", applyFilters);
+filterJobType.addEventListener("change", applyFilters);
+filterQualification.addEventListener("change", applyFilters);
+</script>
+</body>
+</html>
