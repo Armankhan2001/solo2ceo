@@ -429,51 +429,76 @@ document.getElementById("inquiryForm").addEventListener("submit", function(e){
 
 
 
-    <!-- Manual Install Button -->
-<script>
+    <script>
+// Detect iOS
+const isIos = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
+const isInStandaloneMode = ('standalone' in window.navigator) && (window.navigator.standalone);
+
+if(isIos && !isInStandaloneMode){
+    // Show a small install hint button on left
+    const installHint = document.createElement('button');
+    installHint.textContent = "📲 Install";
+    installHint.style.cssText = `
+        position: fixed;
+        bottom: 20px;
+        left: 10px;  /* small left */
+        padding: 6px 12px;
+        background: #2575fc;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 14px;
+        z-index: 1000;
+        cursor: pointer;
+    `;
+    document.body.appendChild(installHint);
+
+    installHint.addEventListener('click', () => {
+        alert("To install this app on your iPhone, tap the Share button in Safari and select 'Add to Home Screen'");
+    });
+}
+
+// For Android / Chrome install
 let deferredPrompt;
 
 window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
+    e.preventDefault();
+    deferredPrompt = e;
 
-  const installBtn = document.createElement('button');
-  installBtn.textContent = "📲 Install App";
-  installBtn.style.cssText = `
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 10px 20px;
-    background:#2575fc;
-    color:white;
-    border:none;
-    border-radius:8px;
-    font-weight:bold;
-    z-index:1000;
-    cursor:pointer;
-  `;
-  document.body.appendChild(installBtn);
+    const installBtn = document.createElement('button');
+    installBtn.textContent = "📲 Install";
+    installBtn.style.cssText = `
+        position: fixed;
+        bottom: 20px;
+        left: 10px;  /* left small */
+        padding: 6px 12px;
+        background: #2575fc;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 14px;
+        z-index: 1000;
+        cursor: pointer;
+    `;
+    document.body.appendChild(installBtn);
 
-  installBtn.addEventListener('click', () => {
-    deferredPrompt.prompt();
-    deferredPrompt.userChoice.then(choice => {
-      if(choice.outcome === 'accepted') console.log("App installed");
-      deferredPrompt = null;
-      installBtn.remove();
+    installBtn.addEventListener('click', () => {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then(choice => {
+            if(choice.outcome === 'accepted') console.log("App installed");
+            deferredPrompt = null;
+            installBtn.remove();
+        });
     });
-  });
 });
 
 // Register Service Worker
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/service-worker.js')
-  .then(() => console.log("Service Worker registered"))
-  .catch(err => console.error("Service Worker registration failed:", err));
+    .then(() => console.log("Service Worker registered"))
+    .catch(err => console.error("Service Worker registration failed:", err));
 }
 </script>
-
-
 
 </body>
 </html>
