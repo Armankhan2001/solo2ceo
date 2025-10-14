@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Advertisements | Solo2CEO</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f8f9fa;
+      margin: 0;
+    }
+
+    /* Navbar */
+    .navbar-brand img {
+      height: 50px;
+      width: auto;
+    }
+
+    /* Banner */
+    .page-banner {
+      background: linear-gradient(rgba(0,123,255,0.7), rgba(0,123,255,0.7)), url('banner.jpg') center/cover no-repeat;
+      color: white;
+      text-align: center;
+      padding: 80px 20px;
+    }
+    .page-banner h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+    }
+    .page-banner p {
+      font-size: 1.1rem;
+    }
+
+    /* Cards */
+    .ad-card {
+      border-radius: 15px;
+      overflow: hidden;
+      transition: transform 0.3s, box-shadow 0.3s;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      background: #fff;
+    }
+    .ad-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    }
+    .ad-card iframe {
+      width: 100%;
+      height: 300px;
+      border: none;
+    }
+    .ad-card-footer {
+      padding: 15px;
+      text-align: center;
+      font-weight: 600;
+      color: #0077b6;
+    }
+
+    /* Footer */
+    footer {
+      background: #fff;
+      border-top: 1px solid #ddd;
+      padding: 20px;
+      text-align: center;
+      font-size: 14px;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
+    <div class="container">
+      <a class="navbar-brand" href="../index.html">
+        <img src="../image/Solo2ceologo.png" alt="Solo2CEO Logo">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link active fw-bold" href="#">Advertisements</a></li>
+          <li class="nav-item"><a class="nav-link" href="../templates/about.html">About</a></li>
+          <li class="nav-item"><a class="nav-link" href="../templates/contact.html">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Banner -->
+  <div class="page-banner">
+    <h1>Our Current Advertisements</h1>
+    <p>See the campaigns we are currently running for our partners and clients.</p>
+  </div>
+
+  <!-- Advertisement Cards -->
+<section class="py-5">
+  <div class="container">
+    <div class="row g-4">
+      <!-- Advertisement 1 -->
+      <div class="col-md-6 col-lg-4">
+        <a href="anita.html" class="text-decoration-none">
+          <div class="ad-card">
+            <img src="image.png" alt="Anita Advertisement" class="img-fluid">
+            <div class="ad-card-footer">Anita Campaign</div>
+          </div>
+        </a>
+      </div>
+
+      <!-- Advertisement 2 -->
+      <div class="col-md-6 col-lg-4">
+        <a href="impexadd.html" class="text-decoration-none">
+          <div class="ad-card">
+            <img src="../image/packagebgimage.avif" alt="Impex Advertisement" class="img-fluid">
+            <div class="ad-card-footer">Impex Campaign</div>
+          </div>
+        </a>
+      </div>
+
+      <!-- Add more advertisements by duplicating the div.col -->
+    </div>
+  </div>
+</section>
+
+  <!-- Footer -->
+  <footer>
+    &copy; 2025 Solo2CEO. All Rights Reserved.
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

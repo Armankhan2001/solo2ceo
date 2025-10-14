@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Instagram Carousel - SAFTA Guide</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f3f4f6;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .carousel {
+      width: 350px;
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      overflow: hidden;
+    }
+    .slide {
+      display: none;
+      padding: 20px;
+      text-align: center;
+    }
+    .slide.active {
+      display: block;
+    }
+    .slide h2 {
+      font-size: 18px;
+      margin-bottom: 12px;
+      font-weight: bold;
+    }
+    .slide p {
+      font-size: 14px;
+      line-height: 1.4;
+      white-space: pre-line;
+    }
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #f0f0f0;
+      padding: 10px;
+    }
+    .controls button {
+      background: #ddd;
+      border: none;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .controls button:hover {
+      background: #ccc;
+    }
+    .counter {
+      font-size: 12px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="carousel">
+    <div class="slide active">
+      <h2>📦 SAFTA Certificate Guide</h2>
+      <p>Easy guide for exporters to obtain a SAFTA Certificate of Origin. Required for preferential tariff benefits.</p>
+    </div>
+    <div class="slide">
+      <h2>📑 Documents Required Before Shipment</h2>
+      <p>
+1. Import Export Code (IEC) Certificate
+2. Original Commercial Invoice (with HS Code)
+3. Original Packing List (with HS Code)
+4. Original Cost Sheet (on company letterhead)
+5. Attested Raw Material Purchase Bills
+6. Attested Copy of Purchase Bill
+7. Cost Sheet in Original
+8. Raw Material Purchase Bills (attested)
+9. Purchase Order from Importer
+10. Digital Signature Certificate (DSC)
+11. Registered Email & Mobile on DGFT portal
+      </p>
+    </div>
+    <div class="slide">
+      <h2>🚢 Documents Required After Shipment</h2>
+      <p>
+1. Shipping Bill
+2. Bill of Lading / Airway Bill / LR Receipt
+3. Declaration that products meet SAFTA origin criteria
+4. Retrospective application (if applicable, with documents)
+      </p>
+    </div>
+    <div class="slide">
+      <h2>📞 Contact</h2>
+      <p>
+For assistance:
+Bharat Parekh – Impex Solution
+📍 Mumbai, India
+📧 bharat@impexsolution.net
+📲 +91 98200 34262
+      </p>
+    </div>
+    <div class="controls">
+      <button id="prev">&#8592;</button>
+      <span class="counter" id="counter">1 / 4</span>
+      <button id="next">&#8594;</button>
+    </div>
+  </div>
+
+  <script>
+    const slides = document.querySelectorAll(".slide");
+    const counter = document.getElementById("counter");
+    let current = 0;
+
+    function showSlide(index) {
+      slides.forEach((s, i) => {
+        s.classList.toggle("active", i === index);
+      });
+      counter.textContent = `${index + 1} / ${slides.length}`;
+    }
+
+    document.getElementById("next").addEventListener("click", () => {
+      current = (current + 1) % slides.length;
+      showSlide(current);
+    });
+
+    document.getElementById("prev").addEventListener("click", () => {
+      current = (current - 1 + slides.length) % slides.length;
+      showSlide(current);
+    });
+  </script>
+</body>
+</html>
