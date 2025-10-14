@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#2575fc">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="image/astourlogo.png">
+
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Visa Data Admin Panel</title>
@@ -268,29 +275,6 @@
       </div>
     `;
 
-    // <p class="mt-3 text-muted" style="font-size: 0.85rem;">
-    //         <strong>Note:</strong> Visa Fees and VFS Fees may vary slightly and are only confirmed at the time of submission.
-    //       /p>
-
-    // Make the whole card clickable
-// const cardElement = card.querySelector(".card-clickable");
-// cardElement.addEventListener("click", async () => {
-//   const fileName = row["Countries"].toLowerCase().replace(/\s+/g, "") + ".html";
-//   const filePath = `visaforms/cardforms/${fileName}`;
-
-
-//   try {
-//     const res = await fetch(filePath, { method: "HEAD" });
-//     if (res.ok) {
-//       window.location.href = filePath;
-//     } else {
-//       alert(`Form for ${row["Countries"]} is not available.`);
-//     }
-//   } catch (err) {
-//     alert(`Unable to open form for ${row["Countries"]}.`);
-//   }
-// });
-
 // Make the whole card clickable
   const cardElement = card.querySelector(".card-clickable");
   cardElement.addEventListener("click", async () => {
@@ -377,6 +361,73 @@ container.appendChild(card);
   }
 </style>
 
+
+<script>
+  // Register Service Worker
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('service-worker.js')
+      .then(() => console.log("Service Worker registered"))
+      .catch(err => console.error("Service Worker registration failed:", err));
+  }
+
+  // Android Install Button
+  let deferredPrompt;
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+
+    const installBtn = document.createElement('button');
+    installBtn.textContent = "📲 Install Admin App";
+    installBtn.style.cssText = `
+      position: fixed;
+      bottom: 20px;
+      left: 10px;
+      padding: 6px 12px;
+      background: #2575fc;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      z-index: 1000;
+      cursor: pointer;
+    `;
+    document.body.appendChild(installBtn);
+
+    installBtn.addEventListener('click', async () => {
+      deferredPrompt.prompt();
+      const choiceResult = await deferredPrompt.userChoice;
+      if (choiceResult.outcome === 'accepted') console.log("App installed");
+      deferredPrompt = null;
+      installBtn.remove();
+    });
+  });
+
+  // iOS hint
+  const isIos = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
+  const isInStandaloneMode = ('standalone' in window.navigator) && window.navigator.standalone;
+
+  if(isIos && !isInStandaloneMode){
+    const iosBtn = document.createElement('button');
+    iosBtn.textContent = "📲 Install Admin App";
+    iosBtn.style.cssText = `
+      position: fixed;
+      bottom: 20px;
+      left: 10px;
+      padding: 6px 12px;
+      background: #2575fc;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      z-index: 1000;
+      cursor: pointer;
+    `;
+    iosBtn.addEventListener('click', () => {
+      alert("To install this app on your iPhone, tap the Share button in Safari and select 'Add to Home Screen'");
+    });
+    document.body.appendChild(iosBtn);
+  }
+</script>
 
 </body>
 <script>
