@@ -1,0 +1,21 @@
+{
+  "name": "Solo2CEO",
+  "short_name": "Solo2CEO",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#fafafa",
+  "theme_color": "#2575fc",
+  "description": "Transforming Self-Employed Hustles into Recognized Business Brands",
+  "icons": [
+    {
+      "src": "image/Solo2ceologo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "image/Solo2ceologo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
