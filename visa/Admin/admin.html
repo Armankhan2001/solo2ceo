@@ -288,7 +288,7 @@
       fileName = row["Countries"].toLowerCase().replace(/\s+/g, "") + ".html";
     }
 
-    const filePath = `visaforms/cardforms/${fileName}`;
+    const filePath = `../visaforms/cardforms/${fileName}`;
 
     try {
       const res = await fetch(filePath, { method: "HEAD" });
