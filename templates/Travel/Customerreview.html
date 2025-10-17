@@ -11,6 +11,11 @@
   .card-enter.show { transform: translateY(0) scale(1); opacity: 1; }
   /* Hover zoom */
   .review-card:hover { transform: scale(1.02); transition: 0.3s; }
+  /* Slider */
+  .slider { position: relative; }
+  .slide { display: none; }
+  .slide.active { display: block; }
+  .slider button { font-size: 1.5rem; }
 </style>
 </head>
 <body class="bg-gradient-to-br from-pink-50 via-yellow-50 to-blue-50 min-h-screen p-6">
@@ -40,8 +45,8 @@
           <textarea id="message" rows="4" placeholder="Share your experience..." required class="mt-1 block w-full rounded-md border p-2"></textarea>
         </div>
         <div>
-          <label class="block text-sm font-medium">Photo (visa/trip)</label>
-          <input id="photo" type="file" accept="image/*" class="mt-1 block w-full" />
+          <label class="block text-sm font-medium">Photos (visa/trip)</label>
+          <input id="photos" type="file" accept="image/*" multiple class="mt-1 block w-full"/>
         </div>
         <div>
           <button id="submitBtn" class="w-full py-2 rounded-xl font-semibold bg-gradient-to-r from-pink-500 to-yellow-400 text-white hover:from-pink-600 hover:to-yellow-500">Submit Review</button>
@@ -61,16 +66,10 @@
   </main>
 
   <footer class="mt-12 text-center text-sm text-gray-500">Admins must approve reviews in the Sheet to make them public.</footer>
-  <img src="https://drive.google.com/uc?export=view&id=1QNhx0fkxey0IlOyO3poc2rlVMHo8qXqe" width="300" />
-
 </div>
 
-
 <script>
-/* =========================
-CONFIG: Replace with your Apps Script URL
-========================= */
-const API_ENDPOINT = 'https://script.google.com/macros/s/AKfycbzBie8QmFGRlIT6i3QxAszUdkNozgoIw3ethPPcziq0ctjSlOLGlcsPoDIpsvC4_juq/exec';
+const API_ENDPOINT = 'https://script.google.com/macros/s/AKfycbwW_sh_7YEWRyh9mlSqFnl9W6PcWh94bRIOte2zIClNlpuBstNhO3N9WYRqfeJ_f3w/exec';
 
 // Status display
 const statusEl = document.getElementById('status');
@@ -95,10 +94,9 @@ document.getElementById('reviewForm').addEventListener('submit', async (ev)=>{
   const name = document.getElementById('name').value.trim();
   const country = document.getElementById('country').value.trim();
   const message = document.getElementById('message').value.trim();
-  const file = document.getElementById('photo').files[0];
-  const imageData = await fileToDataURL(file);
-
-  const payload = { name, country, message, image: imageData };
+  const files = document.getElementById('photos').files;
+  const imagesData = await Promise.all([...files].map(f => fileToDataURL(f)));
+  const payload = { name, country, message, images: imagesData };
 
   try{
     setStatus('Uploading — please wait...');
@@ -125,29 +123,97 @@ async function loadReviews(){
   try{
     const res = await fetch(API_ENDPOINT + '?action=getReviews');
     const data = await res.json();
+
     if(Array.isArray(data.reviews) && data.reviews.length){
       setStatus('');
       data.reviews.forEach((r,i)=>{
         const div = document.createElement('div');
         div.className = 'review-card bg-white/90 rounded-3xl p-4 shadow-lg card-enter';
+
+        // Parse images
+        let images = [];
+        try { images = Array.isArray(r.image) ? r.image : JSON.parse(r.image); } 
+        catch(e){ if(r.image) images = [r.image]; }
+
+        // Slider HTML
+        let sliderHtml = '';
+        if(images.length){
+          const slides = images.map((img, idx)=>{
+            let slideContent = '';
+            if(img.includes('drive.google.com')){
+              const fileIdMatch = img.match(/[-\w]{25,}/);
+              const fileId = fileIdMatch ? fileIdMatch[0] : null;
+              if(fileId){
+                slideContent = `<iframe src="https://drive.google.com/file/d/${fileId}/preview" class="w-full h-48 rounded-lg" frameborder="0" allowfullscreen></iframe>`;
+              } else {
+                slideContent = `<img src="https://via.placeholder.com/150" class="w-full h-48 object-cover rounded-lg"/>`;
+              }
+            } else {
+              slideContent = `<img src="${img}" onerror="this.src='https://via.placeholder.com/150'" class="w-full h-48 object-cover rounded-lg"/>`;
+            }
+            return `<div class="slide ${idx===0?'active':''} relative mb-2">${slideContent}</div>`;
+          }).join('');
+
+          sliderHtml = `
+            <div class="slider relative">
+              ${slides}
+              ${images.length>1 ? `<button class="prev absolute left-2 top-1/2 -translate-y-1/2 bg-white/60 rounded-full px-2">‹</button>
+              <button class="next absolute right-2 top-1/2 -translate-y-1/2 bg-white/60 rounded-full px-2">›</button>` : ''}
+            </div>`;
+        } else {
+          sliderHtml = `<img src="https://via.placeholder.com/150" class="w-full h-48 object-cover rounded-lg mb-2"/>`;
+        }
+
         div.innerHTML = `
           <div class="flex items-center gap-3 mb-3">
             <div class="w-16 h-16 rounded-full overflow-hidden bg-gray-100 flex-shrink-0">
-              <img src="${r.image || 'https://via.placeholder.com/150'}" alt="${r.name}" class="w-full h-full object-cover"/>
+              <img src="${images[0] || 'https://via.placeholder.com/150'}" class="w-full h-full object-cover"/>
             </div>
             <div>
               <div class="font-semibold text-lg">${escapeHtml(r.name)}</div>
               <div class="text-sm text-gray-500">${escapeHtml(r.country)} • ${escapeHtml(r.date)}</div>
             </div>
           </div>
+          ${sliderHtml}
           <p class="text-gray-700 text-sm">${escapeHtml(r.message)}</p>
         `;
+
         grid.appendChild(div);
         setTimeout(()=>div.classList.add('show'), 50*i + 50);
+
+        // Slider functionality
+        if(images.length>1){
+          const slider = div.querySelector('.slider');
+          const slideEls = slider.querySelectorAll('.slide');
+          let current = 0;
+          const prevBtn = slider.querySelector('.prev');
+          const nextBtn = slider.querySelector('.next');
+          const showSlide = idx=>{ slideEls.forEach((s,i)=> s.style.display = (i===idx?'block':'none')); };
+          showSlide(current);
+          if(prevBtn && nextBtn){
+            prevBtn.addEventListener('click', ()=>{ current = (current-1+slideEls.length)%slideEls.length; showSlide(current); });
+            nextBtn.addEventListener('click', ()=>{ current = (current+1)%slideEls.length; showSlide(current); });
+          }
+        }
+
       });
+
+      // Modal click for full-size images
+      document.querySelectorAll('.slide img, .review-card > img').forEach(img=>{
+        img.addEventListener('click', e=>{
+          const src = e.target.src;
+          const modal = document.createElement('div');
+          modal.className = 'fixed inset-0 bg-black/80 flex items-center justify-center z-50 cursor-pointer';
+          modal.innerHTML = `<img src="${src}" class="max-h-[90%] max-w-[90%]"/>`;
+          modal.addEventListener('click', ()=>modal.remove());
+          document.body.appendChild(modal);
+        });
+      });
+
     } else {
       setStatus('No success stories yet. Be the first to share!');
     }
+
   } catch(err){
     console.error(err);
     setStatus('Could not load reviews.', true);
@@ -160,6 +226,5 @@ function escapeHtml(s){ if(!s) return ''; return s.replaceAll('&','&amp;').repla
 // Initial load
 loadReviews();
 </script>
-
 </body>
 </html>
