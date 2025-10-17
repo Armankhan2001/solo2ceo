@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Happy Travellers — Share Your Success</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  /* Card entry animation */
+  .card-enter { transform: translateY(10px) scale(0.95); opacity: 0; transition: all 0.4s ease; }
+  .card-enter.show { transform: translateY(0) scale(1); opacity: 1; }
+  /* Hover zoom */
+  .review-card:hover { transform: scale(1.02); transition: 0.3s; }
+</style>
+</head>
+<body class="bg-gradient-to-br from-pink-50 via-yellow-50 to-blue-50 min-h-screen p-6">
+
+<div class="max-w-7xl mx-auto">
+  <header class="text-center mb-10">
+    <h1 class="text-5xl font-extrabold text-pink-600 mb-2">💬 Happy Travellers</h1>
+    <p class="text-gray-600 text-lg">Share your visa & trip success stories and inspire others!</p>
+  </header>
+
+  <main class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    
+    <!-- Form Section -->
+    <section class="lg:col-span-1 bg-white/90 p-6 rounded-3xl shadow-xl">
+      <h2 class="text-2xl font-bold mb-4 text-pink-500">Share Your Story</h2>
+      <form id="reviewForm" class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium">Full Name</label>
+          <input id="name" placeholder="e.g. Rajesh Kumar" required class="mt-1 block w-full rounded-md border p-2" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium">Country / Package</label>
+          <input id="country" placeholder="e.g. Canada Visitor Visa" required class="mt-1 block w-full rounded-md border p-2" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium">Your Experience</label>
+          <textarea id="message" rows="4" placeholder="Share your experience..." required class="mt-1 block w-full rounded-md border p-2"></textarea>
+        </div>
+        <div>
+          <label class="block text-sm font-medium">Photo (visa/trip)</label>
+          <input id="photo" type="file" accept="image/*" class="mt-1 block w-full" />
+        </div>
+        <div>
+          <button id="submitBtn" class="w-full py-2 rounded-xl font-semibold bg-gradient-to-r from-pink-500 to-yellow-400 text-white hover:from-pink-600 hover:to-yellow-500">Submit Review</button>
+        </div>
+        <p id="status" class="text-sm text-gray-600"></p>
+      </form>
+    </section>
+
+    <!-- Reviews Section -->
+    <section class="lg:col-span-2">
+      <h2 class="text-2xl font-bold mb-4 text-pink-500">Success Stories</h2>
+      <div id="reviewsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
+        <!-- Review cards inserted here -->
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="mt-12 text-center text-sm text-gray-500">Admins must approve reviews in the Sheet to make them public.</footer>
+  <img src="https://drive.google.com/uc?export=view&id=1QNhx0fkxey0IlOyO3poc2rlVMHo8qXqe" width="300" />
+
+</div>
+
+
+<script>
+/* =========================
+CONFIG: Replace with your Apps Script URL
+========================= */
+const API_ENDPOINT = 'https://script.google.com/macros/s/AKfycbzBie8QmFGRlIT6i3QxAszUdkNozgoIw3ethPPcziq0ctjSlOLGlcsPoDIpsvC4_juq/exec';
+
+// Status display
+const statusEl = document.getElementById('status');
+function setStatus(msg, isError=false){ statusEl.textContent = msg; statusEl.style.color = isError ? '#b91c1c' : '#065f46'; }
+
+// Convert file to Base64
+function fileToDataURL(file){
+  return new Promise((resolve, reject)=>{
+    if(!file) return resolve(null);
+    const reader = new FileReader();
+    reader.onload = ()=> resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+// Submit form
+document.getElementById('reviewForm').addEventListener('submit', async (ev)=>{
+  ev.preventDefault();
+  setStatus('Preparing your review...');
+
+  const name = document.getElementById('name').value.trim();
+  const country = document.getElementById('country').value.trim();
+  const message = document.getElementById('message').value.trim();
+  const file = document.getElementById('photo').files[0];
+  const imageData = await fileToDataURL(file);
+
+  const payload = { name, country, message, image: imageData };
+
+  try{
+    setStatus('Uploading — please wait...');
+    await fetch(API_ENDPOINT, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    setStatus('✅ Thanks! Your review was submitted for approval.');
+    document.getElementById('reviewForm').reset();
+    loadReviews();
+  } catch(err){
+    console.error(err);
+    setStatus('❌ Failed to submit. Please try again.', true);
+  }
+});
+
+// Load approved reviews
+async function loadReviews(){
+  const grid = document.getElementById('reviewsGrid');
+  grid.innerHTML = '';
+  setStatus('Loading reviews...');
+  try{
+    const res = await fetch(API_ENDPOINT + '?action=getReviews');
+    const data = await res.json();
+    if(Array.isArray(data.reviews) && data.reviews.length){
+      setStatus('');
+      data.reviews.forEach((r,i)=>{
+        const div = document.createElement('div');
+        div.className = 'review-card bg-white/90 rounded-3xl p-4 shadow-lg card-enter';
+        div.innerHTML = `
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-16 h-16 rounded-full overflow-hidden bg-gray-100 flex-shrink-0">
+              <img src="${r.image || 'https://via.placeholder.com/150'}" alt="${r.name}" class="w-full h-full object-cover"/>
+            </div>
+            <div>
+              <div class="font-semibold text-lg">${escapeHtml(r.name)}</div>
+              <div class="text-sm text-gray-500">${escapeHtml(r.country)} • ${escapeHtml(r.date)}</div>
+            </div>
+          </div>
+          <p class="text-gray-700 text-sm">${escapeHtml(r.message)}</p>
+        `;
+        grid.appendChild(div);
+        setTimeout(()=>div.classList.add('show'), 50*i + 50);
+      });
+    } else {
+      setStatus('No success stories yet. Be the first to share!');
+    }
+  } catch(err){
+    console.error(err);
+    setStatus('Could not load reviews.', true);
+  }
+}
+
+// Escape HTML
+function escapeHtml(s){ if(!s) return ''; return s.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;'); }
+
+// Initial load
+loadReviews();
+</script>
+
+</body>
+</html>
