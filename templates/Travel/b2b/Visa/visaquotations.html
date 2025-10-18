@@ -260,7 +260,7 @@ function renderCards(data, sheetKey) {
         const cardElement = card.querySelector(".card-clickable");
         cardElement.addEventListener("click", async () => {
             let fileName = (sheetKey === "schengen") ? "denmark.html" : row["Countries"].toLowerCase().replace(/\s+/g, "") + ".html";
-            const filePath = `../visaforms/cardforms/${fileName}`;
+            const filePath = `../../../../visa/visaforms/cardforms/${fileName}`;
             try {
                 const res = await fetch(filePath, { method: "HEAD" });
                 if (res.ok) window.location.href = filePath;
