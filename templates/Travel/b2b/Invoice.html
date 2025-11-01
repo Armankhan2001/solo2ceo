@@ -31,38 +31,51 @@
     <form id="invoiceForm" class="grid grid-cols-2 gap-4">
 
       <!-- Company Info -->
-      <input class="border p-2 col-span-2" type="text" id="companyName" placeholder="Your Company Name" required>
+      <input class="border p-2 col-span-2" type="text" id="companyName" placeholder="Your Company Name" value="Solo2CEO Pvt Ltd" required>
+      <input class="border p-2 col-span-2" type="text" id="companyAddress" placeholder="Company Address (optional)" value="Bandra West, Mumbai, India">
+      <input class="border p-2" type="text" id="companyContact" placeholder="Company Contact Number" value="+91 99999 12345">
+      <input class="border p-2" type="email" id="companyEmail" placeholder="Company Email" value="info@solo2ceo.com">
+
+      <!-- Bank Details -->
+      <input class="border p-2" type="text" id="bankName" placeholder="Bank Name" value="HDFC Bank">
+      <input class="border p-2" type="text" id="accountHolder" placeholder="Account Holder Name" value="Solo2CEO Pvt Ltd">
+      <input class="border p-2" type="text" id="accountNumber" placeholder="Account Number" value="12345678901234">
+      <input class="border p-2" type="text" id="ifscCode" placeholder="IFSC Code" value="HDFC0001234">
+      <input class="border p-2 col-span-2" type="text" id="upiID" placeholder="UPI ID (optional)" value="solo2ceo@hdfcbank">
+
       <label class="col-span-2 text-sm text-gray-600">Upload Company Logo OR Provide Logo URL</label>
       <input class="border p-2" type="file" id="companyLogoFile" accept="image/*">
       <input class="border p-2" type="text" id="companyLogoURL" placeholder="Or paste Logo Image URL">
 
       <!-- Invoice Details -->
-      <input class="border p-2" type="text" id="invoiceNo" placeholder="Invoice Number (e.g. INV-1001)" required>
+      <input class="border p-2" type="text" id="invoiceNo" placeholder="Invoice Number" value="INV-1001" required>
       <input class="border p-2" type="date" id="invoiceDate" required>
-      <input class="border p-2" type="text" id="clientName" placeholder="Client Name" required>
-      <input class="border p-2" type="text" id="clientPhone" placeholder="Client Phone">
-      <input class="border p-2 col-span-2" type="text" id="clientAddress" placeholder="Client Address" required>
-      <textarea class="border p-2 col-span-2" id="description" placeholder="Service Description"></textarea>
-      <input class="border p-2" type="number" id="price" placeholder="Price (Rs)" required>
-      <input class="border p-2" type="number" id="discount" placeholder="Discount (Rs)" value="0">
-      <input class="border p-2" type="number" id="advance" placeholder="Advance Paid (Rs)" value="0">
-      <input class="border p-2" type="number" id="finalPayment" placeholder="Final Payment (Rs)" value="0">
+      <input class="border p-2" type="text" id="clientName" placeholder="Client Name" value="AsTours International" required>
+      <input class="border p-2" type="text" id="clientPhone" placeholder="Client Phone" value="+91 9876543210">
+      <input class="border p-2 col-span-2" type="text" id="clientAddress" placeholder="Client Address" value="Mumbai, India" required>
+      <textarea class="border p-2 col-span-2" id="description" placeholder="Service Description">Website Design & SEO Package</textarea>
+      <input class="border p-2" type="number" id="price" placeholder="Price (Rs)" value="25000" required>
+      <input class="border p-2" type="number" id="discount" placeholder="Discount (Rs)" value="1000">
+      <input class="border p-2" type="number" id="advance" placeholder="Advance Paid (Rs)" value="5000">
+      <input class="border p-2" type="number" id="finalPayment" placeholder="Final Payment (Rs)" value="19000">
     </form>
-    <button onclick="generateInvoice()" class="btn btn-primary mt-4">Generate Invoice</button>
+
+    <div class="mt-4 text-center">
+      <button onclick="generateInvoice()" class="btn btn-primary">Generate Invoice</button>
+      <button onclick="saveInvoice()" class="btn btn-secondary">💾 Save Invoice</button>
+    </div>
+    <p id="saveMsg" class="text-center text-green-700 font-semibold mt-2"></p>
   </div>
 
   <!-- Invoice Preview -->
   <div id="invoicePreview" class="invoice-box hidden">
     <div id="invoiceContent">
-
-      <!-- Header -->
       <div class="flex justify-between items-center mb-6">
         <img id="pCompanyLogo" alt="Company Logo" class="h-14 hidden">
         <h1 id="pCompanyName" class="text-2xl font-bold text-blue-800"></h1>
         <h1 class="text-3xl font-bold text-blue-800">INVOICE</h1>
       </div>
 
-      <!-- Billed To -->
       <div class="mb-4">
         <h2 class="text-lg font-semibold">Billed To:</h2>
         <p id="pClientName" class="font-bold text-blue-700"></p>
@@ -70,33 +83,31 @@
         <p id="pClientPhone"></p>
       </div>
 
-      <!-- Invoice Details -->
       <div class="grid grid-cols-2 gap-4 mb-4">
         <p><b>Invoice Number:</b> <span id="pInvoiceNo"></span></p>
         <p><b>Date:</b> <span id="pInvoiceDate"></span></p>
       </div>
 
-      <!-- Service Table -->
       <table id="invoiceTable">
-        <thead>
-          <tr>
-            <th>Particulars</th>
-            <th>Amount</th>
-          </tr>
-        </thead>
+        <thead><tr><th>Particulars</th><th>Amount</th></tr></thead>
         <tbody id="invoiceBody"></tbody>
       </table>
 
-      <!-- Status -->
       <div class="mt-4">
         <p id="pStatus"></p>
       </div>
 
-      <!-- Footer -->
-      <p class="mt-8 text-center text-blue-700 font-semibold">Thank you for your business!</p>
+      <div class="mt-8 border-t pt-4 text-sm">
+        <h3 class="font-semibold text-blue-700 mb-2">Company & Payment Info</h3>
+        <p id="pCompanyAddress"></p>
+        <p id="pCompanyContact"></p>
+        <p id="pCompanyEmail"></p>
+        <p id="pBankDetails"></p>
+      </div>
+
+      <p class="mt-6 text-center text-blue-700 font-semibold">Thank you for your business!</p>
     </div>
 
-    <!-- Action Buttons -->
     <div class="mt-6 text-center">
       <button onclick="downloadPDF()" class="btn btn-primary">Download PDF</button>
       <button onclick="shareWhatsApp()" class="btn btn-secondary">Share WhatsApp</button>
@@ -106,110 +117,134 @@
   </div>
 
 <script>
+  const scriptURL = "https://script.google.com/macros/s/AKfycbwpaj7XbBljTvDUYePa4I0RZ-qv7iIr5hH6Ws03M2tneMVLXF_WxqUBKFUrxDjmQbEM/exec"; // <-- Replace with your actual script URL
+
   function generateInvoice() {
-    let companyName = document.getElementById('companyName').value;
-    let companyLogoFile = document.getElementById('companyLogoFile').files[0];
-    let companyLogoURL = document.getElementById('companyLogoURL').value;
+    const companyName = document.getElementById('companyName').value;
+    const companyAddress = document.getElementById('companyAddress').value;
+    const companyContact = document.getElementById('companyContact').value;
+    const companyEmail = document.getElementById('companyEmail').value;
+    const bankName = document.getElementById('bankName').value;
+    const accountHolder = document.getElementById('accountHolder').value;
+    const accountNumber = document.getElementById('accountNumber').value;
+    const ifscCode = document.getElementById('ifscCode').value;
+    const upiID = document.getElementById('upiID').value;
 
-    let invoiceNo = document.getElementById('invoiceNo').value;
-    let invoiceDate = document.getElementById('invoiceDate').value || new Date().toLocaleDateString();
-    let clientName = document.getElementById('clientName').value;
-    let clientAddress = document.getElementById('clientAddress').value;
-    let clientPhone = document.getElementById('clientPhone').value;
-    let description = document.getElementById('description').value;
-    let price = parseFloat(document.getElementById('price').value) || 0;
-    let discount = parseFloat(document.getElementById('discount').value) || 0;
-    let advance = parseFloat(document.getElementById('advance').value) || 0;
-    let finalPayment = parseFloat(document.getElementById('finalPayment').value) || 0;
+    const companyLogoFile = document.getElementById('companyLogoFile').files[0];
+    const companyLogoURL = document.getElementById('companyLogoURL').value;
 
-    let total = price - discount;
-    let totalPaid = advance + finalPayment;
-    let pending = total - totalPaid;
+    const invoiceNo = document.getElementById('invoiceNo').value;
+    const invoiceDate = document.getElementById('invoiceDate').value || new Date().toLocaleDateString();
+    const clientName = document.getElementById('clientName').value;
+    const clientAddress = document.getElementById('clientAddress').value;
+    const clientPhone = document.getElementById('clientPhone').value;
+    const description = document.getElementById('description').value;
+    const price = parseFloat(document.getElementById('price').value) || 0;
+    const discount = parseFloat(document.getElementById('discount').value) || 0;
+    const advance = parseFloat(document.getElementById('advance').value) || 0;
+    const finalPayment = parseFloat(document.getElementById('finalPayment').value) || 0;
 
-    // Company Info
+    const total = price - discount;
+    const totalPaid = advance + finalPayment;
+    const pending = total - totalPaid;
+
+    // Company section
     document.getElementById('pCompanyName').innerText = companyName;
-    let logoElement = document.getElementById('pCompanyLogo');
+    document.getElementById('pCompanyAddress').innerText = "📍 " + companyAddress;
+    document.getElementById('pCompanyContact').innerText = "📞 " + companyContact;
+    document.getElementById('pCompanyEmail').innerText = "✉️ " + companyEmail;
+    document.getElementById('pBankDetails').innerText = `🏦 ${bankName} | A/C: ${accountNumber} | IFSC: ${ifscCode} | UPI: ${upiID}`;
 
+    const logoElement = document.getElementById('pCompanyLogo');
     if (companyLogoFile) {
-      let reader = new FileReader();
-      reader.onload = function(e) {
-        logoElement.src = e.target.result;
-        logoElement.classList.remove("hidden");
-      }
+      const reader = new FileReader();
+      reader.onload = e => { logoElement.src = e.target.result; logoElement.classList.remove("hidden"); };
       reader.readAsDataURL(companyLogoFile);
     } else if (companyLogoURL.trim() !== "") {
       logoElement.src = companyLogoURL;
       logoElement.classList.remove("hidden");
-    } else {
-      logoElement.classList.add("hidden");
     }
 
-    // Invoice Info
     document.getElementById('pInvoiceNo').innerText = invoiceNo;
     document.getElementById('pInvoiceDate').innerText = invoiceDate;
     document.getElementById('pClientName').innerText = clientName;
     document.getElementById('pClientAddress').innerText = clientAddress;
     document.getElementById('pClientPhone').innerText = clientPhone;
 
-    let rows = "";
-    rows += `<tr><td>${description}</td><td>Rs ${price}</td></tr>`;
+    let rows = `<tr><td>${description}</td><td>Rs ${price}</td></tr>`;
     if (discount > 0) rows += `<tr><td>Discount</td><td>- Rs ${discount}</td></tr>`;
     rows += `<tr><td><b>Total</b></td><td><b>Rs ${total}</b></td></tr>`;
 
-    let statusText = "";
+    let status = "";
+    if (totalPaid >= total) status = "Paid";
+    else if (advance > 0) status = "Partial";
+    else status = "Unpaid";
 
-    if (advance > 0 && finalPayment > 0 && totalPaid === total) {
-      rows += `<tr><td>Advance Paid</td><td>Rs ${advance}</td></tr>`;
-      rows += `<tr><td>Final Payment</td><td>Rs ${finalPayment}</td></tr>`;
-      statusText = `<span class="status-paid">✅ Cleared Dues</span>`;
-    } else if (totalPaid === total) {
-      rows += `<tr><td>Paid Amount</td><td>Rs ${totalPaid}</td></tr>`;
-      statusText = `<span class="status-paid">✅ Paid in Full</span>`;
-    } else if (advance > 0 && pending > 0) {
-      rows += `<tr><td>Advance</td><td>Rs ${advance}</td></tr>`;
-      rows += `<tr><td>Pending</td><td>Rs ${pending}</td></tr>`;
-      statusText = `<span class="status-partial">⚠️ Partial Payment</span>`;
-    } else if (totalPaid === 0) {
+    if (advance > 0 && pending > 0)
+      rows += `<tr><td>Advance</td><td>Rs ${advance}</td></tr><tr><td>Pending</td><td>Rs ${pending}</td></tr>`;
+    else if (totalPaid === 0)
       rows += `<tr><td>Pending</td><td>Rs ${total}</td></tr>`;
-      statusText = `<span class="status-none">❌ No Payment Made</span>`;
-    }
 
     document.getElementById('invoiceBody').innerHTML = rows;
-    document.getElementById('pStatus').innerHTML = statusText;
+    document.getElementById('pStatus').innerHTML = status === "Paid"
+      ? "<span class='status-paid'>✅ Paid in Full</span>"
+      : status === "Partial"
+      ? "<span class='status-partial'>⚠️ Partial Payment</span>"
+      : "<span class='status-none'>❌ Unpaid</span>";
 
     document.getElementById('invoicePreview').classList.remove('hidden');
+  }
+
+  async function saveInvoice() {
+    const now = new Date().toLocaleString();
+    const data = {
+      Timestamp: now,
+      companyName: document.getElementById('companyName').value,
+      companyAddress: document.getElementById('companyAddress').value,
+      companyContact: document.getElementById('companyContact').value,
+      bankName: document.getElementById('bankName').value,
+      accountHolder: document.getElementById('accountHolder').value,
+      accountNumber: document.getElementById('accountNumber').value,
+      ifscCode: document.getElementById('ifscCode').value,
+      upiID: document.getElementById('upiID').value,
+      invoiceNo: document.getElementById('invoiceNo').value,
+      invoiceDate: document.getElementById('invoiceDate').value,
+      clientName: document.getElementById('clientName').value,
+      clientPhone: document.getElementById('clientPhone').value,
+      clientAddress: document.getElementById('clientAddress').value,
+      description: document.getElementById('description').value,
+      price: document.getElementById('price').value,
+      discount: document.getElementById('discount').value,
+      advance: document.getElementById('advance').value,
+      finalPayment: document.getElementById('finalPayment').value,
+      total: document.getElementById('price').value - document.getElementById('discount').value,
+      status: document.getElementById('pStatus').innerText
+    };
+
+    document.getElementById("saveMsg").textContent = "⏳ Saving...";
+    try {
+      await fetch(scriptURL, { method: "POST", mode: "no-cors", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) });
+      document.getElementById("saveMsg").textContent = "✅ Saved Successfully!";
+    } catch (err) {
+      document.getElementById("saveMsg").textContent = "❌ Failed to Save!";
+      console.error(err);
+    }
   }
 
   function downloadPDF() {
     const element = document.getElementById("invoiceContent");
     const invoiceNo = document.getElementById('invoiceNo').value || "invoice";
-
-    const opt = {
-      margin: [15, 15, 15, 15],
+    html2pdf().set({
+      margin: [15,15,15,15],
       filename: `${invoiceNo}.pdf`,
-      image: { type: 'jpeg', quality: 1 },
-      html2canvas: { scale: 4, useCORS: true },
+      html2canvas: { scale: 4 },
       jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    };
-
-    element.style.borderRadius = "20px";
-    element.style.boxShadow = "0 6px 20px rgba(0,0,0,0.12)";
-
-    html2pdf().set(opt).from(element).save().finally(() => {
-      element.style.borderRadius = "";
-      element.style.boxShadow = "";
-    });
+    }).from(element).save();
   }
 
-  function shareWhatsApp() {
-    alert("For B2B: Please download invoice and share on WhatsApp manually.");
-  }
-  function shareEmail() {
-    alert("For B2B: Please download invoice and attach in your email manually.");
-  }
-  function shareNative() {
-    alert("For B2B: Please download invoice and share via your preferred app.");
-  }
+  function shareWhatsApp(){alert("Download invoice and share via WhatsApp manually.");}
+  function shareEmail(){alert("Download invoice and attach in your email manually.");}
+  function shareNative(){alert("Download invoice and share via any app manually.");}
 </script>
 
 </body>
