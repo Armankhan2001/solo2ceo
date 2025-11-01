@@ -23,6 +23,10 @@
       border-radius: 14px;
       box-shadow: 0 4px 14px rgba(0,0,0,0.08);
       transition: all 0.3s ease-in-out;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
     .card:hover {
       transform: translateY(-6px);
@@ -62,6 +66,9 @@
       font-size: 14px;
       margin-top: 50px;
       border-top: 1px solid #ddd;
+    }
+    .card-text {
+      flex-grow: 1;
     }
   </style>
 </head>
@@ -168,7 +175,7 @@
             }));
 
             populateCountryFilter();
-            applyFilters();
+            applyFilters(); // auto-sort by newest
           }
         });
       } catch (err) {
@@ -187,6 +194,17 @@
       });
     }
 
+    function parseDate(dateStr) {
+      if (!dateStr) return new Date(0);
+      if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return new Date(dateStr);
+      const parts = dateStr.split("-");
+      if (parts.length === 3) {
+        const [day, mon, year] = parts;
+        return new Date(`${mon} ${day}, ${year}`);
+      }
+      return new Date(0);
+    }
+
     function applyFilters() {
       const search = document.getElementById("searchBox").value.toLowerCase();
       const country = document.getElementById("countryFilter").value;
@@ -198,9 +216,9 @@
       );
 
       filtered.sort((a, b) => {
-        const da = new Date(a.date.split("-").reverse().join("-"));
-        const db = new Date(b.date.split("-").reverse().join("-"));
-        return sort === "newest" ? db - da : da - db;
+        const da = parseDate(a.date);
+        const db = parseDate(b.date);
+        return sort === "oldest" ? da - db : db - da;
       });
 
       displayPosts(filtered);
@@ -216,20 +234,25 @@
       }
 
       filteredPosts.forEach((p, index) => {
+        const shortDesc = p.desc.length > 150 ? p.desc.substring(0, 150) + "..." : p.desc;
+
         const col = document.createElement("div");
-        col.className = "col-md-4 mb-4";
+        col.className = "col-md-4 mb-4 d-flex";
         col.innerHTML = `
-          <div class="card h-100 p-3">
-            <div class="d-flex align-items-center mb-2">
-              ${p.cdn ? `<img src="https://flagcdn.com/w40/${p.cdn.trim().toLowerCase()}.png" class="flag">` : ""}
-              <h5 class="fw-bold text-primary mb-0">${p.title}</h5>
+          <div class="card p-3 shadow-sm w-100">
+            <div>
+              <div class="d-flex align-items-center mb-2">
+                ${p.cdn ? `<img src="https://flagcdn.com/w40/${p.cdn.trim().toLowerCase()}.png" class="flag me-2">` : ""}
+                <h5 class="fw-bold text-primary mb-0">${p.title}</h5>
+              </div>
+              <p class="small text-muted">${p.date} | ${p.country || "General"}</p>
+              <p class="card-text">${shortDesc}</p>
             </div>
-            <p class="small text-muted">${p.date} | ${p.country || "General"}</p>
-            <p>${p.desc}</p>
-            <button class="btn btn-sm btn-outline-primary" onclick="openModal(${posts.indexOf(p)})">
-              Read More
-            </button>
-            
+            <div class="mt-auto">
+              <button class="btn btn-sm btn-outline-primary" onclick="openModal(${posts.indexOf(p)})">
+                Read More
+              </button>
+            </div>
           </div>
         `;
         container.appendChild(col);
@@ -243,7 +266,7 @@
         ${post.date} | ${post.country || "General"}
         ${post.cdn ? `<img src="https://flagcdn.com/w40/${post.cdn.trim().toLowerCase()}.png" class="flag ms-2">` : ""}
       `;
-      document.getElementById("modalOverview").textContent = post.overview || "No overview available.";
+      document.getElementById("modalOverview").textContent = post.overview || post.desc || "No overview available.";
       document.getElementById("modalLink").href = post.link || "#";
       const modal = new bootstrap.Modal(document.getElementById("overviewModal"));
       modal.show();

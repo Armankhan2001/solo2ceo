@@ -54,27 +54,37 @@
   document.getElementById("visaForm").addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const formData = Object.fromEntries(new FormData(e.target).entries());
+    const form = e.target;
+    const formData = Object.fromEntries(new FormData(form).entries());
+
+    // ✅ Format date to "12-Sep-2025"
+    if (formData.date) {
+      const dateObj = new Date(formData.date);
+      const day = dateObj.getDate().toString().padStart(2, "0");
+      const month = dateObj.toLocaleString("en-US", { month: "short" });
+      const year = dateObj.getFullYear();
+      formData.date = `${day}-${month}-${year}`;
+    }
+
     document.getElementById("responseMsg").textContent = "⏳ Submitting...";
 
     try {
-      const res = await fetch(scriptURL, {
+      await fetch(scriptURL, {
         method: "POST",
-        mode: "no-cors", // ✅ prevents CORS error when hosted locally
+        mode: "no-cors",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
 
-      // When mode=no-cors, we can’t read the response, so just show success.
-      document.getElementById("responseMsg").textContent = "✅ Submitted successfully !";
-      e.target.reset();
-
+      document.getElementById("responseMsg").textContent = "✅ Submitted successfully!";
+      form.reset();
     } catch (error) {
       document.getElementById("responseMsg").textContent = "❌ Error submitting data!";
       console.error("Error:", error);
     }
   });
 </script>
+
 
 
 </body>
