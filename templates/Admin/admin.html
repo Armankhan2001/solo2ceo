@@ -86,7 +86,7 @@ header span{color:#00e1ff;}
 
 /* ------------------- CONTAINER / CARDS ------------------- */
 .container{
-  display:none; /* hidden until B2B clicked */
+  display:none;
   grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
   gap:25px;
   padding:40px 30px;
@@ -179,41 +179,41 @@ footer{
   </button>
 </div>
 
-<!-- B2B SECTION (Itinerary Sheet Only) -->
+<!-- B2B SECTION -->
 <div id="b2bSection" class="container">
+  <!-- Itinerary Sheet -->
   <div class="card">
     <h3><i class="fa-solid fa-clipboard-list"></i> Itinerary Create Sheet</h3>
     <p>Manage your packages, visa, and travel itineraries using this live Google Sheet.</p>
     <a href="https://docs.google.com/spreadsheets/d/1Hse1yBuY5c5GFIK0mSE0D2vf-84bfjMZ5paATAW9-GQ/edit?gid=0#gid=0" target="_blank">Open Sheet</a>
   </div>
-</div>
 
-<!-- OTHER SHEETS BELOW B2B -->
-<div class="container" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:25px; padding:40px 30px; max-width:1200px; margin:auto;">
+  <!-- B2B Partner Management -->
   <div class="card">
-    <h3><i class="fa-solid fa-comments"></i> Customer Review Sheet</h3>
-    <p>Manage your customer feedback efficiently using this live Google Sheet.</p>
-    <a href="https://docs.google.com/spreadsheets/d/1a9rIVfmiyb_K7yJBn3JZW1gPvAWbQMYJsBuUfMJnDjo/edit?gid=0#gid=0" target="_blank">Open Sheet</a>
-  </div>
-  <div class="card">
-  <h3><i class="fa-solid fa-blog"></i> Blog Management</h3>
-  <p>Manage blog content and posts using the live Google Sheet or directly via the web admin panel.</p>
-  <div style="display:flex; justify-content:center; gap:10px; flex-wrap:wrap;">
-    <a href="https://docs.google.com/spreadsheets/d/1T2o6corRoxNT5WgrW7D5pbdZFBpTz16Tc6VLw2GKrro/edit?gid=0#gid=0" 
-       target="_blank"
-       class="block bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white py-2 px-4 rounded-md font-medium transition">
-      Open Sheet
-    </a>
-    <a href="../Blog/Blogadmin.html" 
-       target="_blank"
-       class="block bg-gradient-to-r from-green-500 to-green-700 hover:from-green-600 hover:to-green-800 text-white py-2 px-4 rounded-md font-medium transition">
-      Open Web
-    </a>
+    <h3><i class="fa-solid fa-handshake"></i> B2B Partner Management</h3>
+    <p>View and manage B2B partner registrations via Google Sheet or Web Dashboard.</p>
+    <div style="display:flex; justify-content:center; gap:10px; flex-wrap:wrap;">
+      <a href="https://docs.google.com/spreadsheets/d/1nbX4D7D1LkmV8qUwh3QvY5rH4tHqM4K8kg5URMZcHso/edit?gid=0#gid=0" target="_blank">Open Sheet</a>
+      <a href="../Travel/b2b/partnersdetails.html" target="_blank">Open Web</a>
+    </div>
   </div>
 </div>
+    <!-- Customer Review Sheet -->
+      <div class="card">
+        <h3><i class="fa-solid fa-comments"></i> Customer Review Sheet</h3>
+        <p>Manage your customer feedback efficiently using this live Google Sheet.</p>
+        <a href="https://docs.google.com/spreadsheets/d/1a9rIVfmiyb_K7yJBn3JZW1gPvAWbQMYJsBuUfMJnDjo/edit?gid=0#gid=0" target="_blank">Open Sheet</a>
+      </div>
 
-</div>
-
+      <!-- Blog Management -->
+      <div class="card">
+        <h3><i class="fa-solid fa-blog"></i> Blog Management</h3>
+        <p>Manage blog content and posts using the live Google Sheet or directly via the web admin panel.</p>
+        <div style="display:flex; justify-content:center; gap:10px; flex-wrap:wrap;">
+          <a href="https://docs.google.com/spreadsheets/d/1T2o6corRoxNT5WgrW7D5pbdZFBpTz16Tc6VLw2GKrro/edit?gid=0#gid=0" target="_blank">Open Sheet</a>
+          <a href="../Blog/Blogadmin.html" target="_blank">Open Web</a>
+        </div>
+      </div>
 <footer>
   © 2025 Astours International — Your B2B Travel Partner
 </footer>
@@ -231,7 +231,6 @@ function checkPassword(){
   }
 }
 
-// B2B toggle
 function toggleSection(sectionId){
   const section = document.getElementById(sectionId);
   section.style.display = (section.style.display === 'grid') ? 'none' : 'grid';
