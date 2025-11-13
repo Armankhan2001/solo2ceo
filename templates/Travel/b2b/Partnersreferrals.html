@@ -340,7 +340,7 @@ async function fetchReferral() {
   }
 }
 
-// ✅ BANK FORM SUBMISSION HANDLER
+// ✅ BANK FORM SUBMISSION HANDLER (Professional Version)
 document.getElementById("bankForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -356,11 +356,16 @@ document.getElementById("bankForm").addEventListener("submit", async (e) => {
       body: new URLSearchParams(data),
     });
 
-    const result = await response.text();
-    if (result.includes("Success")) {
-      alert("✅ Bank details submitted successfully!");
+    const result = await response.text().then(r => r.trim());
+
+    if (result.includes("Updated")) {
+      alert("✅ Bank details updated successfully!");
+    } else if (result.includes("Added")) {
+      alert("✅ Bank details added successfully!");
+    } else if (result.includes("Error")) {
+      alert("⚠️ " + result);
     } else {
-      alert("⚠️ Submission done, but please verify on the sheet.");
+      alert("✅ Bank details saved successfully!");
     }
 
     document.getElementById("bankForm").reset();
@@ -368,12 +373,13 @@ document.getElementById("bankForm").addEventListener("submit", async (e) => {
 
   } catch (err) {
     console.error(err);
-    alert("❌ Submission failed. Please try again.");
+    alert("❌ Submission failed. Please try again later.");
   } finally {
     document.getElementById("submitBankBtn").disabled = false;
     document.getElementById("bankLoading").style.display = "none";
   }
 });
+
 
 // ✅ OPEN BANK MODAL MANUALLY
 function openBankEditModal() {
