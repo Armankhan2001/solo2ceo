@@ -132,7 +132,7 @@
   <div class="container pb-5">
     <div class="card p-4">
       <div class="mb-3">
-        <label for="clientId" class="form-label fw-semibold">Enter Your Client ID</label>
+        <label for="clientId" class="form-label fw-semibold">Enter Your Partner ID</label>
         <input type="text" id="clientId" class="form-control" placeholder="e.g. 11025">
       </div>
 
@@ -181,95 +181,208 @@
     </div>
   </div>
 
+ <!-- ✅ Bank Details Modal -->
+<div class="modal fade" id="bankModal" tabindex="-1" aria-labelledby="bankModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content rounded-4">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title" id="bankModalLabel">Add Your Bank Details</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="bankForm">
+          <!-- ✅ Must have 'name' attributes matching Google Apps Script parameter names -->
+          <div class="mb-3">
+            <label class="form-label">Client ID</label>
+            <input type="text" class="form-control" id="bankClientId" name="clientId" readonly />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Account Holder Name</label>
+            <input type="text" class="form-control" id="holderName" name="holderName" required />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Bank Name</label>
+            <input type="text" class="form-control" id="bankName" name="bankName" required />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Account Number</label>
+            <input type="text" class="form-control" id="accountNumber" name="accountNumber" required />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">IFSC Code</label>
+            <input type="text" class="form-control" id="ifscCode" name="ifscCode" required />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">UPI ID (optional)</label>
+            <input type="text" class="form-control" id="upiId" name="upiId" placeholder="e.g. name@bank" />
+          </div>
+          <div class="text-center">
+            <button type="submit" class="btn btn-success px-4" id="submitBankBtn">Submit Details</button>
+            <div id="bankLoading" class="mt-3 text-primary fw-semibold" style="display:none;">
+              <i class="fa fa-spinner fa-spin"></i> Submitting your details...
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="bankAction" class="text-center mt-3"></div>
+
+
   <!-- Footer -->
   <footer class="footer">
     © 2025 ASTours International — Building Global Travel Connections 🌍
   </footer>
+ <!-- ✅ Script -->
+<script>
+const sheet1URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRo6-BtopCTAxjdLY2iY08PhtfTpYrOI0AovFYRye9F2Qi7rM9Dp5pDpSwzBSEYi93Uh3LwLHgG9in3/pub?gid=0&single=true&output=csv";
+const sheet2URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRo6-BtopCTAxjdLY2iY08PhtfTpYrOI0AovFYRye9F2Qi7rM9Dp5pDpSwzBSEYi93Uh3LwLHgG9in3/pub?gid=1560195772&single=true&output=csv";
+const bankSheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRo6-BtopCTAxjdLY2iY08PhtfTpYrOI0AovFYRye9F2Qi7rM9Dp5pDpSwzBSEYi93Uh3LwLHgG9in3/pub?gid=940535614&single=true&output=csv";
+const scriptURL = "https://script.google.com/macros/s/AKfycbzvK476S4FL5QL6siPAeRbSfqhxbtj-6NgmAdq5128ahWTgUEoUzsjpl39W5tcPWTJcEA/exec";
 
-  <!-- Script -->
-  <script>
-    const sheet1URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRo6-BtopCTAxjdLY2iY08PhtfTpYrOI0AovFYRye9F2Qi7rM9Dp5pDpSwzBSEYi93Uh3LwLHgG9in3/pub?gid=0&single=true&output=csv";
-    const sheet2URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRo6-BtopCTAxjdLY2iY08PhtfTpYrOI0AovFYRye9F2Qi7rM9Dp5pDpSwzBSEYi93Uh3LwLHgG9in3/pub?gid=1560195772&single=true&output=csv";
+// ✅ FETCH CLIENT REFERRAL DATA
+async function fetchReferral() {
+  const clientId = document.getElementById("clientId").value.trim();
+  if (!clientId) {
+    alert("⚠️ Please enter a valid Client ID");
+    return;
+  }
 
-    async function fetchReferral() {
-      const clientId = document.getElementById("clientId").value.trim();
-      if (!clientId) {
-        alert("Please enter a valid Client ID");
-        return;
-      }
+  document.getElementById("loading").style.display = "block";
+  document.getElementById("resultSection").style.display = "none";
 
-      document.getElementById("loading").style.display = "block";
-      document.getElementById("resultSection").style.display = "none";
+  try {
+    const [sheet1, sheet2, bankSheet] = await Promise.all([
+      fetch(sheet1URL).then(r => r.text()),
+      fetch(sheet2URL).then(r => r.text()),
+      fetch(bankSheetURL).then(r => r.text())
+    ]);
 
-      try {
-        const [sheet1, sheet2] = await Promise.all([
-          fetch(sheet1URL).then(r => r.text()),
-          fetch(sheet2URL).then(r => r.text())
-        ]);
+    const parseCSV = (csv) => {
+      const rows = csv.split(/\r?\n/).filter(r => r.trim() !== "");
+      const headers = rows.shift().split(",").map(h => h.trim().toLowerCase());
+      return rows.map(r => {
+        const values = r.split(",");
+        const obj = {};
+        headers.forEach((h, i) => obj[h] = (values[i] || "").trim());
+        return obj;
+      });
+    };
 
-        const parseCSV = (csv) => {
-          const rows = csv.split(/\r?\n/).filter(r => r.trim() !== "");
-          const headers = rows.shift().split(",").map(h => h.trim().toLowerCase());
-          return rows.map(r => {
-            const values = r.split(",");
-            const obj = {};
-            headers.forEach((h, i) => obj[h] = (values[i] || "").trim());
-            return obj;
-          });
-        };
+    const data1 = parseCSV(sheet1);
+    const data2 = parseCSV(sheet2);
+    const bankData = parseCSV(bankSheet);
 
-        const data1 = parseCSV(sheet1);
-        const data2 = parseCSV(sheet2);
-
-        const partner = data1.find(p => p["client id"] === clientId || p["clientid"] === clientId);
-        if (!partner) {
-          alert("Client ID not found. Please check again.");
-          document.getElementById("loading").style.display = "none";
-          return;
-        }
-
-        document.getElementById("loading").style.display = "none";
-        document.getElementById("resultSection").style.display = "block";
-        document.getElementById("clientIdDisplay").innerText = partner["client id"] || partner["clientid"];
-        document.getElementById("companyName").innerText = partner["company name"] || "N/A";
-
-        const referrals = data2.filter(r => r["client id"] === clientId || r["clientid"] === clientId);
-        const table = document.getElementById("referralTable");
-        table.innerHTML = "";
-
-        if (referrals.length === 0) {
-          table.innerHTML = `
-            <tr>
-              <td colspan="7" class="text-center text-muted">
-                No clients referred by you yet.
-              </td>
-            </tr>`;
-        } else {
-          referrals.forEach(r => {
-            const desc = r["description"] && r["description"].trim() !== "" 
-              ? r["description"]
-              : "No clients referred by you yet.";
-            table.innerHTML += `
-              <tr>
-                <td>${desc}</td>
-                <td>${r["client name"] || ""}</td>
-                <td>${r["location"] || ""}</td>
-                <td>${r["phone number"] || ""}</td>
-                <td>${r["email"] || ""}</td>
-                <td>${r["visa country"] || ""}</td>
-                <td>${r["status"] || ""}</td>
-              </tr>`;
-          });
-        }
-
-      } catch (err) {
-        console.error(err);
-        alert("Error loading referral data. Please try again later.");
-      } finally {
-        document.getElementById("loading").style.display = "none";
-      }
+    const partner = data1.find(p => p["client id"] === clientId || p["clientid"] === clientId);
+    if (!partner) {
+      alert("❌ Client ID not found. Please check again.");
+      document.getElementById("loading").style.display = "none";
+      return;
     }
-  </script>
+
+    // ✅ Display Partner Info
+    document.getElementById("loading").style.display = "none";
+    document.getElementById("resultSection").style.display = "block";
+    document.getElementById("clientIdDisplay").innerText = partner["client id"] || partner["clientid"];
+    document.getElementById("companyName").innerText = partner["company name"] || "N/A";
+
+    // ✅ Display Referral Table
+    const referrals = data2.filter(r => r["client id"] === clientId || r["clientid"] === clientId);
+    const table = document.getElementById("referralTable");
+    table.innerHTML = "";
+
+    if (referrals.length === 0) {
+      table.innerHTML = `<tr><td colspan="7" class="text-center text-muted">No clients referred by you yet.</td></tr>`;
+    } else {
+      referrals.forEach(r => {
+        const desc = r["description"] && r["description"].trim() !== "" ? r["description"] : "No description available.";
+        table.innerHTML += `
+          <tr>
+            <td>${desc}</td>
+            <td>${r["client name"] || ""}</td>
+            <td>${r["location"] || ""}</td>
+            <td>${r["phone number"] || ""}</td>
+            <td>${r["email"] || ""}</td>
+            <td>${r["visa country"] || ""}</td>
+            <td>${r["status"] || ""}</td>
+          </tr>`;
+      });
+    }
+
+    // ✅ Prefill Bank Details if Exist
+    const existingBank = bankData.find(
+      b => b["client id"] === clientId || b["clientid"] === clientId
+    );
+
+    if (existingBank) {
+      document.getElementById("bankClientId").value = existingBank["client id"] || clientId;
+      document.getElementById("holderName").value = existingBank["holder name"] || "";
+      document.getElementById("bankName").value = existingBank["bank name"] || "";
+      document.getElementById("accountNumber").value = existingBank["account number"] || "";
+      document.getElementById("ifscCode").value = existingBank["ifsc code"] || "";
+      document.getElementById("upiId").value = existingBank["upi id"] || "";
+
+      document.getElementById("bankAction").innerHTML = `
+        <button class="btn btn-primary" onclick="openBankEditModal()">💳 View / Edit Bank Details</button>`;
+    } else {
+      document.getElementById("bankClientId").value = clientId;
+      const bankModal = new bootstrap.Modal(document.getElementById('bankModal'));
+      bankModal.show();
+    }
+
+  } catch (err) {
+    console.error(err);
+    alert("⚠️ Error loading referral data. Please try again later.");
+  } finally {
+    document.getElementById("loading").style.display = "none";
+  }
+}
+
+// ✅ BANK FORM SUBMISSION HANDLER
+document.getElementById("bankForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const formData = new FormData(document.getElementById("bankForm"));
+  const data = Object.fromEntries(formData.entries());
+
+  document.getElementById("submitBankBtn").disabled = true;
+  document.getElementById("bankLoading").style.display = "block";
+
+  try {
+    const response = await fetch(scriptURL, {
+      method: "POST",
+      body: new URLSearchParams(data),
+    });
+
+    const result = await response.text();
+    if (result.includes("Success")) {
+      alert("✅ Bank details submitted successfully!");
+    } else {
+      alert("⚠️ Submission done, but please verify on the sheet.");
+    }
+
+    document.getElementById("bankForm").reset();
+    bootstrap.Modal.getInstance(document.getElementById('bankModal')).hide();
+
+  } catch (err) {
+    console.error(err);
+    alert("❌ Submission failed. Please try again.");
+  } finally {
+    document.getElementById("submitBankBtn").disabled = false;
+    document.getElementById("bankLoading").style.display = "none";
+  }
+});
+
+// ✅ OPEN BANK MODAL MANUALLY
+function openBankEditModal() {
+  const bankModal = new bootstrap.Modal(document.getElementById('bankModal'));
+  bankModal.show();
+}
+</script>
+
+
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
