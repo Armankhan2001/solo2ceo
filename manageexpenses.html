@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Expense Titan Pro</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
+                    colors: { 
+                        brand: { 50: '#eff6ff', 100: '#dbeafe', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8', 900: '#1e3a8a' }, 
+                        dark: '#0f172a', surface: '#f8fafc' 
+                    },
+                    boxShadow: { 'glass': '0 8px 32px 0 rgba(31, 38, 135, 0.07)' }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #f8fafc; -webkit-tap-highlight-color: transparent; }
+        
+        /* Glassmorphism */
+        .glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.6); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02); }
+        .glass-dark { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); color: white; }
+        
+        /* Nav States */
+        .nav-item { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+        .nav-item.active { background-color: #eff6ff; color: #2563eb; font-weight: 700; }
+        .nav-item.active i { color: #2563eb; }
+        
+        /* Mobile Nav */
+        .mob-nav-item.active { color: #2563eb; }
+        .mob-nav-item.active::after { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 24px; height: 3px; background: #2563eb; border-radius: 0 0 4px 4px; }
+
+        /* Animations */
+        .animate-fade-in { animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Toast */
+        .toast-enter { animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+        @keyframes slideIn { from { transform: translateY(-100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    </style>
+</head>
+<body class="text-slate-600 h-screen flex flex-col lg:flex-row overflow-hidden font-sans">
+
+    <div id="toast-container" class="fixed top-6 right-6 z-[100] flex flex-col gap-3 pointer-events-none"></div>
+
+    <div id="cat-modal" class="hidden fixed inset-0 z-[80] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity">
+        <div class="bg-white w-full max-w-sm rounded-3xl p-8 shadow-2xl animate-fade-in transform transition-all scale-100">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-bold text-slate-900">New Category</h3>
+                <button onclick="document.getElementById('cat-modal').classList.add('hidden')" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center hover:bg-slate-200"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <input type="text" id="new-cat-name" placeholder="E.g. Gym, Rent, Pets" class="w-full p-4 border border-slate-200 rounded-2xl bg-slate-50 font-bold text-slate-800 focus:ring-2 focus:ring-brand-500 focus:bg-white outline-none transition mb-6">
+            <button onclick="saveCategory()" id="btn-save-cat" class="w-full py-4 font-bold text-white bg-brand-600 rounded-2xl hover:bg-brand-700 shadow-lg shadow-brand-500/30 transition transform active:scale-95">Create Category</button>
+        </div>
+    </div>
+
+    <div id="auth-view" class="fixed inset-0 z-50 bg-white flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-5xl h-[90vh] max-h-[700px] rounded-[40px] shadow-2xl flex overflow-hidden border border-slate-100">
+            <div class="hidden lg:flex w-5/12 bg-dark relative items-center justify-center p-12 overflow-hidden">
+                <div class="absolute inset-0 bg-gradient-to-br from-brand-600 to-indigo-900 opacity-90"></div>
+                <div class="absolute -bottom-24 -left-24 w-96 h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
+                <div class="absolute -top-24 -right-24 w-96 h-96 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
+                <div class="relative z-10 text-white">
+                    <div class="w-16 h-16 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center mb-8 border border-white/20 shadow-xl">
+                        <i class="fa-solid fa-wallet text-3xl"></i>
+                    </div>
+                    <h1 class="text-5xl font-bold mb-6 leading-tight">Master Your<br>Money.</h1>
+                    <p class="text-indigo-100 text-lg leading-relaxed opacity-90">Track expenses, analyze habits, and optimize savings with the ultimate financial dashboard.</p>
+                </div>
+            </div>
+            <div class="w-full lg:w-7/12 p-8 lg:p-16 flex flex-col justify-center bg-white relative">
+                <div class="max-w-md mx-auto w-full">
+                    <div class="mb-10 text-center lg:text-left">
+                        <h2 class="text-3xl font-bold text-slate-900 mb-2">Welcome Back</h2>
+                        <p class="text-slate-400">Manage your finances intelligently.</p>
+                    </div>
+                    
+                    <div class="flex bg-slate-100 p-1.5 rounded-2xl mb-8">
+                        <button onclick="toggleAuth('login')" id="tab-login" class="flex-1 bg-white shadow-sm py-3 rounded-xl font-bold text-slate-800 transition text-sm">Log In</button>
+                        <button onclick="toggleAuth('register')" id="tab-reg" class="flex-1 text-slate-500 py-3 rounded-xl font-bold transition text-sm hover:text-slate-700">Register</button>
+                    </div>
+
+                    <form onsubmit="handleAuth(event)" class="space-y-5">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-2 ml-1">Username</label>
+                            <input type="text" id="auth-user" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl font-semibold focus:bg-white focus:ring-2 focus:ring-brand-500 outline-none transition" placeholder="Enter username" required>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-2 ml-1">Password</label>
+                            <input type="password" id="auth-pass" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl font-semibold focus:bg-white focus:ring-2 focus:ring-brand-500 outline-none transition" placeholder="••••••••" required>
+                        </div>
+                        <button id="btn-auth" class="w-full bg-slate-900 text-white font-bold py-4 rounded-2xl hover:bg-black transition shadow-xl shadow-slate-200 transform active:scale-95 mt-4">Sign In</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="app-view" class="hidden flex-1 flex flex-col lg:flex-row h-full w-full">
+        
+        <aside class="hidden lg:flex w-72 bg-white border-r border-slate-200 flex-col z-20 shadow-sm">
+            <div class="h-24 flex items-center px-8 border-b border-slate-50">
+                <div class="w-10 h-10 bg-brand-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-brand-500/30">
+                    <i class="fa-solid fa-cube text-xl"></i>
+                </div>
+                <span class="ml-3 font-bold text-xl text-slate-800 tracking-tight">Expense<span class="text-brand-600">Pro</span></span>
+            </div>
+            
+            <nav class="p-6 space-y-2 flex-1">
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 pl-3">Menu</p>
+                <button onclick="switchTab('dashboard')" id="desk-nav-dashboard" class="nav-item active w-full flex items-center p-4 rounded-2xl text-slate-500 gap-4">
+                    <i class="fa-solid fa-layer-group text-lg w-6 text-center transition-colors"></i> Overview
+                </button>
+                <button onclick="switchTab('analytics')" id="desk-nav-analytics" class="nav-item w-full flex items-center p-4 rounded-2xl text-slate-500 gap-4">
+                    <i class="fa-solid fa-chart-pie text-lg w-6 text-center transition-colors"></i> Analytics
+                </button>
+            </nav>
+            
+            <div class="p-6 border-t border-slate-50 bg-slate-50/50">
+                <div class="flex items-center gap-4 mb-4 bg-white p-3 rounded-2xl border border-slate-100 shadow-sm">
+                    <div class="w-10 h-10 rounded-full bg-brand-50 flex items-center justify-center text-brand-600 font-bold border border-brand-100"><i class="fa-solid fa-user"></i></div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-xs text-slate-400 font-bold uppercase">Logged In</p>
+                        <p class="text-sm font-bold text-slate-900 truncate" id="desk-user">User</p>
+                    </div>
+                </div>
+                <button onclick="logout()" class="w-full py-3 text-xs font-bold text-red-500 hover:bg-red-50 rounded-xl transition uppercase tracking-wider flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
+                </button>
+            </div>
+        </aside>
+
+        <main class="flex-1 flex flex-col h-full relative overflow-hidden bg-slate-50/80">
+            
+            <header class="lg:hidden h-16 bg-white/90 backdrop-blur-md border-b border-slate-200 flex items-center justify-between px-5 sticky top-0 z-30 shadow-sm">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 bg-brand-600 rounded-lg flex items-center justify-center text-white text-sm shadow-md">
+                        <i class="fa-solid fa-cube"></i>
+                    </div>
+                    <span class="font-bold text-lg text-slate-800 tracking-tight">Titan</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="flex items-center gap-2 bg-slate-100 px-3 py-1.5 rounded-full border border-slate-200">
+                        <div class="w-5 h-5 rounded-full bg-slate-300 flex items-center justify-center"><i class="fa-solid fa-user text-[10px] text-white"></i></div>
+                        <span class="text-xs font-bold text-slate-700 max-w-[80px] truncate" id="mob-user">User</span>
+                    </div>
+                    <button onclick="logout()" class="w-9 h-9 rounded-full bg-red-50 border border-red-100 flex items-center justify-center text-red-500 hover:bg-red-100 transition"><i class="fa-solid fa-power-off text-sm"></i></button>
+                </div>
+            </header>
+
+            <div class="flex-1 overflow-y-auto p-4 lg:p-10 pb-28 lg:pb-10 scroll-smooth" id="main-scroll">
+                
+                <div id="view-dashboard" class="max-w-7xl mx-auto space-y-8 animate-fade-in">
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-8">
+                        <div class="glass-dark p-8 rounded-3xl relative overflow-hidden shadow-2xl shadow-brand-900/20 group">
+                            <div class="relative z-10">
+                                <div class="flex justify-between items-start mb-4">
+                                    <div class="p-3 bg-white/10 rounded-2xl backdrop-blur-sm"><i class="fa-solid fa-wallet text-indigo-300 text-xl"></i></div>
+                                    <span class="bg-emerald-500/20 text-emerald-300 text-xs font-bold px-3 py-1 rounded-full border border-emerald-500/30">+ Active</span>
+                                </div>
+                                <p class="text-indigo-200 text-xs font-bold uppercase tracking-wider mb-1">Total Lifetime Spend</p>
+                                <h2 class="text-4xl font-bold text-white tracking-tight" id="stat-total">₹0</h2>
+                            </div>
+                            <div class="absolute -right-12 -bottom-12 w-48 h-48 bg-brand-500 rounded-full blur-[60px] opacity-40 group-hover:opacity-60 transition duration-500"></div>
+                        </div>
+
+                        <div class="glass p-8 rounded-3xl border border-white shadow-sm relative group hover:shadow-md transition">
+                            <div class="p-3 bg-brand-50 w-fit rounded-2xl mb-4 text-brand-600"><i class="fa-regular fa-calendar text-xl"></i></div>
+                            <p class="text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">This Month</p>
+                            <h2 class="text-3xl font-bold text-slate-800" id="stat-month">₹0</h2>
+                        </div>
+                        
+                        <div class="glass p-8 rounded-3xl border border-white shadow-sm relative group hover:shadow-md transition">
+                            <div class="p-3 bg-emerald-50 w-fit rounded-2xl mb-4 text-emerald-600"><i class="fa-solid fa-chart-line text-xl"></i></div>
+                            <p class="text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">This Week</p>
+                            <h2 class="text-3xl font-bold text-slate-800" id="stat-week">₹0</h2>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 lg:gap-8">
+                        <div class="xl:col-span-1">
+                            <div class="glass p-8 rounded-3xl shadow-sm border border-white sticky top-6">
+                                <div class="flex items-center justify-between mb-8">
+                                    <h3 class="font-bold text-slate-800 text-lg">New Transaction</h3>
+                                    <div class="w-8 h-8 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center"><i class="fa-solid fa-plus"></i></div>
+                                </div>
+                                <form onsubmit="addExpense(event)" class="space-y-6">
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2 pl-1">Date</label>
+                                            <input type="date" id="add-date" class="w-full p-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-semibold focus:bg-white focus:ring-2 focus:ring-brand-500 outline-none transition cursor-pointer">
+                                        </div>
+                                        <div>
+                                            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2 pl-1">Amount (₹)</label>
+                                            <input type="number" id="add-amt" placeholder="0" class="w-full p-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-bold text-slate-900 focus:bg-white focus:ring-2 focus:ring-brand-500 outline-none transition">
+                                        </div>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2 pl-1">Category</label>
+                                        <div id="cat-grid" class="grid grid-cols-3 gap-3">
+                                            </div>
+                                        <input type="hidden" id="add-cat" value="Food">
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2 pl-1">Description</label>
+                                        <input type="text" id="add-desc" placeholder="e.g. Starbucks, Petrol" class="w-full p-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:bg-white focus:ring-2 focus:ring-brand-500 outline-none transition">
+                                    </div>
+
+                                    <button id="btn-add" class="w-full bg-slate-900 text-white font-bold py-4 rounded-2xl hover:bg-black transition shadow-xl shadow-slate-200 transform active:scale-[0.98] flex justify-center items-center gap-2">
+                                        <i class="fa-solid fa-check"></i> Add Transaction
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="xl:col-span-2">
+                            <div class="glass rounded-3xl overflow-hidden flex flex-col h-full min-h-[500px] border border-white shadow-sm">
+                                <div class="p-6 border-b border-slate-100 bg-white/50 backdrop-blur flex justify-between items-center sticky top-0 z-10">
+                                    <h3 class="font-bold text-slate-800 text-lg">Recent History</h3>
+                                    <button onclick="loadData()" class="w-9 h-9 rounded-xl bg-slate-100 flex items-center justify-center text-brand-600 hover:bg-brand-50 transition"><i class="fa-solid fa-arrows-rotate"></i></button>
+                                </div>
+                                <div class="flex-1 overflow-y-auto custom-scroll">
+                                    <table class="w-full text-left text-sm border-collapse">
+                                        <tbody id="table-body">
+                                            <tr><td class="p-6"><div class="h-12 w-full shimmer rounded-xl"></div></td></tr>
+                                            <tr><td class="p-6"><div class="h-12 w-full shimmer rounded-xl"></div></td></tr>
+                                            <tr><td class="p-6"><div class="h-12 w-full shimmer rounded-xl"></div></td></tr>
+                                        </tbody>
+                                    </table>
+                                    <div id="empty-state" class="hidden flex flex-col items-center justify-center h-64 text-center">
+                                        <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mb-4 text-slate-300 text-3xl"><i class="fa-solid fa-receipt"></i></div>
+                                        <p class="text-slate-500 font-medium">No transactions found.</p>
+                                        <p class="text-xs text-slate-400 mt-1">Add a new expense to get started.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="view-analytics" class="hidden max-w-7xl mx-auto space-y-8 animate-fade-in">
+                    <div class="glass p-6 rounded-3xl border border-white shadow-sm flex flex-col md:flex-row gap-6 justify-between items-end">
+                        <div class="w-full md:w-auto flex-1">
+                            <label class="text-xs font-bold text-slate-400 uppercase mb-3 block pl-1">Quick Filters</label>
+                            <div class="flex bg-slate-100 p-1.5 rounded-2xl gap-1">
+                                <button onclick="setFilter('week')" class="flex-1 py-2.5 px-6 rounded-xl text-xs font-bold text-slate-500 hover:bg-white hover:shadow-sm transition">Week</button>
+                                <button onclick="setFilter('month')" class="flex-1 py-2.5 px-6 rounded-xl text-xs font-bold text-slate-500 hover:bg-white hover:shadow-sm transition">Month</button>
+                                <button onclick="setFilter('year')" class="flex-1 py-2.5 px-6 rounded-xl text-xs font-bold text-slate-500 hover:bg-white hover:shadow-sm transition">Year</button>
+                            </div>
+                        </div>
+                        <div class="w-full md:w-auto">
+                            <label class="text-xs font-bold text-slate-400 uppercase mb-3 block pl-1">Custom Range</label>
+                            <div class="flex items-center gap-3 bg-slate-50 border border-slate-200 p-2 pl-4 rounded-2xl">
+                                <input type="date" id="report-start" class="bg-transparent text-sm font-bold text-slate-700 outline-none w-28 cursor-pointer">
+                                <span class="text-slate-300 text-xs font-bold">TO</span>
+                                <input type="date" id="report-end" class="bg-transparent text-sm font-bold text-slate-700 outline-none w-28 cursor-pointer">
+                                <button onclick="applyReport()" class="w-10 h-10 rounded-xl bg-brand-600 text-white flex items-center justify-center shadow-lg hover:bg-brand-700 transition"><i class="fa-solid fa-arrow-right"></i></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+                        <div class="lg:col-span-1 glass p-8 rounded-3xl border border-white shadow-sm flex flex-col items-center justify-center relative min-h-[400px]">
+                            <h3 class="font-bold text-slate-800 w-full mb-6 text-lg">Spending Distribution</h3>
+                            <div class="w-full h-64 relative z-10"><canvas id="expenseChart"></canvas></div>
+                            <div class="absolute inset-0 flex items-center justify-center pointer-events-none mt-10">
+                                <div class="text-center">
+                                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Total Selected</p>
+                                    <p class="text-3xl font-bold text-slate-800 tracking-tight" id="report-total">₹0</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="lg:col-span-2 glass rounded-3xl border border-white shadow-sm overflow-hidden">
+                            <div class="p-6 border-b border-slate-100 bg-slate-50/50">
+                                <h3 class="font-bold text-slate-700 text-lg">Category Breakdown</h3>
+                            </div>
+                            <div class="p-8 space-y-6" id="category-list">
+                                </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <nav class="lg:hidden h-24 bg-white/95 backdrop-blur border-t border-slate-200 flex justify-around items-center px-4 pb-6 z-40 fixed bottom-0 w-full shadow-[0_-10px_40px_rgba(0,0,0,0.05)]">
+                <button onclick="switchTab('dashboard')" id="mob-nav-dashboard" class="mob-nav-item active flex-1 flex flex-col items-center py-2 text-slate-400 relative">
+                    <i class="fa-solid fa-house text-xl mb-1.5 transition-transform active:scale-90"></i>
+                    <span class="text-[10px] font-bold">Home</span>
+                </button>
+                
+                <div class="w-20 relative -mt-12">
+                    <button onclick="document.getElementById('add-desc').focus()" class="w-16 h-16 rounded-full bg-brand-600 text-white shadow-xl shadow-brand-500/40 flex items-center justify-center text-2xl transform active:scale-90 transition border-4 border-slate-50">
+                        <i class="fa-solid fa-plus"></i>
+                    </button>
+                </div>
+                
+                <button onclick="switchTab('analytics')" id="mob-nav-analytics" class="mob-nav-item flex-1 flex flex-col items-center py-2 text-slate-400 relative">
+                    <i class="fa-solid fa-chart-pie text-xl mb-1.5 transition-transform active:scale-90"></i>
+                    <span class="text-[10px] font-bold">Analytics</span>
+                </button>
+            </nav>
+        </main>
+    </div>
+
+    <div id="edit-modal" class="hidden fixed inset-0 z-[90] bg-slate-900/60 backdrop-blur-md flex items-end sm:items-center justify-center sm:p-4 transition-opacity">
+        <div class="bg-white w-full sm:max-w-md rounded-t-[32px] sm:rounded-[32px] p-8 shadow-2xl animate-fade-in relative">
+            <div class="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-8 sm:hidden"></div>
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold text-slate-900">Edit Entry</h3>
+                <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-slate-200"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <input type="hidden" id="edit-id">
+            
+            <div class="space-y-5">
+                <div class="flex gap-4">
+                    <div class="flex-1">
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Date</label>
+                        <input type="date" id="edit-date" class="w-full p-4 border border-slate-200 rounded-2xl bg-slate-50 font-bold text-sm outline-none focus:bg-white focus:ring-2 focus:ring-brand-500 transition">
+                    </div>
+                    <div class="flex-1">
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Amount</label>
+                        <input type="number" id="edit-amt" class="w-full p-4 border border-slate-200 rounded-2xl bg-slate-50 font-bold text-slate-900 outline-none focus:bg-white focus:ring-2 focus:ring-brand-500 transition">
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Category</label>
+                    <select id="edit-cat" class="w-full p-4 border border-slate-200 rounded-2xl bg-slate-50 text-sm font-bold text-slate-700 outline-none focus:bg-white focus:ring-2 focus:ring-brand-500 transition"></select>
+                </div>
+                
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Description</label>
+                    <input type="text" id="edit-desc" class="w-full p-4 border border-slate-200 rounded-2xl bg-slate-50 text-sm font-medium outline-none focus:bg-white focus:ring-2 focus:ring-brand-500 transition">
+                </div>
+            </div>
+            
+            <button onclick="submitEdit()" id="btn-save-edit" class="w-full py-4 mt-8 font-bold text-white bg-brand-600 rounded-2xl hover:bg-brand-700 transition shadow-lg shadow-brand-500/30">Save Changes</button>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // ⚠️ PASTE YOUR GOOGLE SCRIPT URL HERE ⚠️
+        // ============================================
+        const API_URL = "https://script.google.com/macros/s/AKfycby_PKyEp62XAkp7GLg7uOpLPW2imJKDTYB1neMrH9cipbgfwS8pS0VbtVVBcRWggryu/exec";
+        // ============================================
+
+        let currentUser = localStorage.getItem("expenseUser");
+        let allTransactions = [];
+        let authMode = 'login';
+        let chartInstance = null;
+        let categories = ['Food', 'Fuel', 'Groceries', 'Shopping', 'Bills', 'Entertainment', 'Other'];
+        
+        // Extended Color Palette
+        const colors = { 
+            'Food':'#f59e0b', 'Fuel':'#3b82f6', 'Groceries':'#10b981', 'Shopping':'#8b5cf6', 
+            'Bills':'#ef4444', 'Entertainment':'#ec4899', 'Other':'#64748b' 
+        };
+        const icons = { 
+            'Food':'fa-burger', 'Fuel':'fa-gas-pump', 'Groceries':'fa-carrot', 'Shopping':'fa-bag-shopping', 
+            'Bills':'fa-file-invoice', 'Entertainment':'fa-film', 'Other':'fa-tag' 
+        };
+
+        window.onload = function() {
+            document.getElementById('add-date').valueAsDate = new Date();
+            renderCategoryButtons();
+            if(currentUser) showApp();
+        }
+
+        // --- UI FUNCTIONS ---
+        function renderCategoryButtons() {
+            const grid = document.getElementById('cat-grid');
+            grid.innerHTML = '';
+            
+            categories.forEach(cat => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'cat-btn p-3 rounded-2xl border border-slate-200 text-xs font-bold text-slate-500 hover:bg-slate-50 transition text-center truncate bg-white shadow-sm';
+                btn.innerText = cat;
+                btn.onclick = () => selectCat(btn, cat);
+                if(cat === 'Food') { 
+                    btn.classList.add('bg-brand-50', 'text-brand-600', 'border-brand-200', 'ring-2', 'ring-brand-100');
+                    btn.classList.remove('text-slate-500', 'border-slate-200', 'bg-white');
+                }
+                grid.appendChild(btn);
+            });
+
+            // Add Button
+            const addBtn = document.createElement('button');
+            addBtn.type = 'button';
+            addBtn.className = 'p-3 rounded-2xl border border-dashed border-slate-300 text-xs font-bold text-slate-400 hover:bg-slate-50 transition flex items-center justify-center gap-1';
+            addBtn.innerHTML = '<i class="fa-solid fa-plus"></i> New';
+            addBtn.onclick = () => document.getElementById('cat-modal').classList.remove('hidden');
+            grid.appendChild(addBtn);
+
+            // Populate Edit Dropdown
+            const editSelect = document.getElementById('edit-cat');
+            editSelect.innerHTML = '';
+            categories.forEach(cat => {
+                const opt = document.createElement('option');
+                opt.value = cat; opt.innerText = cat;
+                editSelect.appendChild(opt);
+            });
+        }
+
+        function selectCat(btn, val) {
+            document.querySelectorAll('.cat-btn').forEach(b => {
+                b.className = 'cat-btn p-3 rounded-2xl border border-slate-200 text-xs font-bold text-slate-500 hover:bg-slate-50 transition text-center truncate bg-white shadow-sm';
+            });
+            btn.className = 'cat-btn p-3 rounded-2xl border border-brand-200 bg-brand-50 text-xs font-bold text-brand-600 transition text-center truncate ring-2 ring-brand-100';
+            document.getElementById('add-cat').value = val;
+        }
+
+        // --- CORE LOGIC ---
+        function loadData() {
+            fetch(`${API_URL}?action=getData&user=${currentUser}`)
+            .then(res => res.json())
+            .then(json => {
+                if(json.status === 'success') {
+                    allTransactions = json.payload.history;
+                    updateStats(json.payload.stats);
+                    if(json.payload.categories) {
+                        json.payload.categories.forEach(c => { if(!categories.includes(c)) categories.push(c); });
+                        renderCategoryButtons();
+                    }
+                    renderTable(allTransactions);
+                }
+            });
+        }
+
+        function saveCategory() {
+            const name = document.getElementById('new-cat-name').value.trim();
+            if(!name) return;
+            const btn = document.getElementById('btn-save-cat'); btn.innerText = '...'; btn.disabled = true;
+            fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "addCategory", user: currentUser, category: name }) })
+            .then(res => res.json()).then(data => {
+                if(data.status === 'success') {
+                    document.getElementById('cat-modal').classList.add('hidden');
+                    document.getElementById('new-cat-name').value = '';
+                    categories.push(name); renderCategoryButtons(); showToast("Category Added");
+                } else showToast(data.payload, 'error');
+            }).finally(() => { btn.innerText = 'Create Category'; btn.disabled = false; });
+        }
+
+        function addExpense(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btn-add'); btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>';
+            const form = { action: "add", user: currentUser, date: document.getElementById('add-date').value, category: document.getElementById('add-cat').value, description: document.getElementById('add-desc').value, amount: document.getElementById('add-amt').value };
+            fetch(API_URL, { method: "POST", body: JSON.stringify(form) }).then(res => res.json()).then(data => {
+                if(data.status === 'success') { showToast("Added Successfully"); document.getElementById('add-desc').value=''; document.getElementById('add-amt').value=''; loadData(); }
+            }).finally(() => { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-check"></i> Add Transaction'; });
+        }
+
+        function renderTable(data) {
+            const tbody = document.getElementById('table-body'); tbody.innerHTML = "";
+            const empty = document.getElementById('empty-state');
+            
+            if(data.length === 0) { empty.classList.remove('hidden'); return; } else { empty.classList.add('hidden'); }
+
+            data.forEach(t => {
+                const date = new Date(t.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                const color = colors[t.category] || '#64748b';
+                const icon = icons[t.category] || 'fa-tag';
+                
+                tbody.innerHTML += `
+                    <tr class="group hover:bg-slate-50 transition border-b border-slate-50 last:border-0">
+                        <td class="p-6">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-brand-50 group-hover:text-brand-600 transition shadow-sm border border-slate-100">
+                                    <i class="fa-solid ${icon} text-lg"></i>
+                                </div>
+                                <div>
+                                    <p class="font-bold text-slate-800 text-sm mb-0.5">${t.desc}</p>
+                                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wide">${date} • ${t.category}</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="p-6 text-right">
+                            <span class="font-bold text-slate-800 block text-base mb-1">-₹${t.amount.toLocaleString()}</span>
+                            <div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <button onclick="openEditModal('${t.id}')" class="text-brand-600 hover:bg-brand-50 p-1.5 rounded-lg transition"><i class="fa-solid fa-pen"></i></button>
+                                <button onclick="deleteItem('${t.id}')" class="text-slate-400 hover:text-red-500 hover:bg-red-50 p-1.5 rounded-lg transition"><i class="fa-solid fa-trash"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        // --- AUTH & NAV ---
+        function switchTab(tab) {
+            document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
+            if(document.getElementById(`desk-nav-${tab}`)) document.getElementById(`desk-nav-${tab}`).classList.add('active');
+            document.querySelectorAll('.mob-nav-item').forEach(el => { el.classList.remove('active', 'text-brand-600'); el.classList.add('text-slate-400'); });
+            if(document.getElementById(`mob-nav-${tab}`)) { const mob = document.getElementById(`mob-nav-${tab}`); mob.classList.add('active', 'text-brand-600'); mob.classList.remove('text-slate-400'); }
+            document.getElementById('view-dashboard').classList.add('hidden'); document.getElementById('view-analytics').classList.add('hidden');
+            document.getElementById(`view-${tab}`).classList.remove('hidden');
+            if(tab === 'analytics') setFilter('month');
+        }
+
+        function toggleAuth(mode) { authMode = mode; const loginBtn=document.getElementById('tab-login'); const regBtn=document.getElementById('tab-reg'); const authBtn=document.getElementById('btn-auth'); if(mode==='login'){ loginBtn.className='flex-1 bg-white shadow-sm py-3 rounded-xl font-bold text-slate-800 transition text-sm'; regBtn.className='flex-1 text-slate-500 py-3 rounded-xl font-bold transition text-sm hover:text-slate-700'; authBtn.innerText="Sign In"; } else { regBtn.className='flex-1 bg-white shadow-sm py-3 rounded-xl font-bold text-slate-800 transition text-sm'; loginBtn.className='flex-1 text-slate-500 py-3 rounded-xl font-bold transition text-sm hover:text-slate-700'; authBtn.innerText="Create Account"; } }
+        function handleAuth(e) { e.preventDefault(); const btn=document.getElementById('btn-auth'); const u=document.getElementById('auth-user').value; const p=document.getElementById('auth-pass').value; btn.disabled=true; btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i>'; fetch(API_URL, {method:"POST", body:JSON.stringify({action:authMode, username:u, password:p})}).then(res=>res.json()).then(data=>{ if(data.status==='success'){ if(authMode==='login'){ currentUser=data.payload.username; localStorage.setItem("expenseUser",currentUser); showApp(); } else { showToast("Registered! Please login."); toggleAuth('login'); } } else showToast(data.payload,'error'); }).finally(()=>{ btn.disabled=false; btn.innerText=authMode==='login'?"Sign In":"Create Account"; }); }
+        function showApp() { document.getElementById('auth-view').classList.add('hidden'); document.getElementById('app-view').classList.remove('hidden'); document.getElementById('desk-user').innerText=currentUser; document.getElementById('mob-user').innerText=currentUser; loadData(); }
+        function logout() { localStorage.removeItem("expenseUser"); location.reload(); }
+
+        // --- ANALYTICS ---
+        function setFilter(type) { const now=new Date(); const s=document.getElementById('report-start'); const e=document.getElementById('report-end'); e.valueAsDate=now; if(type==='week'){const d=new Date(); d.setDate(now.getDate()-7); s.valueAsDate=d;} else if(type==='month'){s.valueAsDate=new Date(now.getFullYear(), now.getMonth(), 1);} else if(type==='year'){s.valueAsDate=new Date(now.getFullYear(), 0, 1);} applyReport(); }
+        function applyReport() {
+            const start = new Date(document.getElementById('report-start').value || 0); const end = new Date(document.getElementById('report-end').value || '2100-01-01'); end.setHours(23,59,59);
+            const filtered = allTransactions.filter(t => { const d = new Date(t.timestamp); return d >= start && d <= end; });
+            const breakdown = {}; let total = 0; filtered.forEach(t => { breakdown[t.category] = (breakdown[t.category] || 0) + t.amount; total += t.amount; });
+            document.getElementById('report-total').innerText = "₹" + total.toLocaleString(); renderChart(breakdown); renderCategoryList(breakdown, total);
+        }
+        function renderChart(data) { const ctx=document.getElementById('expenseChart').getContext('2d'); if(chartInstance)chartInstance.destroy(); chartInstance=new Chart(ctx, {type:'doughnut', data:{labels:Object.keys(data), datasets:[{data:Object.values(data), backgroundColor:Object.keys(data).map(k=>colors[k]||'#6366f1'), borderWidth:0}]}, options:{responsive:true, maintainAspectRatio:false, cutout:'80%', plugins:{legend:{display:false}}}}); }
+        function renderCategoryList(data, total) { const c=document.getElementById('category-list'); c.innerHTML=""; Object.keys(data).sort((a,b)=>data[b]-data[a]).forEach(cat=>{ const amt=data[cat]; const pct=total>0?Math.round((amt/total)*100):0; const color=colors[cat]||'#6366f1'; const icon=icons[cat]||'fa-tag'; c.innerHTML+=`<div class="flex items-center gap-4"><div class="w-12 h-12 rounded-2xl flex items-center justify-center text-white shadow-md shadow-brand-500/20" style="background-color:${color}"><i class="fa-solid ${icon}"></i></div><div class="flex-1"><div class="flex justify-between text-sm mb-2"><span class="font-bold text-slate-800">${cat}</span><span class="font-bold text-slate-900">₹${amt.toLocaleString()} <span class="text-slate-400 font-medium ml-1">(${pct}%)</span></span></div><div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden"><div class="h-2 rounded-full" style="width:${pct}%; background-color:${color}"></div></div></div></div>`; }); }
+
+        // --- MISC ---
+        function updateStats(s) { document.getElementById('stat-week').innerText="₹"+s.weekly.toLocaleString(); document.getElementById('stat-month').innerText="₹"+s.monthly.toLocaleString(); document.getElementById('stat-total').innerText="₹"+s.total.toLocaleString(); }
+        function deleteItem(id) { if(!confirm("Are you sure?")) return; showToast("Deleting...","info"); fetch(API_URL, {method:"POST", body:JSON.stringify({action:"delete", id:id, user:currentUser})}).then(res=>res.json()).then(data=>{if(data.status==='success'){showToast("Deleted"); loadData();}}); }
+        function openEditModal(id) { const item=allTransactions.find(t=>t.id===id); if(!item)return; document.getElementById('edit-id').value=id; document.getElementById('edit-date').value=new Date(item.timestamp).toISOString().split('T')[0]; document.getElementById('edit-cat').value=item.category; document.getElementById('edit-desc').value=item.desc; document.getElementById('edit-amt').value=item.amount; document.getElementById('edit-modal').classList.remove('hidden'); }
+        function closeModal() { document.getElementById('edit-modal').classList.add('hidden'); }
+        function submitEdit() { const btn=document.getElementById('btn-save-edit'); btn.disabled=true; btn.innerText="Saving..."; const form={action:"edit", id:document.getElementById('edit-id').value, user:currentUser, date:document.getElementById('edit-date').value, category:document.getElementById('edit-cat').value, description:document.getElementById('edit-desc').value, amount:document.getElementById('edit-amt').value }; fetch(API_URL, {method:"POST", body:JSON.stringify(form)}).then(res=>res.json()).then(data=>{if(data.status==='success'){showToast("Updated"); closeModal(); loadData();}}).finally(()=>{btn.disabled=false; btn.innerText="Save Changes";}); }
+        function showToast(msg, type='success') { const el=document.createElement('div'); el.className=`toast-enter p-4 rounded-2xl shadow-xl flex items-center gap-3 text-sm font-bold text-white pointer-events-auto backdrop-blur-md ${type==='success'?'bg-emerald-500/90':'bg-red-500/90'}`; el.innerHTML=`<i class="fa-solid ${type==='success'?'fa-circle-check':'fa-triangle-exclamation'}"></i> ${msg}`; document.getElementById('toast-container').appendChild(el); setTimeout(()=>{el.style.opacity='0'; setTimeout(()=>el.remove(),300)},3000); }
+    </script>
+</body>
+</html>
