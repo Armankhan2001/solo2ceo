@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Open Shield Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #0f172a; color: #e2e8f0; font-family: sans-serif; }
+        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
+        .status-badge { padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; text-transform: uppercase; }
+        .bg-Approved, .bg-Active { background-color: #059669; color: white; }
+        .bg-Pending { background-color: #d97706; color: white; }
+        .bg-Banned, .bg-Closed { background-color: #dc2626; color: white; }
+        .nav-btn.active { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border-right: 3px solid #38bdf8; }
+        /* Special active state for the green sheet button */
+        #btn-sheet.active { background: rgba(16, 185, 129, 0.15); color: #34d399; border-right: 3px solid #34d399; }
+        #loader { position: fixed; inset: 0; background: rgba(15,23,42,0.95); z-index: 50; display: none; justify-content: center; align-items: center; flex-direction: column; }
+    </style>
+</head>
+<body class="h-screen flex flex-col overflow-hidden">
+
+    <div id="loader"><i class="fa-solid fa-circle-notch fa-spin text-4xl text-sky-500"></i><p class="mt-4 text-sky-500 font-bold animate-pulse">Syncing Secure Database...</p></div>
+
+    <div id="login-modal" class="fixed inset-0 z-40 bg-slate-950 flex items-center justify-center p-4">
+        <div class="glass p-8 rounded-2xl w-full max-w-sm text-center border border-slate-700">
+            <h1 class="text-2xl font-bold mb-6 text-white">Admin Access</h1>
+            <input type="password" id="admin-pass" placeholder="Enter Password" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-white focus:border-sky-500 outline-none mb-4 text-center">
+            <button onclick="login()" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-bold py-3 rounded-lg shadow-lg">Authenticate</button>
+        </div>
+    </div>
+
+    <div class="flex flex-1 overflow-hidden">
+        <aside class="w-20 lg:w-64 bg-slate-900 border-r border-slate-800 flex flex-col z-10 transition-all duration-300">
+            <div class="p-6 font-bold text-xl tracking-wider text-white hidden lg:block">OPEN<span class="text-sky-500">ADMIN</span></div>
+            <div class="p-4 lg:hidden text-center text-sky-500 text-2xl"><i class="fa-solid fa-shield-cat"></i></div>
+            <nav class="flex-1 px-2 lg:px-4 space-y-1 overflow-y-auto">
+                <p class="hidden lg:block text-[10px] uppercase font-bold text-slate-500 px-3 mt-4 mb-2">General</p>
+                <button onclick="switchTab('members')" id="btn-members" class="nav-btn w-full text-left p-3 rounded-lg text-slate-400 hover:text-white flex items-center gap-4 transition"><i class="fa-solid fa-users w-5 text-center"></i> <span class="hidden lg:inline">Members</span></button>
+                <button onclick="switchTab('ledger')" id="btn-ledger" class="nav-btn w-full text-left p-3 rounded-lg text-slate-400 hover:text-white flex items-center gap-4 transition"><i class="fa-solid fa-file-invoice-dollar w-5 text-center"></i> <span class="hidden lg:inline">Ledger</span></button>
+                <button onclick="switchTab('outflow')" id="btn-outflow" class="nav-btn w-full text-left p-3 rounded-lg text-slate-400 hover:text-white flex items-center gap-4 transition"><i class="fa-solid fa-money-bill-transfer w-5 text-center"></i> <span class="hidden lg:inline">Outflows</span></button>
+                
+                <p class="hidden lg:block text-[10px] uppercase font-bold text-slate-500 px-3 mt-6 mb-2">Urgent Needs</p>
+                <button onclick="switchTab('campaigns')" id="btn-campaigns" class="nav-btn w-full text-left p-3 rounded-lg text-rose-400 hover:text-rose-300 flex items-center gap-4 transition"><i class="fa-solid fa-heart-pulse w-5 text-center"></i> <span class="hidden lg:inline">Campaigns</span></button>
+                <button onclick="switchTab('camp-donations')" id="btn-camp-donations" class="nav-btn w-full text-left p-3 rounded-lg text-slate-400 hover:text-white flex items-center gap-4 transition"><i class="fa-solid fa-hand-holding-heart w-5 text-center"></i> <span class="hidden lg:inline">Camp. Donations</span></button>
+                
+                <div class="mt-6 pt-4 border-t border-slate-800">
+                    <button onclick="switchTab('sheet')" id="btn-sheet" class="nav-btn w-full text-left p-3 rounded-lg text-emerald-400 hover:text-white flex items-center gap-4 transition bg-emerald-500/10 border border-emerald-500/20"><i class="fa-solid fa-table w-5 text-center"></i> <span class="hidden lg:inline">Live Database</span></button>
+                </div>
+            </nav>
+            <div class="p-4 border-t border-slate-800"><button onclick="fetchData()" class="w-full bg-slate-800 hover:bg-slate-700 text-sky-400 py-2 rounded-lg text-xs font-bold transition"><i class="fa-solid fa-rotate"></i> Refresh</button></div>
+        </aside>
+
+        <main class="flex-1 overflow-hidden bg-slate-950 p-4 lg:p-8 relative flex flex-col">
+            
+            <div id="view-members" class="tab-view h-full flex flex-col">
+                <div class="flex justify-between items-center mb-6"><h2 class="text-2xl font-bold text-white">Member Registry</h2><span class="text-xs bg-slate-800 px-3 py-1 rounded-full text-slate-400" id="count-members">0</span></div>
+                <div class="flex-1 overflow-auto glass rounded-xl border border-slate-800"><table class="w-full text-left text-sm text-slate-400"><thead class="bg-slate-900 text-xs uppercase font-bold text-slate-300 sticky top-0"><tr><th class="p-4">Name</th><th class="p-4">Phone</th><th class="p-4">Pledge</th><th class="p-4">Aadhar</th><th class="p-4">Status</th><th class="p-4">Action</th></tr></thead><tbody id="tbody-members" class="divide-y divide-slate-800"></tbody></table></div>
+            </div>
+
+            <div id="view-ledger" class="tab-view hidden h-full flex flex-col">
+                <div class="flex justify-between items-center mb-6"><h2 class="text-2xl font-bold text-white">General Fund</h2><div class="text-xs text-slate-500">Approve Main Donations</div></div>
+                <div class="flex-1 overflow-auto glass rounded-xl border border-slate-800"><table class="w-full text-left text-sm text-slate-400"><thead class="bg-slate-900 text-xs uppercase font-bold text-slate-300 sticky top-0"><tr><th class="p-4">Date</th><th class="p-4">Name</th><th class="p-4">Amount</th><th class="p-4">TxID</th><th class="p-4">Type</th><th class="p-4">Status</th><th class="p-4">Action</th></tr></thead><tbody id="tbody-ledger" class="divide-y divide-slate-800"></tbody></table></div>
+            </div>
+
+            <div id="view-outflow" class="tab-view hidden h-full overflow-auto">
+                <div class="max-w-xl mx-auto glass p-8 rounded-2xl border border-slate-700">
+                    <h2 class="text-2xl font-bold mb-6 text-white border-b border-slate-700 pb-4">Record Expense</h2>
+                    <div class="grid grid-cols-2 gap-4 mb-6"><div class="bg-slate-900 p-4 rounded-xl border border-slate-700"><label class="text-[10px] text-slate-500 uppercase font-bold">Balance</label><div class="text-xl font-bold text-sky-500">₹ <span id="calc-balance">0</span></div></div><div class="bg-slate-900 p-4 rounded-xl border border-slate-700"><label class="text-[10px] text-slate-500 uppercase font-bold">Reserve</label><div class="text-xl font-bold text-amber-500">₹ <span id="calc-reserve">0</span></div></div></div>
+                    <form onsubmit="submitOutflow(event)" class="space-y-4">
+                        <select id="outflow-type" class="w-full bg-slate-800 border border-slate-600 rounded-lg p-3 text-white"><option value="claim">Claim Payout</option><option value="opcost">Operational Cost</option></select>
+                        <input type="number" name="Amount" id="out-amount" required class="w-full bg-slate-800 border border-slate-600 rounded-lg p-3 text-white" placeholder="Amount">
+                        <textarea name="Desc" required class="w-full bg-slate-800 border border-slate-600 rounded-lg p-3 text-white h-24" placeholder="Reason..."></textarea>
+                        <button type="submit" class="w-full bg-rose-600 hover:bg-rose-500 text-white font-bold py-3 rounded-lg shadow-lg">Confirm</button>
+                    </form>
+                </div>
+            </div>
+
+            <div id="view-campaigns" class="tab-view hidden h-full flex flex-col">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 h-full">
+                    <div class="glass p-6 rounded-xl border border-slate-700 h-fit">
+                        <h3 class="font-bold text-white mb-4 flex items-center gap-2"><i class="fa-solid fa-plus-circle text-emerald-400"></i> Create New Campaign</h3>
+                        <form onsubmit="submitCampaign(event)" class="space-y-3">
+                            <input type="text" name="Applicant" required placeholder="Applicant Name" class="w-full bg-slate-900 border border-slate-600 rounded p-2 text-sm text-white">
+                            <select name="Type" class="w-full bg-slate-900 border border-slate-600 rounded p-2 text-sm text-white">
+                                <option>Medical</option><option>Education</option><option>Disaster Relief</option><option>Community</option>
+                            </select>
+                            <input type="number" name="Target" required placeholder="Target Amount (₹)" class="w-full bg-slate-900 border border-slate-600 rounded p-2 text-sm text-white">
+                            <input type="number" name="Hours" required placeholder="Hours Validity" class="w-full bg-slate-900 border border-slate-600 rounded p-2 text-sm text-white">
+                            <textarea name="Desc" required placeholder="Description..." class="w-full bg-slate-900 border border-slate-600 rounded p-2 text-sm text-white h-20"></textarea>
+                            <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 rounded text-sm">Launch Campaign</button>
+                        </form>
+                    </div>
+                    <div class="lg:col-span-2 overflow-auto glass rounded-xl border border-slate-800">
+                        <table class="w-full text-left text-sm text-slate-400">
+                            <thead class="bg-slate-900 text-xs uppercase font-bold text-slate-300 sticky top-0"><tr><th class="p-4">Applicant</th><th class="p-4">Target</th><th class="p-4">Status</th><th class="p-4">Action</th></tr></thead>
+                            <tbody id="tbody-campaigns" class="divide-y divide-slate-800"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="view-camp-donations" class="tab-view hidden h-full flex flex-col">
+                <div class="flex justify-between items-center mb-6"><h2 class="text-2xl font-bold text-white">Urgent Donations</h2><div class="text-xs text-slate-500">Approve to update 'Raised' amount</div></div>
+                <div class="flex-1 overflow-auto glass rounded-xl border border-slate-800">
+                    <table class="w-full text-left text-sm text-slate-400">
+                        <thead class="bg-slate-900 text-xs uppercase font-bold text-slate-300 sticky top-0"><tr><th class="p-4">Date</th><th class="p-4">Donor</th><th class="p-4">Amount</th><th class="p-4">Campaign</th><th class="p-4">TxID</th><th class="p-4">Status</th><th class="p-4">Action</th></tr></thead>
+                        <tbody id="tbody-camp-donations" class="divide-y divide-slate-800"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="view-sheet" class="tab-view hidden h-full flex flex-col">
+                <div class="flex justify-between items-center mb-4">
+                    <div>
+                        <h2 class="text-2xl font-bold text-white">Master Database</h2>
+                        <p class="text-xs text-slate-400">Read-Only Live Preview</p>
+                    </div>
+                    <a href="https://docs.google.com/spreadsheets/d/1BpvO0xFVIBUc_udrZkUI_MU01OUNi-GkGp9v2KWEVNU/edit" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 shadow-lg transition">
+                        <span>Open Google Sheets</span>
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    </a>
+                </div>
+                <div class="flex-1 bg-slate-900 rounded-xl overflow-hidden border border-slate-700 relative">
+                    <iframe 
+                        src="https://docs.google.com/spreadsheets/d/1BpvO0xFVIBUc_udrZkUI_MU01OUNi-GkGp9v2KWEVNU/preview" 
+                        class="w-full h-full border-0"
+                        allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        let PASSWORD = '';
+        let GLOBAL_DATA = { members: [], ledger: [], audit: [], campaigns: [], urgent_donations: [] };
+        
+        // PASTE DEPLOYED URL
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwpwAsfzSchRcdY7Mn_krlb6IWIGS69oiZzNGXNZnRlwjQbfoPMkeEo7jmwIlEWPKBo/exec'; 
+
+        function login() {
+            PASSWORD = document.getElementById('admin-pass').value;
+            if(!PASSWORD) return alert("Enter password");
+            document.getElementById('login-modal').style.display = 'none';
+            fetchData();
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-view').forEach(el => el.classList.add('hidden'));
+            document.getElementById('view-'+tab).classList.remove('hidden');
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active', 'bg-slate-800', 'text-white'));
+            const btn = document.getElementById('btn-'+tab); if(btn) btn.classList.add('active');
+        }
+
+        function toggleLoader(show) { document.getElementById('loader').style.display = show ? 'flex' : 'none'; }
+
+        function fetchData() {
+            toggleLoader(true);
+            const fd = new FormData(); fd.append('action', 'admin_fetch'); fd.append('pass', PASSWORD);
+            fetch(SCRIPT_URL, { method: 'POST', body: fd }).then(r => r.json()).then(data => {
+                toggleLoader(false);
+                if(data.result === 'error') { alert(data.message); document.getElementById('login-modal').style.display = 'flex'; return; }
+                GLOBAL_DATA = data;
+                renderMembers(); renderLedger(); renderCampaigns(); renderCampDonations(); calculateStats();
+            });
+        }
+
+        // --- RENDERERS ---
+        function renderMembers() {
+            const tbody = document.getElementById('tbody-members'); tbody.innerHTML = '';
+            document.getElementById('count-members').innerText = GLOBAL_DATA.members.length;
+            GLOBAL_DATA.members.forEach((row) => {
+                const status = row[6];
+                const btn = status === 'Active' ? `<button onclick="toggleMember('${String(row[5]).replace(/'/g,'')}', 'Banned')" class="text-xs text-red-400 border border-red-500 rounded px-2">Ban</button>` : `<button onclick="toggleMember('${String(row[5]).replace(/'/g,'')}', 'Active')" class="text-xs text-green-400 border border-green-500 rounded px-2">Active</button>`;
+                tbody.innerHTML += `<tr class="hover:bg-slate-900 border-b border-slate-800/50"><td class="p-4 font-bold text-white">${row[1]}</td><td class="p-4 text-xs">${row[2]}</td><td class="p-4">₹${row[4]}</td><td class="p-4 font-mono text-xs">${String(row[5]).replace(/'/g,'')}</td><td class="p-4"><span class="status-badge bg-${status}">${status}</span></td><td class="p-4">${btn}</td></tr>`;
+            });
+        }
+
+        function renderLedger() {
+            const tbody = document.getElementById('tbody-ledger'); tbody.innerHTML = '';
+            GLOBAL_DATA.ledger.slice().reverse().forEach((row, index) => {
+                const realIndex = GLOBAL_DATA.ledger.length - 1 - index;
+                const status = row[6];
+                const action = status === 'Pending' ? `<button onclick="approveTx(${realIndex}, 'admin_approve_tx')" class="text-xs bg-sky-600 text-white px-3 py-1 rounded font-bold">Approve</button>` : `<span class="text-slate-600 text-[10px]"><i class="fa-solid fa-check"></i></span>`;
+                tbody.innerHTML += `<tr class="hover:bg-slate-900 border-b border-slate-800/50"><td class="p-4 text-xs font-mono">${new Date(row[0]).toLocaleDateString()}</td><td class="p-4 font-bold text-white">${row[1]}</td><td class="p-4 text-emerald-400">+₹${row[2]}</td><td class="p-4 font-mono text-xs">${row[3]}</td><td class="p-4 text-xs">${row[4]}</td><td class="p-4"><span class="status-badge bg-${status}">${status}</span></td><td class="p-4">${action}</td></tr>`;
+            });
+        }
+
+        function renderCampaigns() {
+            const tbody = document.getElementById('tbody-campaigns'); tbody.innerHTML = '';
+            if(GLOBAL_DATA.campaigns) {
+                GLOBAL_DATA.campaigns.forEach((row, index) => {
+                    const status = row[5];
+                    const toggle = status === 'Active' 
+                        ? `<button onclick="toggleCampaign(${index}, 'Closed')" class="text-xs text-red-400 border border-red-500 rounded px-2 py-1">Close</button>` 
+                        : `<button onclick="toggleCampaign(${index}, 'Active')" class="text-xs text-green-400 border border-green-500 rounded px-2 py-1">Re-Open</button>`;
+                    tbody.innerHTML += `<tr class="hover:bg-slate-900 border-b border-slate-800/50"><td class="p-4 font-bold text-white">${row[0]}<br><span class="text-[10px] text-slate-500 uppercase">${row[1]}</span></td><td class="p-4 text-sm">₹${row[3]}</td><td class="p-4"><span class="status-badge bg-${status}">${status}</span></td><td class="p-4">${toggle}</td></tr>`;
+                });
+            }
+        }
+
+        function renderCampDonations() {
+            const tbody = document.getElementById('tbody-camp-donations'); tbody.innerHTML = '';
+            if(GLOBAL_DATA.urgent_donations) {
+                GLOBAL_DATA.urgent_donations.slice().reverse().forEach((row, index) => {
+                    const realIndex = GLOBAL_DATA.urgent_donations.length - 1 - index;
+                    const status = row[7] || 'Pending';
+                    const action = status === 'Pending' 
+                        ? `<button onclick="approveTx(${realIndex}, 'admin_approve_urgent')" class="text-xs bg-rose-600 text-white px-3 py-1 rounded font-bold">Approve</button>` 
+                        : `<span class="text-slate-600 text-[10px]"><i class="fa-solid fa-check"></i></span>`;
+                    
+                    tbody.innerHTML += `<tr class="hover:bg-slate-900 border-b border-slate-800/50"><td class="p-4 text-xs font-mono">${new Date(row[0]).toLocaleDateString()}</td><td class="p-4 font-bold text-white">${row[1]}</td><td class="p-4 text-emerald-400 font-bold">₹${row[4]}</td><td class="p-4 text-xs text-slate-400">${row[5]}</td><td class="p-4 text-xs font-mono">${row[6]}</td><td class="p-4"><span class="status-badge bg-${status}">${status}</span></td><td class="p-4">${action}</td></tr>`;
+                });
+            }
+        }
+
+        function calculateStats() {
+            let totalIn = 0; GLOBAL_DATA.ledger.forEach(r => { if(r[6] === 'Approved' && r[4] === 'Credit') totalIn += Number(r[2]); });
+            let totalOut = 0; GLOBAL_DATA.audit.forEach(r => { totalOut += (Number(r[3]) || 0) + (Number(r[7]) || 0); });
+            const bal = totalIn - totalOut;
+            document.getElementById('calc-balance').innerText = bal.toLocaleString();
+            document.getElementById('calc-reserve').innerText = Math.floor(totalIn * 0.3).toLocaleString();
+        }
+
+        // --- ACTIONS ---
+
+        function approveTx(index, actionType) {
+            if(!confirm("Confirm Approval?")) return;
+            toggleLoader(true);
+            const fd = new FormData(); fd.append('action', actionType); fd.append('pass', PASSWORD); fd.append('row', index); fd.append('status', 'Approved');
+            fetch(SCRIPT_URL, { method:'POST', body:fd }).then(r=>r.json()).then(d=>{ if(d.result==='success') fetchData(); else alert(d.message); });
+        }
+
+        function toggleMember(aadhar, status) {
+            toggleLoader(true);
+            const fd = new FormData(); fd.append('action', 'admin_toggle_member'); fd.append('pass', PASSWORD); fd.append('aadhar', aadhar); fd.append('status', status);
+            fetch(SCRIPT_URL, { method:'POST', body:fd }).then(r=>r.json()).then(d=>{ if(d.result==='success') fetchData(); else alert(d.message); });
+        }
+
+        function toggleCampaign(index, status) {
+            toggleLoader(true);
+            const fd = new FormData(); fd.append('action', 'admin_toggle_campaign'); fd.append('pass', PASSWORD); fd.append('row', index); fd.append('status', status);
+            fetch(SCRIPT_URL, { method:'POST', body:fd }).then(r=>r.json()).then(d=>{ if(d.result==='success') fetchData(); else alert(d.message); });
+        }
+
+        function submitCampaign(e) {
+            e.preventDefault();
+            if(!confirm("Launch this campaign?")) return;
+            toggleLoader(true);
+            const fd = new FormData(e.target);
+            fd.append('action', 'admin_create_campaign'); fd.append('pass', PASSWORD);
+            fetch(SCRIPT_URL, { method:'POST', body:fd }).then(r=>r.json()).then(d=>{ if(d.result==='success') { e.target.reset(); fetchData(); alert("Campaign Launched"); } else alert(d.message); });
+        }
+
+        function submitOutflow(e) {
+            e.preventDefault(); if(!confirm("Deduct funds?")) return;
+            const bal = Number(document.getElementById('calc-balance').innerText.replace(/,/g,''));
+            const res = Number(document.getElementById('calc-reserve').innerText.replace(/,/g,''));
+            const type = document.getElementById('outflow-type').value; const amt = document.getElementById('out-amount').value;
+            const fd = new FormData();
+            fd.append('action', 'admin_log_outflow'); fd.append('pass', PASSWORD); fd.append('Balance', bal - amt); fd.append('Reserve', res); fd.append('Members', GLOBAL_DATA.members.length); fd.append('Description', e.target.Desc.value); fd.append('AdminName', 'Admin');
+            if(type === 'claim') { fd.append('Claims', amt); fd.append('OpCost', 0); } else { fd.append('Claims', 0); fd.append('OpCost', amt); }
+            toggleLoader(true);
+            fetch(SCRIPT_URL, { method:'POST', body:fd }).then(r=>r.json()).then(d=>{ if(d.result==='success') { e.target.reset(); fetchData(); alert("Saved"); } else alert(d.message); });
+        }
+    </script>
+</body>
+</html>

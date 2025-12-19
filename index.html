@@ -177,8 +177,8 @@
             <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
             <li class="nav-item"><a class="nav-link" href="templates/about.html">About</a></li>
             <li class="nav-item"><a class="nav-link" href="services.html">Services</a></li>
-            <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
-            <li class="nav-item"><a class="nav-link" href="templates/domain.html">Other-Domains</a></li>
+            <li class="nav-item"><a class="nav-link" href="templates/contact.html">Contact</a></li>
+            <li class="nav-item"><a class="nav-link" href="templates/domain.html">Ecosystem</a></li>
           </ul>
         </div>
       </div>
@@ -329,28 +329,64 @@
 
 <!-- JS: Handle Submit -->
 <script>
+// 1. YOUR GOOGLE SCRIPT URL (Make sure this is correct)
+const scriptURL = "https://script.google.com/macros/s/AKfycbySmtlkyt9L3XuP0XT7BdeP1TfnoNEjFTJvBZIBaVoTYk615PQuRswhAVVPW5rTJG-5/exec";
+
 document.getElementById("inquiryForm").addEventListener("submit", function(e){
     e.preventDefault();
 
     let btn = document.getElementById("submitBtn");
+    let originalText = btn.innerHTML;
+    
     btn.disabled = true;
     btn.innerHTML = "⏳ Submitting...";
 
-    // Simulate form submit (e.g., API / Google Sheets call)
-    setTimeout(() => {
-        btn.disabled = false;
+    // --- PHONE FIX START ---
+    // Get the phone number user typed
+    let rawPhone = this.phone.value;
+    let finalPhone = rawPhone;
+
+    // Check if it starts with '+'. If yes, add hidden apostrophe (')
+    // This stops Google Sheets from deleting the '+' or showing errors.
+    if (rawPhone.trim().startsWith("+")) {
+        finalPhone = "'" + rawPhone;
+    }
+    // --- PHONE FIX END ---
+
+    // 2. Prepare the data to send
+    const data = {
+        name: this.name.value,
+        email: this.email.value,
+        phone: finalPhone, // Sending the fixed phone number
+        occupation: this.occupation.value,
+        location: this.location.value,
+        message: this.message.value
+    };
+
+    // 3. Send to Google Sheet
+    fetch(scriptURL, {
+        method: "POST",
+        body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then(response => {
+        // Success!
         btn.innerHTML = "✅ Submitted";
         
-        // Reset after a while (optional)
         setTimeout(() => {
-          btn.innerHTML = "🚀 Submit";
-        }, 2000);
-
-        document.getElementById("inquiryForm").reset();
-    }, 2000);
+            btn.disabled = false;
+            btn.innerHTML = originalText; // Reset button text
+            document.getElementById("inquiryForm").reset(); // Clear form
+        }, 3000);
+    })
+    .catch(error => {
+        // Error!
+        console.error('Error!', error.message);
+        btn.innerHTML = "❌ Error. Try Again.";
+        btn.disabled = false;
+    });
 });
 </script>
-
 
 
 

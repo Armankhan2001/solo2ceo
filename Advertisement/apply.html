@@ -102,6 +102,20 @@
       e.preventDefault();
       responseMsg.style.color = "blue";
       responseMsg.textContent = "⏳ Submitting...";
+      // --- CHANGE START ---
+      
+      // 1. I put the data into a variable first instead of sending it immediately
+      const formData = new FormData(form); 
+
+      // 2. I grab the phone number from that variable
+      const rawPhone = formData.get("phone");
+
+      // 3. I check if it has a '+'. If yes, I add the apostrophe (')
+      if (rawPhone && rawPhone.trim().startsWith("+")) {
+          formData.set("phone", "'" + rawPhone);
+      }
+
+      // --- CHANGE END ---
       try {
         const resp = await fetch(scriptURL, {
           method: "POST",
