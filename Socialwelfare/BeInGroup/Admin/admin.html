@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-slate-50 min-h-screen flex flex-col font-sans">
+
+    <div id="login-section" class="fixed inset-0 z-50 bg-slate-100 flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-md rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
+            <div class="p-8">
+                <div class="text-center mb-8">
+                    <div class="bg-slate-800 w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4">
+                        <i data-lucide="lock" class="text-white w-6 h-6"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-slate-800">Admin Login</h2>
+                    <p class="text-slate-500 text-sm mt-1">Please enter your credentials</p>
+                </div>
+
+                <form id="loginForm" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Username</label>
+                        <input type="text" name="username" required class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Password</label>
+                        <input type="password" name="password" required class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+                    
+                    <div id="login-error" class="hidden p-3 bg-red-50 text-red-600 text-sm rounded-lg text-center">
+                        Invalid username or password.
+                    </div>
+
+                    <button type="submit" id="loginBtn" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 rounded-lg transition-colors flex items-center justify-center gap-2">
+                        <span>Sign In</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="dashboard-section" class="hidden flex-col min-h-screen w-full">
+        
+        <nav class="bg-white border-b border-slate-200 sticky top-0 z-30">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between h-16">
+                    <div class="flex items-center gap-3">
+                        <div class="bg-slate-800 p-2 rounded-lg">
+                            <i data-lucide="shield-check" class="text-white w-5 h-5"></i>
+                        </div>
+                        <span class="font-bold text-xl text-slate-800">Admin Portal</span>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="hidden sm:flex items-center">
+                            <span id="nav-profile-name" class="text-sm font-bold text-slate-700 mr-2">Admin</span>
+                            <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                                <i data-lucide="user" class="w-4 h-4 text-green-600"></i>
+                            </div>
+                        </div>
+                        <button onclick="logout()" class="text-sm text-red-500 hover:text-red-700 font-medium">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <main class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
+            
+            <div class="mb-10 text-center">
+                <h1 id="welcome-message" class="text-3xl font-bold text-slate-900 mb-2">Welcome Back!</h1>
+                <p class="text-slate-500">Select a module below to manage your website data.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <a href="Inquiryhome.html" class="group relative bg-white rounded-2xl p-8 shadow-sm border border-slate-200 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-blue-600 rounded-t-2xl"></div>
+                    <div class="flex items-start justify-between mb-6">
+                        <div class="bg-blue-50 p-4 rounded-xl group-hover:bg-blue-100 transition-colors">
+                            <i data-lucide="message-square" class="w-8 h-8 text-blue-600"></i>
+                        </div>
+                        <div class="bg-slate-50 px-3 py-1 rounded-full text-xs font-semibold text-slate-500 uppercase tracking-wide">Incoming</div>
+                    </div>
+                    <h2 class="text-xl font-bold text-slate-800 mb-2 group-hover:text-blue-600 transition-colors">Enquiry Dashboard</h2>
+                    <p class="text-slate-500 text-sm mb-6">View, search, and manage customer contact form submissions.</p>
+                    <div class="flex items-center text-blue-600 font-semibold text-sm">
+                        Open Enquiries <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>
+                    </div>
+                </a>
+
+                <a href="upcomingevents.html" class="group relative bg-white rounded-2xl p-8 shadow-sm border border-slate-200 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 to-purple-600 rounded-t-2xl"></div>
+                    <div class="flex items-start justify-between mb-6">
+                        <div class="bg-purple-50 p-4 rounded-xl group-hover:bg-purple-100 transition-colors">
+                            <i data-lucide="calendar-days" class="w-8 h-8 text-purple-600"></i>
+                        </div>
+                        <div class="bg-slate-50 px-3 py-1 rounded-full text-xs font-semibold text-slate-500 uppercase tracking-wide">Schedule</div>
+                    </div>
+                    <h2 class="text-xl font-bold text-slate-800 mb-2 group-hover:text-purple-600 transition-colors">Events Manager</h2>
+                    <p class="text-slate-500 text-sm mb-6">Add new upcoming events, edit details, and view the calendar list.</p>
+                    <div class="flex items-center text-purple-600 font-semibold text-sm">
+                        Manage Events <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>
+                    </div>
+                </a>
+
+                <a href="loginprofiles.html" id="rohini-only-card" class="hidden group relative bg-white rounded-2xl p-8 shadow-sm border border-slate-200 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-orange-500 to-orange-600 rounded-t-2xl"></div>
+                    <div class="flex items-start justify-between mb-6">
+                        <div class="bg-orange-50 p-4 rounded-xl group-hover:bg-orange-100 transition-colors">
+                            <i data-lucide="users" class="w-8 h-8 text-orange-600"></i>
+                        </div>
+                        <div class="bg-slate-50 px-3 py-1 rounded-full text-xs font-semibold text-slate-500 uppercase tracking-wide">Admin Only</div>
+                    </div>
+                    <h2 class="text-xl font-bold text-slate-800 mb-2 group-hover:text-orange-600 transition-colors">User Profiles</h2>
+                    <p class="text-slate-500 text-sm mb-6">Manage login credentials, add new admins, and update passwords.</p>
+                    <div class="flex items-center text-orange-600 font-semibold text-sm">
+                        Manage Users <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>
+                    </div>
+                </a>
+
+            </div>
+        </main>
+
+        <footer class="bg-white border-t border-slate-200 py-6 mt-8">
+            <div class="max-w-5xl mx-auto px-4 text-center text-slate-400 text-sm">
+                &copy; 2025 Admin Dashboard System | Designed by Solo2Ceo.
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // --- CONFIGURATION ---
+        const authScriptURL = 'https://script.google.com/macros/s/AKfycbxMnDN4FYcbY-h_pvS-F_sEd3q7vpOmXDLyy-bqohnm9CqQ4iYJGa4OwPiSzntvpSa1BQ/exec';
+
+        const loginSection = document.getElementById('login-section');
+        const dashboardSection = document.getElementById('dashboard-section');
+        const loginForm = document.getElementById('loginForm');
+        const loginBtn = document.getElementById('loginBtn');
+        const errorMsg = document.getElementById('login-error');
+        const rohiniCard = document.getElementById('rohini-only-card');
+
+        // Check if logged in on load
+        if(sessionStorage.getItem('isLoggedIn') === 'true') {
+            showDashboard();
+        }
+
+        function showDashboard() {
+            // Get Name from Session Storage
+            const savedName = sessionStorage.getItem('adminName') || 'Admin';
+            
+            // Update UI with the Name
+            document.getElementById('welcome-message').innerText = `Welcome Back, ${savedName}!`;
+            document.getElementById('nav-profile-name').innerText = savedName;
+
+            // --- ROHINI CHECK LOGIC ---
+            // Remove extra spaces and make case insensitive
+            if (savedName.trim().toLowerCase() === 'rohini') {
+                rohiniCard.classList.remove('hidden');
+                rohiniCard.classList.add('block');
+            } else {
+                rohiniCard.classList.add('hidden');
+            }
+
+            loginSection.classList.add('hidden');
+            dashboardSection.classList.remove('hidden');
+            dashboardSection.classList.add('flex');
+            lucide.createIcons();
+        }
+
+        function logout() {
+            sessionStorage.removeItem('isLoggedIn');
+            sessionStorage.removeItem('adminName'); 
+            location.reload(); 
+        }
+
+        loginForm.addEventListener('submit', e => {
+            e.preventDefault();
+            
+            const originalBtnText = loginBtn.innerHTML;
+            loginBtn.innerHTML = 'Verifying...';
+            loginBtn.disabled = true;
+            errorMsg.classList.add('hidden');
+
+            fetch(authScriptURL, { method: 'POST', body: new FormData(loginForm)})
+                .then(response => response.json())
+                .then(data => {
+                    if (data.result === 'success') {
+                        // SAVE LOGIN STATUS AND NAME
+                        sessionStorage.setItem('isLoggedIn', 'true');
+                        sessionStorage.setItem('adminName', data.name); 
+                        
+                        showDashboard();
+                    } else {
+                        errorMsg.classList.remove('hidden');
+                        loginBtn.innerHTML = originalBtnText;
+                        loginBtn.disabled = false;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error!', error.message);
+                    alert("Network Error. Check connection.");
+                    loginBtn.innerHTML = originalBtnText;
+                    loginBtn.disabled = false;
+                });
+        });
+
+        lucide.createIcons();
+    </script>
+</body>
+</html>

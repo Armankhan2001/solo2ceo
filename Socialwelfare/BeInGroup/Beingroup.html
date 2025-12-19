@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIG Foundation | Be In Group NGO</title>
+    <meta name="description" content="Empowering women, educating tribal children, and supporting farmers in rural India. BIG Foundation is dedicated to holistic community development.">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="BIG Foundation | Empowering Rural India">
+    <meta property="og:description" content="Empowering women, educating tribal children, and supporting farmers in rural India.">
+    <meta property="og:type" content="website">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            DEFAULT: 'hsl(215, 100%, 35%)',
+                            foreground: 'hsl(0, 0%, 100%)',
+                        },
+                        secondary: {
+                            DEFAULT: 'hsl(24, 90%, 60%)',
+                            foreground: 'hsl(0, 0%, 100%)',
+                        },
+                        accent: {
+                            DEFAULT: 'hsl(45, 100%, 50%)',
+                            foreground: 'hsl(215, 100%, 20%)',
+                        },
+                        muted: {
+                            DEFAULT: 'hsl(210, 20%, 96%)',
+                            foreground: 'hsl(215, 20%, 40%)',
+                        },
+                        border: 'hsl(214, 32%, 91%)',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Outfit', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Papaparse for CSV -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+
+    <style>
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="font-sans text-slate-800 bg-slate-50">
+
+    <!-- Navigation -->
+    <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 py-4 bg-gradient-to-b from-black/80 to-transparent">
+        <div class="container mx-auto px-4 flex items-center justify-between relative">
+            <a href="#" class="flex items-center gap-2 group relative z-50">
+                <div id="logo-container"
+                    class="relative transition-all duration-300 flex items-center justify-center bg-white shadow-lg 
+                            px-3 pt-2 pb-3 h-30 w-30 -mt-2 rounded-full">
+                    <img id="logo-img"
+                        src="attached_assets/Gemini_Generated_Image_fx8hcafx8hcafx8h__1_-removebg-preview_1765005923447.png"
+                        alt="BIG Foundation Logo"
+                        class="h-28 w-28 object-contain">
+                </div>
+
+            </a>
+
+
+            <!-- Desktop Nav -->
+            <div class="hidden md:flex items-center gap-8">
+                <a href="#" class="text-sm font-medium text-white hover:text-secondary font-heading tracking-wide transition-colors drop-shadow-sm nav-link">Home</a>
+                <a href="#about" class="text-sm font-medium text-white hover:text-secondary font-heading tracking-wide transition-colors drop-shadow-sm nav-link">About Us</a>
+                <a href="#work" class="text-sm font-medium text-white hover:text-secondary font-heading tracking-wide transition-colors drop-shadow-sm nav-link">Our Work</a>
+                <a href="#projects" class="text-sm font-medium text-white hover:text-secondary font-heading tracking-wide transition-colors drop-shadow-sm nav-link">Projects</a>
+                <a href="#missions" class="text-sm font-medium text-white hover:text-secondary font-heading tracking-wide transition-colors drop-shadow-sm nav-link">Upcoming Events</a>
+                <a href="#contact" class="text-sm font-medium text-white hover:text-secondary font-heading tracking-wide transition-colors drop-shadow-sm nav-link">Contact</a>
+                
+                <a href="#donate" class="bg-white text-primary hover:bg-white/90 font-semibold px-6 py-2.5 rounded-full transition-all shadow-sm hover:shadow-md flex items-center gap-2 border-2 border-transparent nav-btn">
+                    <i data-lucide="heart" class="w-4 h-4 fill-current"></i>
+                    Donate
+                </a>
+            </div>
+
+            <!-- Mobile Toggle -->
+            <button id="mobile-menu-btn" class="md:hidden p-2 text-white hover:bg-white/20 rounded-md transition-colors">
+                <i data-lucide="menu" class="w-6 h-6"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100 absolute top-full left-0 right-0 shadow-xl">
+            <div class="container py-6 flex flex-col gap-4 px-4">
+                <a href="#" class="text-lg font-medium text-slate-800 py-2 border-b border-gray-50">Home</a>
+                <a href="#about" class="text-lg font-medium text-slate-800 py-2 border-b border-gray-50">About Us</a>
+                <a href="#work" class="text-lg font-medium text-slate-800 py-2 border-b border-gray-50">Our Work</a>
+                <a href="#projects" class="text-lg font-medium text-slate-800 py-2 border-b border-gray-50">Projects</a>
+                <a href="#contact" class="text-lg font-medium text-slate-800 py-2 border-b border-gray-50">Contact</a>
+                <a href="#donate" class="bg-accent text-accent-foreground font-bold text-center py-3 rounded-lg mt-2 flex items-center justify-center gap-2">
+                    <i data-lucide="heart" class="w-4 h-4 fill-current"></i>
+                    Donate Now
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex items-center pt-20 overflow-hidden bg-slate-50">
+        <div class="absolute inset-0 z-0">
+            <img src="attached_assets/generated_images/hero_image_of_diverse_indian_villagers.png" 
+                 alt="Diverse group of Indian villagers" 
+                 class="w-full h-full object-cover object-center">
+            <div class="absolute inset-0 bg-gradient-to-r from-primary/90 via-primary/70 to-transparent"></div>
+        </div>
+
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="max-w-2xl text-white reveal active">
+                <span class="inline-block py-1 px-3 rounded-full bg-secondary/90 text-white text-sm font-semibold mb-6 backdrop-blur-sm">
+                    Empowering Rural India
+                </span>
+                <h1 class="text-5xl md:text-6xl lg:text-7xl font-bold font-heading leading-tight mb-6">
+                    Building a <span class="text-accent">Better Future</span> Together
+                </h1>
+                <p class="text-xl md:text-2xl text-blue-50 mb-8 leading-relaxed">
+                    Working in the pockets of Maharashtra to provide education, healthcare, and empowerment where it's needed most.
+                </p>
+                
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="#donate" class="bg-accent hover:bg-accent/90 text-accent-foreground font-bold text-lg px-8 py-4 rounded-full transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl hover:-translate-y-1">
+                        Donate Now
+                        <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                    </a>
+                    <a href="#about" class="bg-white/10 hover:bg-white/20 text-white backdrop-blur-md font-semibold text-lg px-8 py-4 rounded-full transition-all border border-white/30 flex items-center justify-center">
+                        Learn More
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 text-white/70 flex flex-col items-center gap-2 animate-bounce">
+            <span class="text-xs uppercase tracking-widest">Scroll</span>
+            <div class="w-px h-12 bg-gradient-to-b from-white to-transparent"></div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 md:py-32 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-2 gap-16 items-center">
+                <div class="relative reveal">
+                    <div class="absolute -top-4 -left-4 w-24 h-24 bg-accent/20 rounded-full blur-xl"></div>
+                    <div class="relative z-10">
+                        <h2 class="text-primary font-bold text-sm uppercase tracking-widest mb-2">Who We Are</h2>
+                        <h3 class="text-4xl md:text-5xl font-heading font-bold text-slate-900 mb-6">
+                            Bridging the Gap in Rural Development
+                        </h3>
+                        <p class="text-lg text-slate-600 leading-relaxed mb-6">
+                            India is widespread with an enormous population, yet many pockets remain devoid of any help. 
+                            <span class="font-semibold text-primary"> BIG Foundation</span> works in such pockets, specifically in Murbad, Thane district of Maharashtra.
+                        </p>
+                        <p class="text-lg text-slate-600 leading-relaxed mb-8">
+                            Our mission is holistic development—focusing on education, health, women empowerment, and employment 
+                            to bring sustainable change to underprivileged communities.
+                        </p>
+                        
+                        <div class="grid grid-cols-2 gap-6">
+                            <div class="border-l-4 border-secondary pl-4">
+                                <div class="text-3xl font-bold text-primary font-heading">1000+</div>
+                                <div class="text-sm text-slate-500">Families Reached</div>
+                            </div>
+                            <div class="border-l-4 border-secondary pl-4">
+                                <div class="text-3xl font-bold text-primary font-heading">5+</div>
+                                <div class="text-sm text-slate-500">Key Initiatives</div>
+                            </div>
+                            <div class="border-l-4 border-secondary pl-4">
+                                <div class="text-3xl font-bold text-primary font-heading">12A/80G</div>
+                                <div class="text-sm text-slate-500">Certified NGO</div>
+                            </div>
+                            <div class="border-l-4 border-secondary pl-4">
+                                <div class="text-3xl font-bold text-primary font-heading">100%</div>
+                                <div class="text-sm text-slate-500">Transparency</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="relative grid grid-cols-2 gap-4 reveal">
+                    <img src="attached_assets/generated_images/tribal_children_education.png" alt="Education" class="rounded-2xl shadow-lg w-full h-64 object-cover translate-y-8">
+                    <img src="attached_assets/generated_images/indian_women_vocational_training.png" alt="Women Empowerment" class="rounded-2xl shadow-lg w-full h-64 object-cover">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Our Work Section -->
+    <section id="work" class="py-20 bg-slate-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center max-w-3xl mx-auto mb-16 reveal">
+                <h2 class="text-primary font-bold text-sm uppercase tracking-widest mb-2">Our Initiatives</h2>
+                <h3 class="text-4xl font-heading font-bold text-slate-900 mb-4">Holistic Community Development</h3>
+                <p class="text-slate-600 text-lg">We focus on five key pillars to create sustainable impact in rural lives.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group border border-slate-200 reveal">
+                    <div class="h-48 overflow-hidden relative">
+                        <img src="attached_assets/generated_images/indian_women_vocational_training.png" alt="Women Empowerment" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute top-4 left-4 bg-white/90 backdrop-blur p-2 rounded-lg text-primary">
+                            <i data-lucide="users" class="w-6 h-6"></i>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h4 class="text-xl font-bold font-heading text-primary mb-3">Women Empowerment</h4>
+                        <p class="text-slate-600 mb-4 text-sm">
+                            Vocational training in tailoring, handicrafts, and digital skills. We support financial independence through self-help groups.
+                        </p>
+                        <ul class="space-y-2 mb-6">
+                            <li class="flex items-center gap-2 text-sm font-medium text-slate-800"><i data-lucide="check-circle-2" class="w-4 h-4 text-secondary"></i> Vocational Training</li>
+                            <li class="flex items-center gap-2 text-sm font-medium text-slate-800"><i data-lucide="check-circle-2" class="w-4 h-4 text-secondary"></i> Financial Aid</li>
+                            <li class="flex items-center gap-2 text-sm font-medium text-slate-800"><i data-lucide="check-circle-2" class="w-4 h-4 text-secondary"></i> Small Saving Units</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group border border-slate-200 reveal">
+                    <div class="h-48 overflow-hidden relative">
+                        <img src="attached_assets/generated_images/tribal_children_education.png" alt="Child Education" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute top-4 left-4 bg-white/90 backdrop-blur p-2 rounded-lg text-primary">
+                            <i data-lucide="graduation-cap" class="w-6 h-6"></i>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h4 class="text-xl font-bold font-heading text-primary mb-3">Tribal Child Development</h4>
+                        <p class="text-slate-600 mb-4 text-sm">
+                            Integrated initiatives focusing on education, health, and nutrition. We run tuition classes and support ashram schools.
+                        </p>
+                        <ul class="space-y-2 mb-6">
+                            <li class="flex items-center gap-2 text-sm font-medium text-slate-800"><i data-lucide="check-circle-2" class="w-4 h-4 text-secondary"></i> Free Tuition Classes</li>
+                            <li class="flex items-center gap-2 text-sm font-medium text-slate-800"><i data-lucide="check-circle-2" class="w-4 h-4 text-secondary"></i> Nutritional Support</li>
+                            <li class="flex items-center gap-2 text-sm font-medium text-slate-800"><i data-lucide="check-circle-2" class="w-4 h-4 text-secondary"></i> School Supplies</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group border border-slate-200 reveal">
+                    <div class="h-48 overflow-hidden relative">
+                        <img src="attached_assets/generated_images/indian_farmer_in_field.png" alt="Farming" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute top-4 left-4 bg-white/90 backdrop-blur p-2 rounded-lg text-primary">
+                            <i data-lucide="sprout" class="w-6 h-6"></i>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h4 class="text-xl font-bold font-heading text-primary mb-3">Farmer Support</h4>
+                        <p class="text-slate-600 mb-4 text-sm">
+                            Helping farmers during distress and training them in food processing to add value to their produce.
+                        </p>
+                        <ul class="space-y-2 mb-6">
+                            <li class="flex items-center gap-2 text-sm font-medium text-slate-800"><i data-lucide="check-circle-2" class="w-4 h-4 text-secondary"></i> Market Linkages</li>
+                            <li class="flex items-center gap-2 text-sm font-medium text-slate-800"><i data-lucide="check-circle-2" class="w-4 h-4 text-secondary"></i> Processing Units</li>
+                            <li class="flex items-center gap-2 text-sm font-medium text-slate-800"><i data-lucide="check-circle-2" class="w-4 h-4 text-secondary"></i> Crisis Support</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group border border-slate-200 reveal">
+                    <div class="h-48 overflow-hidden relative">
+                        <img src="attached_assets/generated_images/rural_healthcare_camp.png" alt="Healthcare" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute top-4 left-4 bg-white/90 backdrop-blur p-2 rounded-lg text-primary">
+                            <i data-lucide="heart-pulse" class="w-6 h-6"></i>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h4 class="text-xl font-bold font-heading text-primary mb-3">Healthcare</h4>
+                        <p class="text-slate-600 mb-4 text-sm">
+                            Addressing the disparity between urban and rural health. We provide emergency medical care and organize health camps.
+                        </p>
+                        <ul class="space-y-2 mb-6">
+                            <li class="flex items-center gap-2 text-sm font-medium text-slate-800"><i data-lucide="check-circle-2" class="w-4 h-4 text-secondary"></i> Medical Camps</li>
+                            <li class="flex items-center gap-2 text-sm font-medium text-slate-800"><i data-lucide="check-circle-2" class="w-4 h-4 text-secondary"></i> Emergency Aid</li>
+                            <li class="flex items-center gap-2 text-sm font-medium text-slate-800"><i data-lucide="check-circle-2" class="w-4 h-4 text-secondary"></i> Hygiene Kits</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                 <!-- Card 5 -->
+                <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group border border-slate-200 reveal">
+                    <div class="h-48 overflow-hidden relative">
+                        <img src="attached_assets/generated_images/artwork.png" alt="Healthcare" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute top-4 left-4 bg-white/90 backdrop-blur p-2 rounded-lg text-primary">
+                            <i data-lucide="heart-pulse" class="w-6 h-6"></i>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h4 class="text-xl font-bold font-heading text-primary mb-3">Cultural Programs</h4>
+                        <p class="text-slate-600 mb-4 text-sm">
+                            Providing a platform for women artists to showcase their talents. Dance, drama, and arts workshops.
+                        </p>
+                        <ul class="space-y-2 mb-6">
+                            <li class="flex items-center gap-2 text-sm font-medium text-slate-800"><i data-lucide="check-circle-2" class="w-4 h-4 text-secondary"></i> Art Workshops</li>
+                            <li class="flex items-center gap-2 text-sm font-medium text-slate-800"><i data-lucide="check-circle-2" class="w-4 h-4 text-secondary"></i> Cultural Events</li>
+                            <li class="flex items-center gap-2 text-sm font-medium text-slate-800"><i data-lucide="check-circle-2" class="w-4 h-4 text-secondary"></i> Talent Showcase</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+    </section>
+
+    <!-- NEW: MISSIONS SECTION -->
+    <section id="missions" class="py-20 bg-slate-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center max-w-3xl mx-auto mb-16 reveal">
+                <h2 class="text-primary font-bold text-sm uppercase tracking-widest mb-2">Join Our Campaign</h2>
+                <h3 class="text-4xl font-heading font-bold text-slate-900 mb-4">Upcoming Missions</h3>
+                <p class="text-slate-600 text-lg">
+                    Be a part of our journey. Check out where we are going next.
+                </p>
+            </div>
+
+            <div id="missions-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- JS will populate this -->
+                <div class="col-span-full text-center py-10 text-slate-400">
+                    Loading missions...
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEW: GALLERY SECTION -->
+    <section id="gallery" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center max-w-3xl mx-auto mb-16 reveal">
+                <h2 class="text-primary font-bold text-sm uppercase tracking-widest mb-2">Our Impact</h2>
+                <h3 class="text-4xl font-heading font-bold text-slate-900 mb-4">Recent Campaigns</h3>
+                <p class="text-slate-600 text-lg">
+                    Glimpses from our recent visits and activities on the ground.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows-[200px]" id="gallery-grid">
+                 <!-- Hardcoded for demo, but can be dynamic -->
+                 <div class="relative rounded-xl overflow-hidden cursor-pointer group md:col-span-2 md:row-span-2 reveal">
+                    <img src="attached_assets/ourimages/Banner1.jpg" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+                        <span class="text-white font-medium text-sm backdrop-blur-sm bg-black/30 px-2 py-1 rounded">Community Gathering</span>
+                    </div>
+                 </div>
+                 <div class="relative rounded-xl overflow-hidden cursor-pointer group reveal">
+                    <img src="attached_assets/ourimages/Banner2.jpg" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                 </div>
+                 <div class="relative rounded-xl overflow-hidden cursor-pointer group reveal">
+                    <img src="attached_assets/ourimages/Banner3.jpg" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                 </div>
+                 <div class="relative rounded-xl overflow-hidden cursor-pointer group reveal">
+                    <img src="attached_assets/ourimages/Banner4.jpg" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                 </div>
+                 <div class="relative rounded-xl overflow-hidden cursor-pointer group reveal">
+                    <img src="attached_assets/generated_images/rural_healthcare_camp.png" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                 </div>
+            </div>
+        </div>
+    </section>
+    
+
+    <!-- Upcoming Projects -->
+    <section id="projects" class="py-20 bg-primary text-white relative overflow-hidden">
+        <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-6 reveal">
+                <div>
+                    <h2 class="text-secondary font-bold text-sm uppercase tracking-widest mb-2">Future Vision</h2>
+                    <h3 class="text-4xl font-heading font-bold text-white">Upcoming Projects</h3>
+                </div>
+                <p class="text-blue-100 max-w-md text-lg">
+                    We have ambitious goals to expand our reach and deepen our impact.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-white/10 backdrop-blur-md border border-white/20 p-8 rounded-2xl hover:bg-white/20 transition-colors reveal">
+                    <div class="w-12 h-12 bg-secondary rounded-full flex items-center justify-center mb-6 text-white font-bold text-xl">1</div>
+                    <h4 class="text-2xl font-bold font-heading mb-3">Residential Boarding</h4>
+                    <p class="text-blue-100">A safe home and learning environment for poor children.</p>
+                </div>
+                <div class="bg-white/10 backdrop-blur-md border border-white/20 p-8 rounded-2xl hover:bg-white/20 transition-colors reveal">
+                    <div class="w-12 h-12 bg-secondary rounded-full flex items-center justify-center mb-6 text-white font-bold text-xl">2</div>
+                    <h4 class="text-2xl font-bold font-heading mb-3">Village Libraries</h4>
+                    <p class="text-blue-100">Establishing libraries in every village to promote literacy.</p>
+                </div>
+                <div class="bg-white/10 backdrop-blur-md border border-white/20 p-8 rounded-2xl hover:bg-white/20 transition-colors reveal">
+                    <div class="w-12 h-12 bg-secondary rounded-full flex items-center justify-center mb-6 text-white font-bold text-xl">3</div>
+                    <h4 class="text-2xl font-bold font-heading mb-3">Training Centers</h4>
+                    <p class="text-blue-100">Dedicated centers for advanced farming and vocational skills.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Donate Section -->
+    <section id="donate" class="py-24 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="bg-slate-900 rounded-[2.5rem] p-8 md:p-16 relative overflow-hidden text-center reveal">
+                <div class="absolute top-0 left-0 w-full h-full opacity-20">
+                    <div class="absolute top-0 right-0 w-96 h-96 bg-secondary rounded-full blur-3xl translate-x-1/2 -translate-y-1/2"></div>
+                    <div class="absolute bottom-0 left-0 w-96 h-96 bg-primary rounded-full blur-3xl -translate-x-1/2 translate-y-1/2"></div>
+                </div>
+                
+                <div class="relative z-10 max-w-3xl mx-auto">
+                    <h2 class="text-3xl md:text-5xl font-heading font-bold text-white mb-6">
+                        Help Us Reach 10,00,000 Families
+                    </h2>
+                    <p class="text-xl text-slate-300 mb-10 leading-relaxed">
+                        "Let's celebrate with purpose, share hope, and spread smiles."
+                        Your contribution helps us provide emergency aid, education, and empowerment to those who need it most.
+                    </p>
+                    
+                    <div class="flex flex-col md:flex-row justify-center items-center gap-12">
+                        <div class="flex flex-col gap-4 items-center md:items-end">
+                            <button class="bg-accent hover:bg-accent/90 text-accent-foreground font-bold text-xl px-10 py-5 rounded-full transition-all shadow-lg hover:shadow-accent/50 flex items-center justify-center gap-2">
+                                Donate Now
+                                <i data-lucide="arrow-right" class="w-6 h-6"></i>
+                            </button>
+                            <p class="text-slate-400 text-sm">Your support changes lives.</p>
+                        </div>
+
+                        <div class="bg-white p-4 rounded-2xl shadow-xl transform hover:scale-105 transition-transform duration-300">
+                            <div class="w-64 h-auto bg-white rounded-lg overflow-hidden">
+                                <img src="attached_assets/qrcode.png" 
+                                     alt="Scan to Donate" 
+                                     class="w-full h-auto object-contain">
+                            </div>
+                            <p class="text-primary font-bold mt-3 text-sm uppercase tracking-wider">Scan to Donate</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 bg-slate-50">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-2 gap-12">
+                <div class="reveal">
+                    <h2 class="text-primary font-bold text-sm uppercase tracking-widest mb-2">Get in Touch</h2>
+                    <h3 class="text-4xl font-heading font-bold text-slate-900 mb-8">We'd Love to Hear From You</h3>
+                    
+                    <div class="space-y-8">
+                        <div>
+                            <h4 class="text-xl font-bold text-primary mb-2">Founders</h4>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 hover:border-secondary/50 transition-colors">
+                                    <div class="font-semibold text-slate-900">Dr. Shailesh Jadhav</div>
+                                    <a href="tel:+919820794983" class="text-slate-500 text-sm hover:text-secondary">+91 98207 94983</a>
+                                </div>
+                                <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 hover:border-secondary/50 transition-colors">
+                                    <div class="font-semibold text-slate-900">Mrs. Rohini Umesh Jadhav</div>
+                                    <a href="tel:+919967296119" class="text-slate-500 text-sm hover:text-secondary">+91 99672 96119</a>
+                                </div>
+                                <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 hover:border-secondary/50 transition-colors">
+                                    <div class="font-semibold text-slate-900">Mrs. Shraddha Gambhir</div>
+                                    <a href="tel:+919920044420" class="text-slate-500 text-sm hover:text-secondary">+91 99200 44420</a>
+                                </div>
+                                <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 hover:border-secondary/50 transition-colors">
+                                    <div class="font-semibold text-slate-900">Mr. Umesh Gaikwad</div>
+                                    <a href="tel:+919221656521" class="text-slate-500 text-sm hover:text-secondary">+91 92216 56521</a>
+                                </div>
+                                <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 hover:border-secondary/50 transition-colors">
+                                    <div class="font-semibold text-slate-900">Mr. Ganesh Bhalerao</div>
+                                    <a href="tel:+918424825785" class="text-slate-500 text-sm hover:text-secondary">+91 84248 25785</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+
+                <!-- Send Us Message Form Below -->
+                <div class="bg-white p-8 rounded-2xl shadow-lg border border-slate-200 reveal relative overflow-hidden">
+                <div id="success-message" class="hidden absolute inset-0 bg-white z-10 flex flex-col items-center justify-center text-center p-8 h-full">
+                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4 mx-auto">
+                        <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                    </div>
+                    <h4 class="text-2xl font-bold font-heading mb-2 text-gray-900">Message Received!</h4>
+                    <p class="text-gray-600 mb-6">Thanks for reaching out. We have saved your details and will contact you shortly.</p>
+                    <button onclick="resetForm()" class="px-6 py-2 bg-gray-100 text-gray-700 font-semibold rounded-lg hover:bg-gray-200 transition-colors">Send Another</button>
+                </div>
+
+                <div id="form-container">
+                    <h4 class="text-2xl font-bold font-heading mb-6">Send us a Message</h4>
+                    
+                    <form id="contact-form" class="space-y-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="space-y-2">
+                                <label class="text-sm font-medium">Name</label>
+                                <input type="text" name="Name" required class="w-full px-4 py-3 rounded-lg border border-gray-200 bg-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" placeholder="Your Name">
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-sm font-medium">Phone</label>
+                                <input type="tel" name="Phone" required class="w-full px-4 py-3 rounded-lg border border-gray-200 bg-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" placeholder="Your Phone">
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-sm font-medium">Email</label>
+                            <input type="email" name="Email" required class="w-full px-4 py-3 rounded-lg border border-gray-200 bg-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" placeholder="your@email.com">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-sm font-medium">Message</label>
+                            <textarea name="Message" required class="w-full px-4 py-3 rounded-lg border border-gray-200 bg-white focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all min-h-[120px]" placeholder="How can we help?"></textarea>
+                        </div>
+                        
+                        <button type="submit" id="submit-btn" class="w-full bg-primary text-white font-bold py-4 rounded-lg hover:bg-primary/90 transition-colors flex items-center justify-center gap-2">
+                            <span id="btn-text">Send Message</span>
+                            <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <script>
+                // --- IMPORTANT: PASTE YOUR NEW WEB APP URL HERE ---
+                const scriptURL = 'https://script.google.com/macros/s/AKfycbygMZQUAiZ4SFbti9IA_yL56fx5aUxYzV8xWcBOhJu2OJ3XRrQAfHsMCk6wtFXfH90cHQ/exec'; 
+
+                const form = document.forms['contact-form'];
+                const btn = document.getElementById('submit-btn');
+                const btnText = document.getElementById('btn-text');
+                const successMsg = document.getElementById('success-message');
+                const formContainer = document.getElementById('form-container');
+
+                form.addEventListener('submit', e => {
+                    e.preventDefault();
+                    
+                    // UI: Show loading
+                    btnText.innerHTML = "Sending...";
+                    btn.disabled = true;
+
+                    fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+                        .then(response => {
+                            // UI: Success
+                            successMsg.classList.remove('hidden');
+                            successMsg.classList.add('flex');
+                            formContainer.classList.add('invisible'); 
+                            
+                            // Reset button for next time
+                            btnText.innerHTML = "Send Message";
+                            btn.disabled = false;
+                            form.reset();
+                        })
+                        .catch(error => {
+                            console.error('Error!', error.message);
+                            alert("Error! Please check your internet connection.");
+                            btnText.innerHTML = "Send Message";
+                            btn.disabled = false;
+                        });
+                });
+
+                function resetForm() {
+                    successMsg.classList.add('hidden');
+                    successMsg.classList.remove('flex');
+                    formContainer.classList.remove('invisible');
+                }
+            </script>
+            </div>
+        </div>
+    </section>
+    <!-- Footer -->
+    <footer class="bg-primary text-white pt-20 pb-10 relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-secondary via-accent to-secondary"></div>
+        
+        <div class="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 relative z-10 px-4">
+            <!-- Brand -->
+            <div class="space-y-6">
+                <a href="#" class="flex items-center gap-2 group relative z-50">
+    <div id="logo-container" 
+         class="relative transition-all duration-300 flex items-center justify-center bg-white shadow-lg 
+                px-2 pt-1 pb-1 h-16 w-16 -mt-2 rounded-full">
+        <img src="attached_assets/Gemini_Generated_Image_fx8hcafx8hcafx8h__1_-removebg-preview_1765005923447.png" 
+             alt="BIG Foundation Logo" 
+             class="h-12 w-12 object-contain">
+    </div>
+</a>
+
+
+                <p class="text-blue-100 leading-relaxed">
+                    Empowering communities in rural India through education, healthcare, and sustainable development.
+                </p>
+                <div class="flex gap-4">
+                    <a href="#" class="bg-white/10 p-2 rounded-full hover:bg-accent hover:text-accent-foreground transition-all"><i data-lucide="facebook" class="w-5 h-5"></i></a>
+                    <a href="#" class="bg-white/10 p-2 rounded-full hover:bg-accent hover:text-accent-foreground transition-all"><i data-lucide="twitter" class="w-5 h-5"></i></a>
+                    <a href="#" class="bg-white/10 p-2 rounded-full hover:bg-accent hover:text-accent-foreground transition-all"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+                    <a href="#" class="bg-white/10 p-2 rounded-full hover:bg-accent hover:text-accent-foreground transition-all"><i data-lucide="linkedin" class="w-5 h-5"></i></a>
+                </div>
+            </div>
+
+            <!-- Links -->
+            <div>
+                <h3 class="font-heading font-bold text-xl mb-6 text-white">Quick Links</h3>
+                <ul class="space-y-4">
+                    <li><a href="#about" class="text-blue-100 hover:text-accent transition-colors flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>About Us</a></li>
+                    <li><a href="#work" class="text-blue-100 hover:text-accent transition-colors flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>Our Initiatives</a></li>
+                    <li><a href="#projects" class="text-blue-100 hover:text-accent transition-colors flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>Upcoming Projects</a></li>
+                    <li><a href="#donate" class="text-blue-100 hover:text-accent transition-colors flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>Donate</a></li>
+                    <li><a href="#contact" class="text-blue-100 hover:text-accent transition-colors flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>Contact Us</a></li>
+                </ul>
+            </div>
+
+            <!-- Contact -->
+            <div>
+                <h3 class="font-heading font-bold text-xl mb-6 text-white">Contact Us</h3>
+                <ul class="space-y-4">
+                    <li class="flex items-start gap-3">
+                        <i data-lucide="map-pin" class="w-5 h-5 text-secondary shrink-0 mt-1"></i>
+                        <span class="text-blue-100">Murbad, Thane District,<br>Maharashtra, India</span>
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <i data-lucide="phone" class="w-5 h-5 text-secondary shrink-0"></i>
+                        <div class="flex flex-col">
+                            <a href="tel:+919820794983" class="text-blue-100 hover:text-white">+91 98207 94983</a>
+                            <a href="tel:+919967296119" class="text-blue-100 hover:text-white">+91 99672 96119</a>
+                        </div>
+                    </li>
+                    <li class="flex items-center gap-3">
+                        <i data-lucide="mail" class="w-5 h-5 text-secondary shrink-0"></i>
+                        <a href="mailto:helpbigfoundation@gmail.com" class="text-blue-100 hover:text-white break-all">helpbigfoundation@gmail.com</a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Certifications -->
+            <div>
+                <h3 class="font-heading font-bold text-xl mb-6 text-white">Our Credentials</h3>
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-white/10 px-3 py-2 rounded text-sm text-center text-blue-50 border border-white/20">12A Registered</div>
+                    <div class="bg-white/10 px-3 py-2 rounded text-sm text-center text-blue-50 border border-white/20">80G Certified</div>
+                    <div class="bg-white/10 px-3 py-2 rounded text-sm text-center text-blue-50 border border-white/20">CSR Approved</div>
+                    <div class="bg-white/10 px-3 py-2 rounded text-sm text-center text-blue-50 border border-white/20">ISO Certified</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container mx-auto mt-16 pt-8 border-t border-white/10 px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                
+                <p class="text-blue-200 text-sm text-center md:text-left">
+                    © 2025 BIG Foundation (Be In Group). All rights reserved.
+                </p>
+
+                <p class="text-blue-200/80 text-sm flex items-center gap-1">
+                    Designed by 
+                    <a href="#" class="font-semibold text-blue-100 hover:text-white transition-colors duration-300">
+                        Solo2Ceo
+                    </a>
+                </p>
+
+            </div>
+        </div>
+    </footer>
+
+    <script>
+       lucide.createIcons();
+
+// Navbar Scroll Effect
+const navbar = document.getElementById('navbar');
+const logoContainer = document.getElementById('logo-container');
+const logoImg = document.getElementById('logo-img');
+const navLinks = document.querySelectorAll('.nav-link');
+const navBtn = document.querySelector('.nav-btn');
+const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+
+window.addEventListener('scroll', () => {
+
+    if (window.scrollY > 20) {
+
+        // navbar shrink
+        navbar.classList.add('bg-white/95', 'backdrop-blur-md', 'shadow-md', 'py-2');
+        navbar.classList.remove('bg-gradient-to-b', 'from-black/80', 'to-transparent', 'py-4');
+
+        // 🔽 shrink logo
+        logoContainer.classList.remove('h-30', 'w-30', '-mt-2');
+        logoContainer.classList.add('h-16', 'w-16', 'mt-0');
+
+        logoImg.classList.remove('h-28', 'w-28');
+        logoImg.classList.add('h-14', 'w-14');
+
+        navLinks.forEach(link => {
+            link.classList.add('text-primary');
+            link.classList.remove('text-white');
+        });
+
+        navBtn.classList.add('bg-accent', 'text-accent-foreground', 'hover:bg-accent/90');
+        navBtn.classList.remove('bg-white', 'text-primary', 'hover:bg-white/90');
+
+        mobileMenuBtn.classList.add('text-primary', 'hover:bg-slate-100');
+        mobileMenuBtn.classList.remove('text-white', 'hover:bg-white/20');
+
+    } else {
+
+        // navbar original
+        navbar.classList.remove('bg-white/95', 'backdrop-blur-md', 'shadow-md', 'py-2');
+        navbar.classList.add('bg-gradient-to-b', 'from-black/80', 'to-transparent', 'py-4');
+
+        // 🔼 restore EXACT original size + original margin
+        logoContainer.classList.add('h-30', 'w-30', '-mt-2');
+        logoContainer.classList.remove('h-16', 'w-16', 'mt-0');
+
+        logoImg.classList.add('h-28', 'w-28');
+        logoImg.classList.remove('h-14', 'w-14');
+
+        navLinks.forEach(link => {
+            link.classList.remove('text-primary');
+            link.classList.add('text-white');
+        });
+
+        navBtn.classList.remove('bg-accent', 'text-accent-foreground', 'hover:bg-accent/90');
+        navBtn.classList.add('bg-white', 'text-primary', 'hover:bg-white/90');
+
+        mobileMenuBtn.classList.remove('text-primary', 'hover:bg-slate-100');
+        mobileMenuBtn.classList.add('text-white', 'hover:bg-white/20');
+    }
+});
+
+        // Mobile Menu Toggle
+        const mobileMenu = document.getElementById('mobile-menu');
+        let isMenuOpen = false;
+
+        mobileMenuBtn.addEventListener('click', () => {
+            isMenuOpen = !isMenuOpen;
+            if (isMenuOpen) {
+                mobileMenu.classList.remove('hidden');
+            } else {
+                mobileMenu.classList.add('hidden');
+            }
+        });
+
+        // Close mobile menu on link click
+        document.querySelectorAll('#mobile-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                isMenuOpen = false;
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // Scroll Reveal Animation
+        const revealElements = document.querySelectorAll('.reveal');
+
+        const revealOnScroll = () => {
+            const windowHeight = window.innerHeight;
+            const elementVisible = 150;
+
+            revealElements.forEach((reveal) => {
+                const elementTop = reveal.getBoundingClientRect().top;
+                if (elementTop < windowHeight - elementVisible) {
+                    reveal.classList.add('active');
+                }
+            });
+        };
+
+        window.addEventListener('scroll', revealOnScroll);
+        // Trigger once on load
+        revealOnScroll();
+
+        // --- MISSIONS CSV LOADING LOGIC ---
+        const GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vR8wohpEHoBs5NaBnspO1lGuG_Kpdn3xMROjvxy6vGHl_nbPnMNrzwkRBwsfR2f6uiwvqUDJiWfZl93/pub?output=csv"; // TODO: Enter your published CSV URL here
+
+        const placeholderMissions = [
+            {
+                Event: "Mega Health Camp",
+                Date: "15th Aug 2025",
+                Time: "10:00 AM",
+                Location: "Z.P. School, Murbad",
+                Description: "General health checkup and medicine distribution for 500+ villagers."
+            },
+            {
+                Event: "Women Skill Workshop",
+                Date: "20th Aug 2025",
+                Time: "11:00 AM",
+                Location: "Community Hall, Thane",
+                Description: "Teaching tailoring and handicrafts to empower local women."
+            }
+        ];
+
+        function renderMissions(missions) {
+            const grid = document.getElementById('missions-grid');
+            grid.innerHTML = '';
+
+            if (missions.length === 0) {
+                grid.innerHTML = '<div class="col-span-full text-center">No upcoming missions found.</div>';
+                return;
+            }
+
+            missions.forEach(mission => {
+                const card = document.createElement('div');
+                card.className = "bg-white rounded-xl shadow-sm border border-slate-200 p-6 hover:shadow-md transition-shadow reveal active";
+                card.innerHTML = `
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="bg-accent/10 text-accent-foreground px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide">
+                            Upcoming
+                        </div>
+                    </div>
+                    <h4 class="text-xl font-bold font-heading text-slate-900 mb-2">${mission.Event}</h4>
+                    <p class="text-slate-600 text-sm mb-6 line-clamp-3">${mission.Description}</p>
+                    
+                    <div class="space-y-3 border-t border-slate-100 pt-4">
+                        <div class="flex items-center gap-3 text-sm text-slate-800">
+                            <i data-lucide="calendar" class="w-4 h-4 text-secondary"></i>
+                            <span>${mission.Date}</span>
+                        </div>
+                        <div class="flex items-center gap-3 text-sm text-slate-800">
+                            <i data-lucide="clock" class="w-4 h-4 text-secondary"></i>
+                            <span>${mission.Time}</span>
+                        </div>
+                        <div class="flex items-center gap-3 text-sm text-slate-800">
+                            <i data-lucide="map-pin" class="w-4 h-4 text-secondary"></i>
+                            <span>${mission.Location}</span>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+            // Re-initialize icons for new elements
+            lucide.createIcons();
+        }
+
+        if (GOOGLE_SHEET_CSV_URL) {
+            Papa.parse(GOOGLE_SHEET_CSV_URL, {
+                download: true,
+                header: true,
+                complete: function(results) {
+                    const validData = results.data.filter(row => row.Event && row.Date);
+                    renderMissions(validData.length ? validData : placeholderMissions);
+                },
+                error: function(err) {
+                    console.error("Error loading CSV", err);
+                    renderMissions(placeholderMissions);
+                }
+            });
+        } else {
+            renderMissions(placeholderMissions);
+        }
+    </script>
+</body>
+</html>
