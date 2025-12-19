@@ -350,40 +350,100 @@
         </div>
     </section>
 
-    <!-- NEW: GALLERY SECTION -->
     <section id="gallery" class="py-20 bg-white">
-        <div class="container mx-auto px-4">
-            <div class="text-center max-w-3xl mx-auto mb-16 reveal">
-                <h2 class="text-primary font-bold text-sm uppercase tracking-widest mb-2">Our Impact</h2>
-                <h3 class="text-4xl font-heading font-bold text-slate-900 mb-4">Recent Campaigns</h3>
-                <p class="text-slate-600 text-lg">
-                    Glimpses from our recent visits and activities on the ground.
-                </p>
-            </div>
-
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows-[200px]" id="gallery-grid">
-                 <!-- Hardcoded for demo, but can be dynamic -->
-                 <div class="relative rounded-xl overflow-hidden cursor-pointer group md:col-span-2 md:row-span-2 reveal">
-                    <img src="attached_assets/ourimages/Banner1.jpg" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
-                    <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
-                        <span class="text-white font-medium text-sm backdrop-blur-sm bg-black/30 px-2 py-1 rounded">Community Gathering</span>
-                    </div>
-                 </div>
-                 <div class="relative rounded-xl overflow-hidden cursor-pointer group reveal">
-                    <img src="attached_assets/ourimages/Banner2.jpg" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
-                 </div>
-                 <div class="relative rounded-xl overflow-hidden cursor-pointer group reveal">
-                    <img src="attached_assets/ourimages/Banner3.jpg" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
-                 </div>
-                 <div class="relative rounded-xl overflow-hidden cursor-pointer group reveal">
-                    <img src="attached_assets/ourimages/Banner4.jpg" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
-                 </div>
-                 <div class="relative rounded-xl overflow-hidden cursor-pointer group reveal">
-                    <img src="attached_assets/generated_images/rural_healthcare_camp.png" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
-                 </div>
-            </div>
+    <div class="container mx-auto px-4">
+        <div class="text-center max-w-3xl mx-auto mb-16 reveal">
+            <h2 class="text-primary font-bold text-sm uppercase tracking-widest mb-2">Our Impact</h2>
+            <h3 class="text-4xl font-heading font-bold text-slate-900 mb-4">Recent Campaigns</h3>
+            <p class="text-slate-600 text-lg">
+                Glimpses from our recent visits and activities on the ground.
+            </p>
         </div>
-    </section>
+
+        <div id="gallery-loader" class="text-center py-10">
+            <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+            <p class="mt-2 text-gray-500 text-sm">Loading Gallery...</p>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows-[200px]" id="gallery-grid">
+            </div>
+    </div>
+</section>
+<script>
+    // YOUR GOOGLE APPS SCRIPT URL
+    const galleryAppUrl = 'https://script.google.com/macros/s/AKfycbzAz--a-EI7GYXrwxoVKevE1XUY2_8T0mUxoK4N8MChwAIfOcGXYRLIdbDhPRXCy-MeQQ/exec';
+
+    async function loadGalleryImages() {
+        const grid = document.getElementById('gallery-grid');
+        const loader = document.getElementById('gallery-loader');
+
+        if (!grid || !loader) return;
+
+        try {
+            grid.innerHTML = '';
+            loader.classList.remove('hidden');
+
+            const response = await fetch(galleryAppUrl);
+            const data = await response.json();
+            
+            loader.classList.add('hidden');
+
+            if (!data || data.length === 0) {
+                grid.innerHTML = '<p class="text-center col-span-full text-gray-500">No images found.</p>';
+                return;
+            }
+
+            const recentImages = data.reverse();
+
+            recentImages.forEach((item, index) => {
+                // 1. CLEAN ID
+                let rawId = item.url.split('id=')[1];
+                if (!rawId) return; 
+                let fileId = rawId.split('&')[0].trim(); 
+
+                // 2. USE PROXY URL (The Fix for invisible images)
+                // We wrap the Google Drive link inside 'wsrv.nl' to bypass security blocks.
+                let driveUrl = `https://drive.google.com/uc?id=${fileId}`;
+                let proxyUrl = `https://wsrv.nl/?url=${encodeURIComponent(driveUrl)}&w=1200&output=webp`;
+
+                // 3. COLLAGE LAYOUT LOGIC
+                // If it's the first image (index 0), make it Big (2 rows, 2 cols).
+                let layoutClasses = "";
+                if (index === 0) {
+                    layoutClasses = "md:col-span-2 md:row-span-2";
+                }
+
+                // 4. HTML CARD
+                // Uses 'object-cover' to fill the boxes perfectly without gaps (Collage style)
+                const cardHTML = `
+                    <div class="relative rounded-xl overflow-hidden cursor-pointer group bg-gray-200 ${layoutClasses}">
+                        <a href="${driveUrl}" target="_blank" class="block w-full h-full">
+                            <img src="${proxyUrl}" 
+                                 alt="${item.name}" 
+                                 class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                 loading="lazy" 
+                                 referrerpolicy="no-referrer">
+                        </a>
+                        
+                        <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4 pointer-events-none">
+                            <span class="text-white font-medium text-sm backdrop-blur-sm bg-black/30 px-2 py-1 rounded">
+                                ${item.name}
+                            </span>
+                        </div>
+                    </div>
+                `;
+
+                grid.innerHTML += cardHTML;
+            });
+
+        } catch (error) {
+            console.error("Gallery Error:", error);
+            if(loader) loader.innerHTML = '<p class="text-red-500">Failed to load images.</p>';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadGalleryImages);
+</script>
     
 
     <!-- Upcoming Projects -->
@@ -673,7 +733,7 @@
 
                 <p class="text-blue-200/80 text-sm flex items-center gap-1">
                     Designed by 
-                    <a href="#" class="font-semibold text-blue-100 hover:text-white transition-colors duration-300">
+                    <a href="www.solo2ceo.info" class="font-semibold text-blue-100 hover:text-white transition-colors duration-300">
                         Solo2Ceo
                     </a>
                 </p>
