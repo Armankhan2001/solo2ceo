@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediPlus - Super Admin Console</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #0f172a; color: #e2e8f0; }
+        
+        .hidden-section { display: none !important; }
+        
+        /* Full height iframe */
+        #sheet-frame {
+            width: 100%;
+            height: calc(100vh - 80px); /* Subtract header height */
+            border: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="authScreen" class="fixed inset-0 flex items-center justify-center bg-gray-900 z-50">
+        <div class="bg-gray-800 p-10 rounded-2xl shadow-2xl w-full max-w-sm text-center border border-gray-700">
+            <div class="w-20 h-20 bg-red-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-red-900/50">
+                <i class="fas fa-user-shield text-3xl text-white"></i>
+            </div>
+            <h2 class="text-2xl font-bold mb-2 text-white">System Access</h2>
+            <p class="text-gray-400 text-sm mb-6">Restricted to MediPlus Super Admins</p>
+            
+            <form onsubmit="handleLogin(event)">
+                <input type="password" id="adminPass" placeholder="Enter Security Code" class="w-full p-4 rounded-xl bg-gray-900 border border-gray-600 text-white mb-4 outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition text-center tracking-widest">
+                <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white py-3 rounded-xl font-bold transition shadow-lg">Unlock Database</button>
+            </form>
+            <p id="errorMsg" class="text-red-400 text-xs mt-4 hidden">Access Denied. Invalid Code.</p>
+        </div>
+    </div>
+
+    <div id="dashboardScreen" class="hidden-section flex flex-col h-screen">
+        
+        <header class="bg-gray-800 border-b border-gray-700 h-20 flex justify-between items-center px-6 shadow-md z-10">
+            <div class="flex items-center gap-4">
+                <div class="bg-red-600 text-white w-10 h-10 rounded-lg flex items-center justify-center font-bold shadow-md"><i class="fas fa-database"></i></div>
+                <div>
+                    <h1 class="text-xl font-bold text-white tracking-wide">MediPlus <span class="text-red-500">Database Manager</span></h1>
+                    <p class="text-xs text-gray-400 flex items-center gap-2"><span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span> Live Connection</p>
+                </div>
+            </div>
+
+            <div class="flex gap-3">
+                <a href="https://docs.google.com/spreadsheets/d/1kR_fzOJBvxyB0dX_ndh-cDsTdNcxTMPKoCk5htg9Axo/edit?usp=sharing" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg font-bold text-sm transition flex items-center gap-2">
+                    <i class="fas fa-external-link-alt"></i> Open Full Screen
+                </a>
+                <button onclick="location.reload()" class="bg-gray-700 hover:bg-gray-600 text-white px-5 py-2 rounded-lg font-bold text-sm transition border border-gray-600">
+                    Logout
+                </button>
+            </div>
+        </header>
+
+        <main class="flex-grow bg-white">
+            <iframe 
+                id="sheet-frame"
+                src="https://docs.google.com/spreadsheets/d/1kR_fzOJBvxyB0dX_ndh-cDsTdNcxTMPKoCk5htg9Axo/edit?usp=sharing&rm=minimal"
+                allow="autoplay">
+            </iframe>
+        </main>
+
+    </div>
+
+    <script>
+        // *** CONFIGURATION ***
+        const ADMIN_CODE = "admin"; // <--- Set your password here
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const input = document.getElementById('adminPass').value;
+            const error = document.getElementById('errorMsg');
+
+            if (input === ADMIN_CODE) {
+                document.getElementById('authScreen').classList.add('hidden-section');
+                document.getElementById('dashboardScreen').classList.remove('hidden-section');
+            } else {
+                error.classList.remove('hidden');
+                document.getElementById('adminPass').value = '';
+                document.getElementById('adminPass').focus();
+            }
+        }
+    </script>
+</body>
+</html>
