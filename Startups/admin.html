@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Admin | Database Control</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0f172a; color: white; }
+        .sheet-frame { width: 100%; height: calc(100vh - 80px); border: none; background: white; }
+    </style>
+</head>
+<body class="flex flex-col h-screen overflow-hidden">
+
+    <nav class="h-20 bg-slate-900 border-b border-slate-700 flex items-center justify-between px-6 shadow-lg z-50">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center text-white text-xl font-bold shadow-lg shadow-indigo-500/50">
+                <i class="fa-solid fa-database"></i>
+            </div>
+            <div>
+                <h1 class="text-lg font-bold tracking-wide text-white">DATABASE MASTER</h1>
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Direct Access Mode</p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-4">
+            <span class="text-xs text-slate-400 hidden md:block">
+                <i class="fa-solid fa-lock text-emerald-400 mr-1"></i> Secure Connection
+            </span>
+            <a href="https://docs.google.com/spreadsheets/d/1iJPLcyiElYHCleKipAf0W6kuHFqMyjnwIoq2AB1jkNM/edit" target="_blank" 
+               class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg text-sm font-bold transition flex items-center gap-2">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i> Open Full Screen
+            </a>
+        </div>
+    </nav>
+
+    <main class="flex-1 relative bg-slate-800">
+        <div id="loader" class="absolute inset-0 flex items-center justify-center bg-slate-900 z-0">
+            <div class="text-center">
+                <div class="w-12 h-12 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                <p class="text-slate-400 text-sm font-bold animate-pulse">Connecting to Google Servers...</p>
+            </div>
+        </div>
+        
+        <iframe 
+            src="https://docs.google.com/spreadsheets/d/1iJPLcyiElYHCleKipAf0W6kuHFqMyjnwIoq2AB1jkNM/edit?rm=minimal" 
+            class="sheet-frame relative z-10"
+            onload="document.getElementById('loader').style.display='none'">
+        </iframe>
+    </main>
+
+</body>
+</html>

@@ -1,100 +1,222 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Solo2CEO | Services</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <title>Solo2CEO | Our Services</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            gold: '#FFD700',
+                            dark: '#111827',
+                            gray: '#1F2937'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
     <style>
-      body {
-        font-family: 'Segoe UI', sans-serif;
-      }
+        .glass-nav {
+            background: rgba(17, 24, 39, 0.95);
+            backdrop-filter: blur(10px);
+        }
+        .service-card:hover .icon-box {
+            background-color: #FFD700;
+            color: #111827;
+            transform: rotateY(360deg);
+        }
+        .icon-box {
+            transition: all 0.6s ease;
+        }
     </style>
-  </head>
-  <body class="bg-gray-50 text-gray-800">
-    <!-- Navbar -->
-    <header class="bg-gray-900 text-white shadow">
-      <div class="container mx-auto flex justify-between items-center px-4 py-3">
-        <a href="index.html" class="text-xl font-bold">Solo2CEO</a>
-        <nav class="space-x-4">
-          <a href="templates/about.html" class="hover:text-yellow-400">About</a>
-          <a href="services.html" class="text-yellow-400 font-semibold">Services</a>
-          <a href="templates/contact.html" class="hover:text-yellow-400">Contact</a>
-        </nav>
-      </div>
+</head>
+<body class="bg-gray-50 text-gray-800 overflow-x-hidden">
+
+    <header class="glass-nav text-white fixed w-full top-0 z-50 shadow-lg transition-all duration-300">
+        <div class="container mx-auto flex justify-between items-center px-6 py-4">
+            <a href="index.html" class="text-2xl font-bold tracking-wider flex items-center gap-2">
+                <i class="fa-solid fa-rocket text-brand-gold"></i> Solo<span class="text-brand-gold">2</span>CEO
+            </a>
+            
+            <nav class="hidden md:flex space-x-8 text-sm font-medium">
+                <a href="templates/about.html" class="hover:text-brand-gold transition duration-300">About</a>
+                <a href="services.html" class="text-brand-gold border-b-2 border-brand-gold pb-1">Services</a>
+                <a href="templates/contact.html" class="hover:text-brand-gold transition duration-300">Contact</a>
+            </nav>
+
+            <button class="md:hidden text-2xl focus:outline-none text-brand-gold">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
     </header>
 
-    <!-- Hero Section -->
-    <section class="bg-gradient-to-r from-gray-900 to-gray-800 text-white py-16 text-center">
-      <h1 class="text-4xl font-bold mb-4">Our Services</h1>
-      <p class="text-lg max-w-xl mx-auto">Empowering Entrepreneurs from Solo to CEO — Branding, Strategy, and Growth Solutions</p>
+    <section class="relative bg-brand-dark text-white pt-32 pb-20 lg:pt-40 lg:pb-28 overflow-hidden">
+        <div class="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-gray-800 to-transparent opacity-30"></div>
+        
+        <div class="container mx-auto px-6 text-center relative z-10" data-aos="fade-up">
+            <span class="text-brand-gold font-semibold tracking-widest uppercase text-sm mb-2 block">Level Up Your Business</span>
+            <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">
+                From Solo Hustle <br> to <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-gold to-yellow-200">CEO Mindset</span>
+            </h1>
+            <p class="text-gray-300 text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed">
+                We provide the branding, strategy, and growth solutions you need to stop trading time for money and start building an empire.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="#services" class="px-8 py-3 bg-brand-gold text-brand-dark font-bold rounded-full hover:bg-white transition duration-300 shadow-[0_0_20px_rgba(255,215,0,0.3)]">
+                    Explore Services
+                </a>
+            </div>
+        </div>
     </section>
 
-    <!-- Services Accordion Section -->
-    <section class="max-w-4xl mx-auto py-16 px-6">
-      <div class="space-y-6">
-        <!-- Service Card -->
-        <details class="bg-white border rounded-lg shadow-md p-5">
-          <summary class="font-semibold cursor-pointer text-lg text-gray-900">Social Media Growth & Branding</summary>
-          <ul class="mt-3 text-sm text-gray-700 list-disc ml-6">
-            <li>Instagram, Facebook setup and management</li>
-            <li>Bio, logo, and profile branding</li>
-            <li>Reels and engaging posts</li>
-            <li>Consistent content strategy</li>
-          </ul>
-        </details>
+    <section id="services" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="text-3xl font-bold text-gray-900">What We Do</h2>
+                <div class="w-20 h-1 bg-brand-gold mx-auto mt-4 rounded-full"></div>
+            </div>
 
-        <details class="bg-white border rounded-lg shadow-md p-5">
-          <summary class="font-semibold cursor-pointer text-lg text-gray-900">Business Strategy & Scaling</summary>
-          <ul class="mt-3 text-sm text-gray-700 list-disc ml-6">
-            <li>1-on-1 consulting sessions</li>
-            <li>Target audience & competitor analysis</li>
-            <li>Market positioning</li>
-            <li>Customized growth roadmap</li>
-          </ul>
-        </details>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <div class="service-card bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-b-4 border-transparent hover:border-brand-gold" data-aos="fade-up" data-aos-delay="100">
+                    <div class="icon-box w-14 h-14 bg-gray-100 text-gray-900 rounded-lg flex items-center justify-center text-2xl mb-6">
+                        <i class="fa-brands fa-instagram"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-gray-900">Social Media Growth</h3>
+                    <p class="text-gray-600 text-sm mb-4">Dominate the feed with a brand that speaks louder than words.</p>
+                    <ul class="text-sm text-gray-500 space-y-2">
+                        <li><i class="fa-solid fa-check text-brand-gold mr-2"></i>Instagram & Facebook Setup</li>
+                        <li><i class="fa-solid fa-check text-brand-gold mr-2"></i>Profile Branding & Bio Optimization</li>
+                        <li><i class="fa-solid fa-check text-brand-gold mr-2"></i>Reels & Viral Content Strategy</li>
+                    </ul>
+                </div>
 
-        <details class="bg-white border rounded-lg shadow-md p-5">
-          <summary class="font-semibold cursor-pointer text-lg text-gray-900">Professional Content Creation</summary>
-          <ul class="mt-3 text-sm text-gray-700 list-disc ml-6">
-            <li>Product photography & video</li>
-            <li>Scripted storytelling</li>
-            <li>Editing + branded visuals</li>
-            <li>Hashtag & caption strategies</li>
-          </ul>
-        </details>
+                <div class="service-card bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-b-4 border-transparent hover:border-brand-gold" data-aos="fade-up" data-aos-delay="200">
+                    <div class="icon-box w-14 h-14 bg-gray-100 text-gray-900 rounded-lg flex items-center justify-center text-2xl mb-6">
+                        <i class="fa-solid fa-chess"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-gray-900">Business Strategy</h3>
+                    <p class="text-gray-600 text-sm mb-4">Stop guessing. Start scaling with a roadmap designed for you.</p>
+                    <ul class="text-sm text-gray-500 space-y-2">
+                        <li><i class="fa-solid fa-check text-brand-gold mr-2"></i>1-on-1 Consulting Sessions</li>
+                        <li><i class="fa-solid fa-check text-brand-gold mr-2"></i>Competitor Analysis</li>
+                        <li><i class="fa-solid fa-check text-brand-gold mr-2"></i>Custom Growth Roadmap</li>
+                    </ul>
+                </div>
 
-        <details class="bg-white border rounded-lg shadow-md p-5">
-          <summary class="font-semibold cursor-pointer text-lg text-gray-900">Advertising & Paid Promotions</summary>
-          <ul class="mt-3 text-sm text-gray-700 list-disc ml-6">
-            <li>Facebook, Instagram Ad Setup</li>
-            <li>Google My Business & Local SEO</li>
-            <li>Influencer collaboration</li>
-            <li>Budget-based marketing plans</li>
-          </ul>
-        </details>
+                <div class="service-card bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-b-4 border-transparent hover:border-brand-gold" data-aos="fade-up" data-aos-delay="300">
+                    <div class="icon-box w-14 h-14 bg-gray-100 text-gray-900 rounded-lg flex items-center justify-center text-2xl mb-6">
+                        <i class="fa-solid fa-camera-retro"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-gray-900">Content Creation</h3>
+                    <p class="text-gray-600 text-sm mb-4">High-quality visuals that convert viewers into paying clients.</p>
+                    <ul class="text-sm text-gray-500 space-y-2">
+                        <li><i class="fa-solid fa-check text-brand-gold mr-2"></i>Product Photography</li>
+                        <li><i class="fa-solid fa-check text-brand-gold mr-2"></i>Scripted Storytelling</li>
+                        <li><i class="fa-solid fa-check text-brand-gold mr-2"></i>Professional Editing</li>
+                    </ul>
+                </div>
 
-        <details class="bg-white border rounded-lg shadow-md p-5">
-          <summary class="font-semibold cursor-pointer text-lg text-gray-900">Customer Engagement & Community Building</summary>
-          <ul class="mt-3 text-sm text-gray-700 list-disc ml-6">
-            <li>Managing DMs, comments, feedback</li>
-            <li>Contests, giveaways, interactive campaigns</li>
-            <li>Trust-building via reputation management</li>
-            <li>Loyal audience building</li>
-          </ul>
-        </details>
-      </div>
+                <div class="service-card bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-b-4 border-transparent hover:border-brand-gold" data-aos="fade-up" data-aos-delay="100">
+                    <div class="icon-box w-14 h-14 bg-gray-100 text-gray-900 rounded-lg flex items-center justify-center text-2xl mb-6">
+                        <i class="fa-solid fa-bullhorn"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-gray-900">Paid Advertising</h3>
+                    <p class="text-gray-600 text-sm mb-4">Accelerate your reach with targeted ad campaigns.</p>
+                    <ul class="text-sm text-gray-500 space-y-2">
+                        <li><i class="fa-solid fa-check text-brand-gold mr-2"></i>Facebook & IG Ad Setup</li>
+                        <li><i class="fa-solid fa-check text-brand-gold mr-2"></i>Google My Business SEO</li>
+                        <li><i class="fa-solid fa-check text-brand-gold mr-2"></i>Influencer Marketing</li>
+                    </ul>
+                </div>
 
-      <!-- Proposal Buttons -->
-      <div class="mt-10 text-center">
-        <a href="Website_Proposal.html" class="inline-block bg-yellow-400 hover:bg-yellow-500 text-black font-semibold py-3 px-6 rounded-lg shadow mr-4">View Website Proposal</a>
-        <a href="Social_Proposal.html" class="inline-block bg-gray-800 hover:bg-gray-700 text-white font-semibold py-3 px-6 rounded-lg shadow">View Social Media Proposal</a>
-      </div>
+                <div class="service-card bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-b-4 border-transparent hover:border-brand-gold" data-aos="fade-up" data-aos-delay="200">
+                    <div class="icon-box w-14 h-14 bg-gray-100 text-gray-900 rounded-lg flex items-center justify-center text-2xl mb-6">
+                        <i class="fa-solid fa-users-viewfinder"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-gray-900">Community Building</h3>
+                    <p class="text-gray-600 text-sm mb-4">Turn customers into a loyal tribe that advocates for you.</p>
+                    <ul class="text-sm text-gray-500 space-y-2">
+                        <li><i class="fa-solid fa-check text-brand-gold mr-2"></i>Reputation Management</li>
+                        <li><i class="fa-solid fa-check text-brand-gold mr-2"></i>DM & Comment Engagement</li>
+                        <li><i class="fa-solid fa-check text-brand-gold mr-2"></i>Contests & Campaigns</li>
+                    </ul>
+                </div>
+
+                 <div class="bg-brand-dark p-8 rounded-2xl shadow-lg flex flex-col justify-center items-center text-center text-white border-2 border-brand-gold" data-aos="fade-up" data-aos-delay="300">
+                    <h3 class="text-2xl font-bold mb-2">Ready to Scale?</h3>
+                    <p class="text-gray-300 text-sm mb-6">Let's build a custom package for your needs.</p>
+                    <a href="templates/contact.html" class="px-6 py-3 bg-brand-gold text-brand-dark font-bold rounded-lg hover:bg-white transition duration-300 w-full">
+                        Contact Us Today
+                    </a>
+                </div>
+
+            </div>
+        </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-gray-400 py-6 text-center">
-      &copy; 2025 Solo2CEO. Empowering Self-Employed Entrepreneurs.
+    <section class="py-16 bg-white border-t border-gray-100">
+        <div class="container mx-auto px-6 text-center" data-aos="zoom-in">
+            <h2 class="text-2xl font-bold text-gray-900 mb-8">View Our Detailed Proposals</h2>
+            <div class="flex flex-col md:flex-row justify-center gap-6">
+                <a href="Website_Proposal.html" class="group relative px-8 py-4 bg-gray-100 rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all">
+                    <div class="absolute inset-0 w-0 bg-brand-gold transition-all duration-[250ms] ease-out group-hover:w-full opacity-20"></div>
+                    <span class="relative text-gray-900 font-bold flex items-center gap-2">
+                        <i class="fa-solid fa-laptop-code text-brand-gray group-hover:text-black"></i> View Website Proposal
+                    </span>
+                </a>
+                <a href="Social_Proposal.html" class="group relative px-8 py-4 bg-brand-dark rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all">
+                    <div class="absolute inset-0 w-0 bg-brand-gold transition-all duration-[250ms] ease-out group-hover:w-full opacity-100"></div>
+                    <span class="relative text-white group-hover:text-brand-dark font-bold flex items-center gap-2">
+                        <i class="fa-solid fa-hashtag"></i> View Social Media Proposal
+                    </span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-brand-dark text-white py-12 border-t border-gray-800">
+        <div class="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center">
+            <div class="mb-6 md:mb-0">
+                <a href="#" class="text-2xl font-bold flex items-center gap-2">
+                    <i class="fa-solid fa-rocket text-brand-gold"></i> Solo2CEO
+                </a>
+                <p class="text-gray-400 text-sm mt-2">Empowering Self-Employed Entrepreneurs.</p>
+            </div>
+            <div class="flex space-x-6 mb-6 md:mb-0">
+                <a href="#" class="text-gray-400 hover:text-brand-gold transition text-xl"><i class="fa-brands fa-instagram"></i></a>
+                <a href="#" class="text-gray-400 hover:text-brand-gold transition text-xl"><i class="fa-brands fa-linkedin"></i></a>
+                <a href="#" class="text-gray-400 hover:text-brand-gold transition text-xl"><i class="fa-brands fa-twitter"></i></a>
+            </div>
+            <div class="text-gray-500 text-sm">
+                &copy; 2025 Solo2CEO. All rights reserved.
+            </div>
+        </div>
     </footer>
-  </body>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+        });
+    </script>
+</body>
 </html>

@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KharidBech | MMR Marketplace</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
+                    colors: {
+                        primary: '#4F46E5', // Indigo 600
+                        secondary: '#0F172A', // Slate 900
+                        accent: '#10B981', // Emerald 500
+                        surface: '#F8FAFC'
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+                        'glow': '0 0 15px rgba(79, 70, 229, 0.3)'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass { background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(226, 232, 240, 0.8); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .loader { border: 3px solid #e2e8f0; border-top: 3px solid #4f46e5; border-radius: 50%; width: 24px; height: 24px; animation: spin 0.8s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .snap-x { scroll-snap-type: x mandatory; }
+        .zoom-img { cursor: zoom-in; transition: transform 0.3s; }
+        .zoomed { transform: scale(2.5); cursor: zoom-out; z-index: 50; }
+        .fade-in { animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Toast */
+        #toast-container { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); z-index: 200; display: flex; flex-direction: column; gap: 10px; pointer-events: none; width: 90%; max-width: 400px; }
+        .toast { background: #1e293b; color: white; padding: 14px 20px; border-radius: 12px; font-size: 14px; font-weight: 600; box-shadow: 0 10px 30px rgba(0,0,0,0.25); opacity: 0; transform: translateY(20px); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events: auto; display: flex; align-items: center; gap: 12px; }
+        .toast.show { opacity: 1; transform: translateY(0); }
+        .toast.success { border-left: 4px solid #10b981; }
+        .toast.error { border-left: 4px solid #ef4444; }
+    </style>
+</head>
+<body class="bg-surface text-slate-800 antialiased pb-24 md:pb-0">
+
+<script>
+    // ⚠️ PASTE YOUR GOOGLE SCRIPT URL HERE
+    const API_URL = "https://script.google.com/macros/s/AKfycbwn8akFu0iQVE_JFJL2uzdiK5LuUxEWPECC5iEl5C6gY8yzxA7zenm0WT4NjG1euAVlBw/exec"; 
+    const ALLOWED_CITIES = ["Mumbai", "Thane", "Navi Mumbai", "Palghar", "Kalyan", "Dombivli", "Vasai", "Virar", "Panvel", "Bhiwandi", "Mira-Bhayandar", "Raigad"];
+</script>
+
+<div id="toast-container"></div>
+
+<nav class="glass sticky top-0 z-50 transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 h-16 md:h-20 flex justify-between items-center">
+        
+        <div class="flex items-center gap-3 cursor-pointer group" onclick="switchView('home')">
+            <div class="w-10 h-10 bg-gradient-to-br from-primary to-indigo-600 rounded-xl flex items-center justify-center text-white text-xl shadow-glow transition group-hover:scale-105">
+                <i class="fa-solid fa-bag-shopping"></i>
+            </div>
+            <div class="leading-tight">
+                <h1 class="text-xl font-extrabold text-slate-900 tracking-tight">KharidBech</h1>
+                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest hidden md:block">Partner Network</span>
+            </div>
+        </div>
+
+        <div class="hidden md:flex gap-8 text-sm font-semibold text-slate-500">
+            <button onclick="switchView('home')" class="hover:text-primary transition nav-link active-nav" id="nav-home">Marketplace</button>
+            <button onclick="switchView('about')" class="hover:text-primary transition nav-link" id="nav-about">About</button>
+            <button onclick="switchView('contact')" class="hover:text-primary transition nav-link" id="nav-contact">Contact</button>
+        </div>
+
+        <div class="flex items-center gap-3">
+            
+            <button onclick="openLocationModal()" class="flex items-center gap-2 bg-white hover:bg-slate-50 px-3 py-2 rounded-full text-xs font-bold text-slate-700 border border-slate-200 shadow-sm transition max-w-[140px]">
+                <i class="fa-solid fa-location-dot text-red-500"></i>
+                <span id="nav-location" class="truncate">Detecting...</span>
+            </button>
+
+            <button onclick="checkAuth(() => openModal('post-modal'))" class="hidden md:flex bg-secondary text-white px-6 py-2.5 rounded-full text-sm font-bold shadow-lg hover:bg-slate-800 hover:-translate-y-0.5 transition items-center gap-2">
+                <i class="fa-solid fa-plus"></i> Sell Item
+            </button>
+            
+            <button onclick="handleProfileClick()" class="hidden md:flex w-10 h-10 rounded-full bg-white items-center justify-center text-slate-600 border border-slate-200 hover:border-primary hover:text-primary transition shadow-sm">
+                <i class="fa-regular fa-user text-lg"></i>
+            </button>
+
+            <button onclick="toggleMobileMenu()" class="md:hidden w-10 h-10 flex items-center justify-center text-slate-600">
+                <i class="fa-solid fa-bars text-xl"></i>
+            </button>
+        </div>
+    </div>
+
+    <div id="mobile-menu" class="hidden md:hidden absolute top-16 left-0 w-full bg-white border-b border-slate-100 shadow-xl z-40 animate-fade-in">
+        <div class="flex flex-col p-4 space-y-2">
+            <button onclick="switchView('home'); toggleMobileMenu()" class="text-left p-3 rounded-lg hover:bg-slate-50 font-bold text-slate-700">Home</button>
+            <button onclick="switchView('about'); toggleMobileMenu()" class="text-left p-3 rounded-lg hover:bg-slate-50 font-bold text-slate-700">About Us</button>
+            <button onclick="switchView('contact'); toggleMobileMenu()" class="text-left p-3 rounded-lg hover:bg-slate-50 font-bold text-slate-700">Contact Support</button>
+            <hr class="border-slate-100">
+            <button onclick="handleProfileClick(); toggleMobileMenu()" class="text-left p-3 rounded-lg hover:bg-slate-50 font-bold text-primary">My Account / Login</button>
+        </div>
+    </div>
+</nav>
+
+<div class="md:hidden fixed bottom-0 left-0 w-full bg-white border-t border-slate-200 z-50 flex justify-around items-center py-3 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+    <button onclick="switchView('home')" class="flex flex-col items-center gap-1 text-slate-400 hover:text-primary transition">
+        <i class="fa-solid fa-house text-lg"></i>
+        <span class="text-[10px] font-bold">Home</span>
+    </button>
+    <button onclick="checkAuth(() => openModal('post-modal'))" class="flex flex-col items-center gap-1 text-white">
+        <div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center shadow-lg shadow-indigo-200 -mt-6 border-4 border-white">
+            <i class="fa-solid fa-plus text-xl"></i>
+        </div>
+        <span class="text-[10px] font-bold text-primary">Sell</span>
+    </button>
+    <button onclick="handleProfileClick()" class="flex flex-col items-center gap-1 text-slate-400 hover:text-primary transition">
+        <i class="fa-solid fa-user text-lg"></i>
+        <span class="text-[10px] font-bold">Profile</span>
+    </button>
+</div>
+
+<div id="view-home" class="view-section">
+    <div class="bg-white border-b border-slate-100 sticky top-[64px] md:top-[80px] z-40 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 py-3">
+            <div class="flex gap-4 overflow-x-auto no-scrollbar items-center" id="cat-rail"></div>
+        </div>
+    </div>
+
+    <div class="md:hidden p-4 bg-white border-b border-slate-100 sticky top-[120px] z-30">
+        <div class="relative">
+            <input type="text" onkeyup="globalSearch(this.value)" placeholder="Search anything..." class="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 pl-11 pr-4 text-sm focus:ring-2 focus:ring-primary/50 outline-none transition">
+            <i class="fa-solid fa-search absolute left-4 top-3.5 text-slate-400"></i>
+        </div>
+    </div>
+
+    <main class="max-w-7xl mx-auto px-4 py-8 min-h-screen">
+        <div id="loader-view" class="text-center py-40 hidden">
+            <div class="loader mx-auto mb-4"></div>
+            <p class="text-slate-400 text-sm font-medium animate-pulse">Loading Deals...</p>
+        </div>
+        <div id="empty-view" class="hidden text-center py-32 opacity-60">
+            <div class="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fa-solid fa-box-open text-4xl text-slate-300"></i>
+            </div>
+            <p class="text-slate-500 font-medium">No results found in this area.</p>
+        </div>
+        <div id="grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+    </main>
+</div>
+
+<div id="view-profile" class="view-section hidden max-w-6xl mx-auto px-4 py-10 min-h-screen">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="col-span-1">
+            <div class="bg-white rounded-3xl shadow-soft border border-slate-100 p-8 sticky top-28">
+                <div class="text-center mb-8">
+                    <div class="w-24 h-24 bg-gradient-to-br from-indigo-100 to-white border-2 border-indigo-50 text-primary rounded-full flex items-center justify-center text-4xl mx-auto mb-4 shadow-inner">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-slate-900" id="pf-name-display">User Name</h2>
+                    <span class="inline-block mt-1 px-3 py-1 bg-slate-100 text-slate-500 text-xs font-bold uppercase tracking-wider rounded-full" id="pf-role-display">User</span>
+                </div>
+
+                <form onsubmit="updateProfile(event)" class="space-y-5">
+                    <div>
+                        <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1 block">Full Name</label>
+                        <input type="text" id="pf-name" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm focus:border-primary outline-none transition">
+                    </div>
+                    <div>
+                        <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1 block">Phone Number</label>
+                        <input type="tel" id="pf-phone" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm focus:border-primary outline-none transition">
+                    </div>
+                    <div>
+                        <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1 block">Email (Locked)</label>
+                        <input type="email" id="pf-email" readonly class="w-full border border-slate-100 bg-slate-100 rounded-xl p-3 text-sm text-slate-400 cursor-not-allowed">
+                    </div>
+                    <button type="submit" id="btn-update-pf" class="w-full bg-primary text-white py-3.5 rounded-xl font-bold hover:bg-indigo-700 transition shadow-lg shadow-indigo-200">Save Changes</button>
+                </form>
+                
+                <button onclick="logout()" class="w-full mt-4 border border-red-100 text-red-500 py-3 rounded-xl font-bold hover:bg-red-50 transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-right-from-bracket"></i> Logout
+                </button>
+            </div>
+        </div>
+
+        <div class="col-span-1 md:col-span-2">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-2xl font-bold text-slate-800 flex items-center gap-3">
+                    <span class="w-10 h-10 bg-indigo-100 text-primary rounded-xl flex items-center justify-center text-lg"><i class="fa-solid fa-layer-group"></i></span>
+                    My Listings
+                </h3>
+            </div>
+            
+            <div id="my-ads-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-6"></div>
+            <div id="my-ads-empty" class="hidden text-center py-20 bg-white rounded-3xl border border-dashed border-slate-200">
+                <div class="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-300 text-2xl"><i class="fa-solid fa-camera"></i></div>
+                <p class="text-slate-500 font-medium">You haven't posted any ads yet.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="view-about" class="view-section hidden max-w-4xl mx-auto px-4 py-12 min-h-screen text-center">
+    <div class="bg-white rounded-3xl shadow-xl overflow-hidden p-8 md:p-12 border border-slate-100">
+        <div class="w-20 h-20 bg-gradient-to-br from-primary to-indigo-600 rounded-3xl flex items-center justify-center text-white text-4xl shadow-glow mx-auto mb-8">
+            <i class="fa-solid fa-store"></i>
+        </div>
+        <h1 class="text-4xl font-extrabold text-slate-900 mb-4">About KharidBech</h1>
+        <p class="text-slate-500 max-w-lg mx-auto leading-relaxed mb-10">
+            We are the Mumbai Metropolitan Region's most trusted partner-driven marketplace. We bridge the gap between verified dealers and buyers, ensuring safe, hyper-local transactions.
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="p-6 bg-slate-50 rounded-2xl"><i class="fa-solid fa-shield-halved text-3xl text-primary mb-3"></i><h3 class="font-bold text-slate-800">Verified</h3><p class="text-xs text-slate-500 mt-1">Safe Dealers</p></div>
+            <div class="p-6 bg-slate-50 rounded-2xl"><i class="fa-solid fa-bolt text-3xl text-primary mb-3"></i><h3 class="font-bold text-slate-800">Fast</h3><p class="text-xs text-slate-500 mt-1">Instant Chat</p></div>
+            <div class="p-6 bg-slate-50 rounded-2xl"><i class="fa-solid fa-map-location-dot text-3xl text-primary mb-3"></i><h3 class="font-bold text-slate-800">Local</h3><p class="text-xs text-slate-500 mt-1">MMR Only</p></div>
+        </div>
+    </div>
+</div>
+
+<div id="view-contact" class="view-section hidden max-w-2xl mx-auto px-4 py-12 min-h-screen">
+    <div class="bg-white rounded-3xl shadow-lg border border-slate-100 p-8 md:p-12 text-center">
+        <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6 text-2xl animate-bounce">
+            <i class="fa-solid fa-headset"></i>
+        </div>
+        <h2 class="text-3xl font-extrabold text-slate-900 mb-2">Get in Touch</h2>
+        <p class="text-slate-500 mb-8">Have questions? We are here to help you.</p>
+        
+        <div class="space-y-4 text-left">
+            <a href="tel:+917021360582" class="flex items-center gap-5 p-5 bg-slate-50 rounded-2xl hover:bg-white hover:shadow-md border border-transparent hover:border-slate-200 transition group">
+                <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-primary shadow-sm group-hover:bg-primary group-hover:text-white transition"><i class="fa-solid fa-phone"></i></div>
+                <div>
+                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Call Support</p>
+                    <p class="font-bold text-slate-800 text-lg">+91 7021360582</p>
+                </div>
+            </a>
+            
+            <a href="mailto:support@kharidbech.com" class="flex items-center gap-5 p-5 bg-slate-50 rounded-2xl hover:bg-white hover:shadow-md border border-transparent hover:border-slate-200 transition group">
+                <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-primary shadow-sm group-hover:bg-primary group-hover:text-white transition"><i class="fa-solid fa-envelope"></i></div>
+                <div>
+                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Email Support</p>
+                    <p class="font-bold text-slate-800 text-lg">support@kharidbech.com</p>
+                </div>
+            </a>
+
+            <div class="flex items-center gap-5 p-5 bg-slate-50 rounded-2xl">
+                <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-primary shadow-sm"><i class="fa-solid fa-map-pin"></i></div>
+                <div>
+                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Headquarters</p>
+                    <p class="font-bold text-slate-800 text-lg">Mumbai, Maharashtra, India</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="auth-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center px-4 bg-slate-900/60 backdrop-blur-sm">
+    <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in-95 relative">
+        <button onclick="closeModal('auth-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 w-8 h-8 flex items-center justify-center rounded-full bg-slate-50 hover:bg-slate-100 transition"><i class="fa-solid fa-times text-lg"></i></button>
+        
+        <div class="bg-slate-50 p-6 text-center border-b border-slate-100">
+            <h2 class="text-2xl font-bold text-slate-800">Welcome</h2>
+            <p class="text-sm text-slate-500">Login to your account</p>
+        </div>
+        <div class="flex p-2 mx-6 mt-4 bg-slate-100 rounded-xl">
+            <button onclick="authTab('login')" id="tab-login" class="flex-1 py-2.5 rounded-lg text-sm font-bold bg-white shadow-sm text-primary transition">Login</button>
+            <button onclick="authTab('signup')" id="tab-signup" class="flex-1 py-2.5 rounded-lg text-sm font-bold text-slate-500 hover:text-slate-700 transition">Sign Up</button>
+        </div>
+        <div class="p-6">
+            <form id="f-login" onsubmit="authSubmit(event, 'login')" class="space-y-4">
+                <input type="email" id="l-email" placeholder="Email" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3.5 text-sm focus:ring-2 focus:ring-primary/50 outline-none transition">
+                <input type="password" id="l-pass" placeholder="Password" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3.5 text-sm focus:ring-2 focus:ring-primary/50 outline-none transition">
+                <button id="btn-login" class="w-full bg-primary text-white py-3.5 rounded-xl font-bold shadow-lg shadow-indigo-200 hover:bg-indigo-700 transition">Login</button>
+                <p class="text-center text-xs text-slate-400 hover:text-primary cursor-pointer transition" onclick="authTab('forgot')">Forgot Password?</p>
+            </form>
+            <form id="f-signup" onsubmit="authSubmit(event, 'signup')" class="space-y-4 hidden">
+                <input type="text" id="s-name" placeholder="Full Name" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3.5 text-sm" required>
+                <input type="tel" id="s-phone" placeholder="Phone (WhatsApp)" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3.5 text-sm" required>
+                <input type="email" id="s-email" placeholder="Email" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3.5 text-sm" required>
+                <input type="password" id="s-pass" placeholder="Create Password" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3.5 text-sm" required>
+                <div class="relative">
+                    <select id="s-role" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3.5 text-sm appearance-none outline-none">
+                        <option value="user">Normal User</option>
+                        <option value="admin">Partner (Dealer)</option>
+                    </select>
+                    <i class="fa-solid fa-chevron-down absolute right-4 top-4.5 text-slate-400 text-xs"></i>
+                </div>
+                <button id="btn-signup" class="w-full bg-emerald-500 text-white py-3.5 rounded-xl font-bold shadow-lg shadow-emerald-200 hover:bg-emerald-600 transition">Create Account</button>
+            </form>
+            <form id="f-forgot" class="space-y-4 hidden">
+                <div class="bg-orange-50 text-orange-600 text-xs p-3 rounded-xl border border-orange-100 mb-2">Enter your email to receive a temporary Security PIN.</div>
+                <input type="email" id="ft-email" placeholder="Email" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3.5 text-sm">
+                <button onclick="getPin()" type="button" class="w-full bg-orange-500 text-white font-bold py-3.5 rounded-xl hover:bg-orange-600 transition">Get PIN</button>
+                <div id="reset-box" class="hidden space-y-3 pt-2">
+                    <input type="text" id="ft-pin" placeholder="Enter PIN" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3.5 text-center font-bold tracking-widest text-lg">
+                    <input type="password" id="ft-new" placeholder="New Password" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3.5 text-sm">
+                    <button onclick="resetPass()" type="button" class="w-full bg-primary text-white font-bold py-3.5 rounded-xl hover:bg-indigo-700 transition">Reset Password</button>
+                </div>
+                <p class="text-center text-xs text-slate-400 cursor-pointer mt-2 hover:text-slate-600" onclick="authTab('login')">Back to Login</p>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="details-modal" class="hidden fixed inset-0 z-[110] flex items-center justify-center px-4 bg-slate-900/70 backdrop-blur-sm">
+    <div class="bg-white w-full max-w-5xl rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row h-[90vh] md:h-[650px] animate-in zoom-in-95">
+        
+        <div class="md:w-[60%] bg-black flex items-center justify-center relative group h-[45%] md:h-full">
+            <div id="dt-slider" class="w-full h-full flex overflow-x-auto snap-x no-scrollbar scroll-smooth items-center"></div>
+            <button onclick="dtSlide(-1)" class="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 backdrop-blur-md text-white w-10 h-10 rounded-full flex items-center justify-center transition"><i class="fa-solid fa-chevron-left"></i></button>
+            <button onclick="dtSlide(1)" class="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 backdrop-blur-md text-white w-10 h-10 rounded-full flex items-center justify-center transition"><i class="fa-solid fa-chevron-right"></i></button>
+            <div class="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/60 backdrop-blur-md text-white text-xs px-3 py-1 rounded-full pointer-events-none border border-white/10">Swipe to view photos</div>
+        </div>
+
+        <div class="md:w-[40%] p-6 md:p-8 flex flex-col h-[55%] md:h-full bg-white relative">
+            <button onclick="closeModal('details-modal')" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 hover:bg-red-50 hover:text-red-500 flex items-center justify-center transition"><i class="fa-solid fa-times"></i></button>
+            <div class="mb-1"><span class="bg-indigo-50 text-primary px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wide" id="dt-cat">Category</span></div>
+            <h2 class="text-2xl font-bold text-slate-900 mt-3 leading-snug" id="dt-title">Product Title</h2>
+            <div class="flex items-center gap-1 text-slate-500 text-sm mt-1 mb-6"><i class="fa-solid fa-location-dot text-red-400"></i> <span id="dt-loc">Location</span></div>
+            <div class="text-4xl font-extrabold text-slate-900 mb-6 tracking-tight" id="dt-price">₹0</div>
+            <div class="flex-1 overflow-y-auto pr-2 mb-6 space-y-4">
+                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                    <h4 class="text-xs font-bold text-slate-400 uppercase mb-2">Description</h4>
+                    <p class="text-slate-600 leading-relaxed text-sm whitespace-pre-line" id="dt-desc">...</p>
+                </div>
+            </div>
+            <div class="border-t border-slate-100 pt-6 mt-auto">
+                <div class="flex items-center gap-4 mb-5">
+                    <div class="w-12 h-12 bg-gradient-to-br from-indigo-100 to-white rounded-full flex items-center justify-center text-primary text-xl border border-indigo-50 shadow-sm"><i class="fa-solid fa-user-shield"></i></div>
+                    <div><p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Posted By</p><p class="font-bold text-slate-800 text-lg leading-none" id="dt-seller">Seller Name</p></div>
+                </div>
+                <button id="dt-chat-btn" class="w-full bg-emerald-500 text-white py-4 rounded-xl font-bold shadow-lg shadow-emerald-200 hover:bg-emerald-600 transition hover:-translate-y-0.5 flex items-center justify-center gap-2 text-lg">
+                    <i class="fa-brands fa-whatsapp text-2xl"></i> Chat on WhatsApp
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="post-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center px-4 bg-slate-900/60 backdrop-blur-sm">
+    <div class="bg-white w-full max-w-2xl rounded-3xl shadow-2xl max-h-[90vh] overflow-y-auto animate-in zoom-in-95">
+        <div class="p-6 border-b sticky top-0 bg-white z-10 flex justify-between items-center">
+            <h2 class="text-xl font-bold text-slate-800">Sell an Item</h2>
+            <button onclick="closePostModal()" class="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center hover:bg-red-50 hover:text-red-500 transition"><i class="fa-solid fa-times"></i></button>
+        </div>
+        <form onsubmit="postAd(event)" class="p-6 space-y-6">
+            <input type="hidden" id="p-id">
+            
+            <div class="relative">
+                <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1 block">Location (MMR)</label>
+                <input type="text" id="p-loc-input" onkeyup="handleLocInput(this.value, 'p-loc-results', 'setPostLoc')" placeholder="Search Area (e.g. Thane, Bandra)" class="w-full border border-indigo-100 bg-indigo-50/30 rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary outline-none transition">
+                <div id="p-loc-results" class="absolute w-full bg-white border border-slate-100 shadow-xl mt-1 max-h-40 overflow-y-auto hidden z-20 rounded-xl"></div>
+            </div>
+            <input type="hidden" id="p-loc-val" required>
+
+            <div class="border-2 border-dashed border-slate-300 rounded-2xl p-8 text-center relative hover:bg-slate-50 transition group cursor-pointer">
+                <input type="file" id="p-files" multiple accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer z-10">
+                <div class="w-14 h-14 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3 text-slate-400 group-hover:scale-110 transition"><i class="fa-solid fa-camera text-2xl"></i></div>
+                <p class="text-sm font-bold text-slate-600">Click to upload photos</p>
+                <p id="file-msg" class="text-xs text-slate-400 mt-1">Max 5 images allowed</p>
+            </div>
+            <div id="edit-prev" class="flex gap-3 flex-wrap"></div>
+
+            <div class="grid grid-cols-2 gap-5">
+                <div class="col-span-2">
+                    <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1 block">Ad Title</label>
+                    <input type="text" id="p-title" placeholder="e.g. iPhone 13 Pro Max" class="w-full border border-slate-200 rounded-xl p-3 text-sm focus:border-primary outline-none" required>
+                </div>
+                <div>
+                    <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1 block">Price (₹)</label>
+                    <input type="number" id="p-price" placeholder="0" class="w-full border border-slate-200 rounded-xl p-3 text-sm focus:border-primary outline-none" required>
+                </div>
+                <div>
+                    <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1 block">Category</label>
+                    <select id="p-cat" class="w-full border border-slate-200 rounded-xl p-3 text-sm bg-white focus:border-primary outline-none appearance-none" required></select>
+                </div>
+                <div class="col-span-2">
+                    <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1 block">Description</label>
+                    <textarea id="p-desc" placeholder="Describe your item..." rows="4" class="w-full border border-slate-200 rounded-xl p-3 text-sm focus:border-primary outline-none"></textarea>
+                </div>
+            </div>
+            <button type="submit" id="btn-post" class="w-full bg-secondary text-white py-4 rounded-xl font-bold shadow-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-800 transition" disabled>POST AD</button>
+        </form>
+    </div>
+</div>
+
+<div id="loc-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center px-4 bg-slate-900/60 backdrop-blur-sm">
+    <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl p-8 text-center animate-in zoom-in-95">
+        <div class="w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl shadow-sm border border-red-100">
+            <i class="fa-solid fa-map-location-dot"></i>
+        </div>
+        <h2 class="text-2xl font-bold text-slate-800 mb-2">Select Location</h2>
+        <p class="text-sm text-slate-500 mb-6">We only operate in Mumbai, Thane, Palghar & Navi Mumbai.</p>
+        
+        <div class="relative text-left">
+            <i class="fa-solid fa-search absolute left-4 top-3.5 text-slate-400"></i>
+            <input type="text" id="loc-search" onkeyup="handleLocInput(this.value, 'loc-results', 'setAppLoc')" placeholder="Search Area..." class="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 pl-11 pr-4 outline-none focus:ring-2 focus:ring-primary transition">
+        </div>
+        
+        <div id="loc-results" class="mt-3 max-h-48 overflow-y-auto hidden bg-white shadow-sm rounded-xl border border-slate-100 text-left"></div>
+        <button onclick="closeModal('loc-modal')" class="w-full mt-6 py-3 text-sm font-bold text-slate-400 hover:text-slate-600 transition">Cancel</button>
+    </div>
+</div>
+
+<div id="zoom-modal" class="hidden fixed inset-0 z-[120] bg-black/95 flex flex-col justify-center">
+    <button onclick="closeModal('zoom-modal')" class="absolute top-5 right-5 text-white text-3xl hover:opacity-70 transition"><i class="fa-solid fa-times"></i></button>
+    <div id="zoom-track" class="flex-1 flex overflow-x-auto snap-x no-scrollbar items-center px-4 gap-4"></div>
+</div>
+
+<script>
+    // --- STATE ---
+    let user = JSON.parse(localStorage.getItem('kb_u7'));
+    let loc = localStorage.getItem('kb_l7');
+    let db = [], tempEditImages = [], debounceTimer;
+
+    const CATS = [
+        {id:'all',t:'All',i:'fa-border-all'},{id:'Mobile',t:'Mobiles',i:'fa-mobile-screen'},{id:'Car',t:'Cars',i:'fa-car'},
+        {id:'Bike',t:'Bikes',i:'fa-motorcycle'},{id:'Electronics',t:'Electronics',i:'fa-plug'},{id:'Furniture',t:'Furniture',i:'fa-couch'},
+        {id:'Fashion',t:'Fashion',i:'fa-shirt'},{id:'Properties',t:'Properties',i:'fa-building'},{id:'Books',t:'Books',i:'fa-book'},
+        {id:'Sports',t:'Sports',i:'fa-futbol'},{id:'Kids',t:'Kids',i:'fa-baby-carriage'},{id:'Services',t:'Services',i:'fa-briefcase'},
+        {id:'Jobs',t:'Jobs',i:'fa-user-doctor'},{id:'Other',t:'Others',i:'fa-box'}
+    ];
+
+    document.addEventListener('DOMContentLoaded', () => {
+        initCats(); 
+        if(!loc) autoDetectLoc(); else { document.getElementById('nav-location').innerText=loc; fetchDB(); }
+        document.getElementById('p-files').onchange = function(){ 
+            document.getElementById('file-msg').innerText=`${this.files.length} selected`; 
+            document.getElementById('file-msg').className="text-xs font-bold text-primary mt-1";
+        }
+    });
+
+    // --- NAVIGATION ---
+    function switchView(v) {
+        document.querySelectorAll('.view-section').forEach(e=>e.classList.add('hidden'));
+        document.getElementById(`view-${v}`).classList.remove('hidden');
+        window.scrollTo(0,0);
+        
+        // Active Nav State
+        document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('text-primary','font-bold'));
+        if(document.getElementById(`nav-${v}`)) document.getElementById(`nav-${v}`).classList.add('text-primary','font-bold');
+
+        if(v==='profile') loadProfileView();
+    }
+    function handleProfileClick() { if(user) switchView('profile'); else openModal('auth-modal'); }
+    function toggleMobileMenu() { document.getElementById('mobile-menu').classList.toggle('hidden'); }
+
+    // --- TOAST NOTIFICATION ---
+    function showToast(msg, type='success') {
+        const div = document.createElement('div');
+        div.className = `toast ${type}`;
+        div.innerHTML = `<i class="fa-solid ${type==='success'?'fa-check-circle':'fa-circle-exclamation'} text-lg"></i> ${msg}`;
+        document.getElementById('toast-container').appendChild(div);
+        setTimeout(()=>div.classList.add('show'), 100);
+        setTimeout(()=>{div.classList.remove('show'); setTimeout(()=>div.remove(),400)}, 3000);
+    }
+
+    // --- DETAILS POPUP (FIXED) ---
+    function openDetails(p) {
+        document.getElementById('dt-title').innerText = p.title;
+        document.getElementById('dt-price').innerText = `₹${Number(p.price).toLocaleString('en-IN')}`;
+        document.getElementById('dt-cat').innerText = p.category;
+        document.getElementById('dt-loc').innerText = p.location;
+        document.getElementById('dt-desc').innerText = p.desc;
+        document.getElementById('dt-seller').innerText = p.sellerName || "User";
+        
+        // FIXED CHAT LOGIC
+        const chatBtn = document.getElementById('dt-chat-btn');
+        chatBtn.onclick = () => {
+            if(!user) { closeModal('details-modal'); openModal('auth-modal'); return; }
+            // Safe conversion to string to prevent 'replace is not a function' error
+            const phoneStr = String(p.contactPhone || '');
+            const cleanPhone = phoneStr.replace(/\D/g,'');
+            if(!cleanPhone) { showToast("Seller phone not available", "error"); return; }
+            window.open(`https://wa.me/${cleanPhone}?text=Hi, interested in ${encodeURIComponent(p.title)}`, '_blank');
+        };
+
+        const imgs = p.images.length ? p.images : [];
+        const slider = document.getElementById('dt-slider');
+        slider.innerHTML = imgs.length 
+            ? imgs.map(id => `<div class="snap-center min-w-full h-full flex items-center justify-center p-2 bg-black"><img src="https://drive.google.com/thumbnail?id=${id}&sz=w1000" class="max-h-full max-w-full object-contain shadow-2xl"></div>`).join('')
+            : `<div class="snap-center min-w-full h-full flex items-center justify-center bg-gray-50 text-slate-400"><i class="fa-solid fa-image text-4xl"></i></div>`;
+            
+        openModal('details-modal');
+    }
+    function dtSlide(d) { const el = document.getElementById('dt-slider'); el.scrollLeft += d*el.offsetWidth; }
+
+    // --- AUTH ---
+    async function authSubmit(e,t) {
+        e.preventDefault();
+        const btn = document.getElementById(t==='login'?'btn-login':'btn-signup');
+        const txt = btn.innerText; btn.innerHTML=`<i class="fa-solid fa-circle-notch fa-spin"></i> Processing...`; btn.disabled=true;
+        
+        const d={action:t,email:document.getElementById(t==='login'?'l-email':'s-email').value,password:document.getElementById(t==='login'?'l-pass':'s-pass').value,name:document.getElementById('s-name')?.value,phone:document.getElementById('s-phone')?.value,role:document.getElementById('s-role')?.value, userName: document.getElementById('s-name')?.value};
+        try {
+            const r=await fetch(API_URL,{method:'POST',body:JSON.stringify(d)}).then(x=>x.json());
+            if(r.status==='success'){
+                if(t==='login'){user=r.user; localStorage.setItem('kb_u7',JSON.stringify(user)); closeModal('auth-modal'); showToast(`Welcome back, ${user.name}!`); switchView('home'); fetchDB();}
+                else { showToast(r.msg); authTab('login'); }
+            } else showToast(r.msg,'error');
+        } catch(e){showToast("Network Error",'error');}
+        btn.innerHTML=txt; btn.disabled=false;
+    }
+    function logout(){localStorage.removeItem('kb_u7'); user=null; showToast("Logged out successfully"); switchView('home'); fetchDB();}
+    function authTab(t){['f-login','f-signup','f-forgot'].forEach(x=>hide(x));show(`f-${t}`);document.getElementById('tab-login').className=t==='login'?"flex-1 py-2.5 rounded-lg text-sm font-bold bg-white shadow-sm text-primary transition":"flex-1 py-2.5 rounded-lg text-sm font-bold text-slate-500 hover:text-slate-700 transition";document.getElementById('tab-signup').className=t==='signup'?"flex-1 py-2.5 rounded-lg text-sm font-bold bg-white shadow-sm text-emerald-500 transition":"flex-1 py-2.5 rounded-lg text-sm font-bold text-slate-500 hover:text-slate-700 transition";}
+
+    // --- PROFILE ---
+    function loadProfileView() {
+        document.getElementById('pf-name-display').innerText = user.name;
+        document.getElementById('pf-role-display').innerText = user.role;
+        document.getElementById('pf-name').value = user.name;
+        document.getElementById('pf-phone').value = user.phone;
+        document.getElementById('pf-email').value = user.email;
+        const myAds = db.filter(p=>p.postedBy===user.email);
+        const g = document.getElementById('my-ads-grid'); g.innerHTML='';
+        if(!myAds.length) show('my-ads-empty'); else {
+            hide('my-ads-empty');
+            myAds.forEach(p=>{
+                const th = p.images.length?`https://drive.google.com/thumbnail?id=${p.images[0]}&sz=w200`:'';
+                g.innerHTML+=`
+                <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-soft flex gap-4 hover:shadow-md transition">
+                    <img src="${th}" class="w-20 h-20 object-cover rounded-xl bg-slate-100">
+                    <div class="flex-1">
+                        <h4 class="font-bold text-slate-800 line-clamp-1">${p.title}</h4>
+                        <p class="text-primary font-bold">₹${p.price}</p>
+                        <p class="text-[10px] text-slate-400 mt-1 uppercase font-bold tracking-wide">${p.status}</p>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <button onclick='editAd(${JSON.stringify(p)})' class="text-xs bg-slate-50 text-slate-600 px-3 py-2 rounded-lg font-bold hover:bg-slate-100">Edit</button>
+                        <button onclick='delAd("${p.id}")' class="text-xs bg-red-50 text-red-500 px-3 py-2 rounded-lg font-bold hover:bg-red-100">Delete</button>
+                    </div>
+                </div>`;
+            });
+        }
+    }
+    async function updateProfile(e) {
+        e.preventDefault(); const b=document.getElementById('btn-update-pf'); const t=b.innerText; b.innerHTML='<i class="fa-solid fa-circle-notch fa-spin"></i> Saving...'; b.disabled=true;
+        const pl={action:'updateProfile',email:user.email,name:document.getElementById('pf-name').value,phone:document.getElementById('pf-phone').value};
+        try {
+            const r=await fetch(API_URL,{method:'POST',body:JSON.stringify(pl)}).then(x=>x.json());
+            if(r.status==='success'){ user=r.user; localStorage.setItem('kb_u7',JSON.stringify(user)); showToast("Profile Updated!"); loadProfileView(); }
+            else showToast(r.msg,'error');
+        } catch(e){showToast("Update failed",'error');}
+        b.innerHTML=t; b.disabled=false;
+    }
+
+    // --- AD LOGIC ---
+    function editAd(p){
+        openModal('post-modal');
+        document.getElementById('p-id').value=p.id;
+        document.getElementById('p-title').value=p.title;
+        document.getElementById('p-price').value=p.price;
+        document.getElementById('p-cat').value=p.category;
+        document.getElementById('p-desc').value=p.desc;
+        setPostLoc(p.location);
+        tempEditImages = [...p.images];
+        renderEditImages();
+        document.getElementById('btn-post').innerText = "UPDATE AD";
+        document.getElementById('btn-post').disabled=false;
+    }
+    function renderEditImages() {
+        document.getElementById('edit-prev').innerHTML = tempEditImages.map(id=>`<div class="w-16 h-16 relative"><img src="https://drive.google.com/thumbnail?id=${id}" class="w-full h-full object-cover rounded-xl shadow-sm"><button type="button" onclick="rmImg('${id}')" class="absolute -top-1 -right-1 bg-red-500 text-white w-5 h-5 flex items-center justify-center rounded-full text-xs shadow-md hover:bg-red-600 transition"><i class="fa-solid fa-times"></i></button></div>`).join('');
+    }
+    function rmImg(id) { tempEditImages = tempEditImages.filter(x=>x!==id); renderEditImages(); }
+    function closePostModal() { tempEditImages = []; closeModal('post-modal'); }
+
+    async function postAd(e) {
+        e.preventDefault(); const b=document.getElementById('btn-post'); const t=b.innerText; b.innerHTML='<i class="fa-solid fa-circle-notch fa-spin"></i> Processing...'; b.disabled=true;
+        const f=document.getElementById('p-files').files; let ni=[];
+        for(let x of f){ ni.push({base64:(await toBase64(x)).split(',')[1],type:x.type}); }
+        const p={action:'saveProduct',id:document.getElementById('p-id').value,title:document.getElementById('p-title').value,price:document.getElementById('p-price').value,category:document.getElementById('p-cat').value,desc:document.getElementById('p-desc').value,location:document.getElementById('p-loc-val').value,email:user.email,role:user.role,phone:user.phone,userName:user.name,existingImages:tempEditImages,newImages:ni};
+        try {
+            const r=await fetch(API_URL,{method:'POST',body:JSON.stringify(p)}).then(x=>x.json());
+            if(r.status==='success'){ closePostModal(); showToast(r.msg); fetchDB(); if(document.getElementById('p-id').value) loadProfileView(); } else showToast(r.msg,'error');
+        } catch(e){showToast("Error",'error');}
+        b.innerHTML=t; b.disabled=false;
+    }
+
+    async function delAd(id){if(confirm("Delete Ad?")){await fetch(API_URL,{method:'POST',body:JSON.stringify({action:'deleteProduct',id})}); showToast("Ad Deleted"); fetchDB(); loadProfileView();}}
+
+    // --- FETCH ---
+    async function fetchDB() {
+        show('loader-view'); hide('grid'); hide('empty-view');
+        const r = await fetch(`${API_URL}?email=${user?user.email:''}&role=${user?user.role:'guest'}`).then(x=>x.json());
+        db = r.data.reverse(); hide('loader-view'); renderGrid(db);
+    }
+    function renderGrid(d) {
+        const g=document.getElementById('grid'); g.innerHTML=''; show('grid'); if(!d.length){show('empty-view');return;} hide('empty-view');
+        d.forEach((p,i)=>{
+            const th=p.images.length?`https://drive.google.com/thumbnail?id=${p.images[0]}&sz=w500`:'';
+            const slides=p.images.map(id=>`<img src="https://drive.google.com/thumbnail?id=${id}&sz=w500" class="snap-center min-w-full h-full object-cover">`).join('');
+            g.innerHTML+=`
+            <div onclick='openDetails(${JSON.stringify(p)})' class="bg-white rounded-3xl shadow-soft overflow-hidden hover:shadow-xl hover:-translate-y-1 transition group flex flex-col h-full fade-in cursor-pointer border border-slate-100" style="animation-delay:${i*50}ms">
+                <div class="relative h-64 bg-slate-100 group">
+                    <div id="sl-${i}" class="flex h-full overflow-x-auto snap-x no-scrollbar scroll-smooth" onclick='event.stopPropagation()'>${p.images.length?slides:`<img src="${th}" class="w-full h-full object-cover opacity-80">`}</div>
+                    ${p.images.length>1?`<button onclick="slide(${i},-1,event)" class="absolute left-2 top-1/2 -translate-y-1/2 bg-black/30 text-white w-8 h-8 rounded-full opacity-0 group-hover:opacity-100 transition flex items-center justify-center hover:bg-black/60 backdrop-blur-sm"><i class="fa-solid fa-chevron-left"></i></button><button onclick="slide(${i},1,event)" class="absolute right-2 top-1/2 -translate-y-1/2 bg-black/30 text-white w-8 h-8 rounded-full opacity-0 group-hover:opacity-100 transition flex items-center justify-center hover:bg-black/60 backdrop-blur-sm"><i class="fa-solid fa-chevron-right"></i></button>`:''}
+                    <span class="absolute top-3 left-3 bg-white/90 backdrop-blur text-[10px] font-bold px-3 py-1 rounded-full text-slate-700 uppercase tracking-wide shadow-sm">${p.category}</span>
+                    <span class="absolute bottom-3 left-3 bg-slate-900/80 text-white text-[10px] px-3 py-1 rounded-full backdrop-blur flex items-center gap-1 shadow-sm"><i class="fa-solid fa-map-pin text-red-400"></i> ${p.location}</span>
+                </div>
+                <div class="p-5 flex flex-col flex-1">
+                    <div class="flex justify-between items-start mb-1">
+                        <h3 class="font-bold text-slate-900 line-clamp-1 text-lg">${p.title}</h3>
+                    </div>
+                    <p class="text-xl font-extrabold text-slate-900 mb-2">₹${Number(p.price).toLocaleString('en-IN')}</p>
+                    <p class="text-xs text-slate-500 line-clamp-2 mb-4 leading-relaxed">${p.desc}</p>
+                    <div class="mt-auto border-t border-slate-50 pt-4 flex items-center justify-between">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Verified Seller</span>
+                        <div class="w-8 h-8 bg-indigo-50 rounded-full flex items-center justify-center text-primary text-xs"><i class="fa-solid fa-comment-dots"></i></div>
+                    </div>
+                </div>
+            </div>`;
+        });
+    }
+
+    // --- HELPERS ---
+    function initCats(){document.getElementById('cat-rail').innerHTML=CATS.map(c=>`<button onclick="filter('${c.id}')" class="flex flex-col items-center min-w-[72px] gap-2 p-2 rounded-xl hover:bg-slate-50 transition group cursor-pointer border border-transparent hover:border-slate-100"><div class="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 text-lg group-hover:bg-primary group-hover:text-white transition shadow-sm"><i class="fa-solid ${c.i}"></i></div><span class="text-[10px] font-bold text-slate-500 uppercase tracking-wide group-hover:text-primary transition">${c.t}</span></button>`).join('');CATS.filter(c=>c.id!=='all').forEach(c=>{const o=document.createElement('option');o.value=c.id;o.innerText=c.t;document.getElementById('p-cat').appendChild(o)});}
+    function filter(id){if(id==='all')fetchDB();else renderGrid(db.filter(p=>p.category===id));}
+    function globalSearch(q){renderGrid(db.filter(p=>p.title.toLowerCase().includes(q.toLowerCase())||p.category.toLowerCase().includes(q.toLowerCase())));}
+    function checkAuth(cb){if(user)cb();else openModal('auth-modal');}
+    function openModal(id){document.getElementById(id).classList.remove('hidden');}
+    function closeModal(id){document.getElementById(id).classList.add('hidden');}
+    function show(id){document.getElementById(id).classList.remove('hidden');}
+    function hide(id){document.getElementById(id).classList.add('hidden');}
+    function slide(i,d,e){e.stopPropagation();const el=document.getElementById(`sl-${i}`);el.scrollLeft+=d*el.offsetWidth;}
+    
+    // Loc
+    function autoDetectLoc(){document.getElementById('nav-location').innerText="Locating...";navigator.geolocation.getCurrentPosition(async p=>{try{const r=await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${p.coords.latitude}&lon=${p.coords.longitude}&format=json`).then(x=>x.json());if(ALLOWED_CITIES.some(c=>JSON.stringify(r.address).includes(c))){setAppLoc(r.address.suburb||r.address.neighbourhood||"Mumbai");}else{showToast("Area not served yet",'error');openModal('loc-modal');}}catch(e){openModal('loc-modal');}},()=>openModal('loc-modal'));}
+    function setAppLoc(l){loc=l;localStorage.setItem('kb_l7',l);document.getElementById('nav-location').innerText=l;closeModal('loc-modal');fetchDB();}
+    function handleLocInput(q,resId,cb){clearTimeout(debounceTimer);const box=document.getElementById(resId);if(q.length<3){box.classList.add('hidden');return;}debounceTimer=setTimeout(async()=>{const r=await fetch(`https://nominatim.openstreetmap.org/search?q=${q}&format=json&addressdetails=1&limit=5&countrycodes=in`).then(x=>x.json());const v=r.filter(x=>ALLOWED_CITIES.some(c=>JSON.stringify(x.address).includes(c)));box.innerHTML=v.length?v.map(i=>`<div onclick="${cb}('${i.display_name.split(',')[0]}')" class="p-3 border-b text-sm hover:bg-slate-50 cursor-pointer flex justify-between items-center group"><span class="font-medium text-slate-700 group-hover:text-primary">${i.display_name.split(',')[0]}</span><i class="fa-solid fa-arrow-right text-slate-300 group-hover:text-primary text-xs"></i></div>`).join(''):'<div class="p-3 text-xs text-slate-400">No match</div>';box.classList.remove('hidden');},400);}
+    function setPostLoc(l){document.getElementById('p-loc-input').value=l;document.getElementById('p-loc-val').value=l;document.getElementById('p-loc-results').classList.add('hidden');document.getElementById('btn-post').disabled=false;}
+    
+    // Forgot Pass
+    async function getPin(){const e=document.getElementById('ft-email').value; const r=await fetch(API_URL,{method:'POST',body:JSON.stringify({action:'forgotPass',email:e})}).then(x=>x.json()); if(r.status==='success'){showToast(`PIN: ${r.pin}`);show('reset-box');}else showToast(r.msg,'error');}
+    async function resetPass(){const pl={action:'resetPass',email:document.getElementById('ft-email').value,pin:document.getElementById('ft-pin').value,newPass:document.getElementById('ft-new').value}; const r=await fetch(API_URL,{method:'POST',body:JSON.stringify(pl)}).then(x=>x.json()); if(r.status==='success'){showToast(r.msg);authTab('login');}else showToast(r.msg,'error');}
+    const toBase64=f=>new Promise((r,j)=>{const d=new FileReader();d.readAsDataURL(f);d.onload=()=>r(d.result);d.onerror=j;});
+</script>
+</body>
+</html>
