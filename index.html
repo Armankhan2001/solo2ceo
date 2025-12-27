@@ -74,7 +74,7 @@
 
         /* --- 4. NAVIGATION BAR --- */
         .navbar {
-            padding: 20px 0;
+            padding: 10px 0; /* Reduced padding for cleaner look */
             background: transparent;
             transition: all 0.4s ease;
         }
@@ -82,12 +82,13 @@
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
             box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-            padding: 12px 0;
+            padding: 10px 0;
         }
         .navbar-brand {
             font-weight: 800;
             font-size: 1.8rem;
             color: var(--dark-bg);
+            margin-right: 0; /* Reset default margin */
         }
         .navbar-brand span { color: var(--primary); }
         
@@ -454,18 +455,27 @@
             .nav-link { color: #333 !important; }
             .stats-section { margin-top: 40px; }
         }
+        .logo {
+            width: 120px;           /* adjust size */
+            height: auto;
+            border-radius: 50%;     /* removes white corners */
+            display: block;
+        }
     </style>
 </head>
 <body>
 
     <nav class="navbar navbar-expand-lg fixed-top">
-        <div class="container">
-            <a class="navbar-brand" href="index.html">
-                <i class="fas fa-rocket me-2 text-primary"></i>Solo2<span>CEO</span>
+        <div class="container-fluid px-4">
+            
+            <a class="navbar-brand d-flex align-items-center me-auto" href="index.html">
+                <img src="./image/Solo2ceologo.png" alt="Solo2CEO Logo" class="logo">
             </a>
+
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <i class="fas fa-bars text-primary fs-3"></i>
             </button>
+
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-center">
                     <li class="nav-item"><a class="nav-link active" href="index.html">Home</a></li>
@@ -479,6 +489,7 @@
                     </li>
                 </ul>
             </div>
+
         </div>
     </nav>
 
