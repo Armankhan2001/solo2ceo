@@ -1,136 +1,368 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>About Us – Solo2CEO</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      margin: 0;
-      background: #f2f4f6;
-    }
+    <link rel="manifest" href="../manifest.json">
+    <meta name="theme-color" content="#4f46e5">
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Arman Khan | Solo2CEO</title>
+    
+    <link rel="icon" type="image/png" href="../image/Solo2ceologo.png">
 
-    section {
-      margin-bottom: 40px;
-    }
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    h1, h2, h3 {
-      margin-bottom: 15px;
-    }
+    <style>
+        /* =========================================
+           1. PREMIUM DESIGN SYSTEM (MATCHING HOME)
+           ========================================= */
+        :root {
+            --primary: #4f46e5;
+            --primary-glow: rgba(79, 70, 229, 0.5);
+            --secondary: #ec4899;
+            --accent: #06b6d4;
+            --dark-bg: #0f172a;
+            --text-main: #1e293b;
+            --gradient-btn: linear-gradient(90deg, #4f46e5, #ec4899);
+        }
 
-    p {
-      line-height: 1.6;
-    }
+        body { font-family: 'Outfit', sans-serif; background-color: #f8fafc; color: var(--text-main); overflow-x: hidden; line-height: 1.6; }
+        h1, h2, h3, h4, h5 { font-family: 'Space Grotesk', sans-serif; letter-spacing: -0.02em; }
 
-    .pill-tags span {
-      margin: 6px;
-    }
+        /* Floating Navbar */
+        .navbar { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); padding: 12px 0; border-bottom: 1px solid rgba(0,0,0,0.05); }
+        .navbar.scrolled { width: 90%; margin: 20px auto 0; border-radius: 50px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); top: 0; left: 0; right: 0; }
+        .navbar-brand { font-weight: 800; font-size: 1.4rem; color: var(--dark-bg) !important; display: flex; align-items: center; gap: 10px; }
+        .brand-logo { height: 40px; width: 40px; border-radius: 50%; object-fit: cover; }
+        .nav-link { font-weight: 600; color: var(--text-main) !important; margin: 0 12px; transition: 0.3s; }
+        .nav-link:hover, .nav-link.active { color: var(--primary) !important; }
+        .btn-nav { background: var(--dark-bg); color: white !important; border-radius: 50px; padding: 10px 24px; font-weight: 600; transition: 0.3s; }
+        .btn-nav:hover { background: var(--primary); transform: translateY(-2px); }
 
-    .yt-wrapper {
-      position: relative;
-      padding-bottom: 56.25%;
-      height: 0;
-      overflow: hidden;
-      max-width: 800px;
-      margin: 0 auto;
-      border-radius: 12px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.2);
-    }
+        /* Hero Header */
+        header {
+            background-color: #000000;
+            background-image: radial-gradient(at 50% 0%, #1e1b4b 0, transparent 50%);
+            color: white; padding: 180px 0 120px; position: relative; overflow: hidden; text-align: center;
+        }
+        .orb { position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.5; }
+        .orb-1 { top: -10%; left: -10%; width: 400px; height: 400px; background: var(--primary); animation: drift 10s infinite alternate; }
+        .orb-2 { bottom: 10%; right: -5%; width: 300px; height: 300px; background: var(--secondary); animation: drift 12s infinite alternate-reverse; }
+        @keyframes drift { from { transform: translate(0,0); } to { transform: translate(30px, 40px); } }
 
-    .yt-wrapper iframe {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      border-radius: 12px;
-    }
-  </style>
+        /* Cards & Sections */
+        .glass-panel {
+            background: white; border-radius: 24px; padding: 50px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.05); margin-top: -80px; position: relative; z-index: 5;
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+
+        .pill-badge {
+            background: #f1f5f9; color: var(--primary); padding: 8px 20px;
+            border-radius: 50px; font-size: 0.85rem; font-weight: 600;
+            display: inline-block; margin: 5px; transition: 0.3s; border: 1px solid transparent;
+        }
+        .pill-badge:hover { background: white; border-color: var(--primary); transform: translateY(-2px); }
+
+        /* Problem vs Solution Cards */
+        .compare-card {
+            background: white; border-radius: 20px; padding: 30px; height: 100%;
+            border: 1px solid #e2e8f0; transition: 0.3s;
+        }
+        .compare-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        .compare-card.problem { border-left: 5px solid #ef4444; }
+        .compare-card.solution { border-left: 5px solid #10b981; }
+
+        .check-list li { list-style: none; margin-bottom: 12px; display: flex; align-items: flex-start; gap: 10px; }
+        .check-list i { margin-top: 5px; }
+
+        /* Video Wrapper */
+        .yt-wrapper {
+            position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;
+            max-width: 900px; margin: 0 auto; border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(79, 70, 229, 0.3); border: 4px solid white;
+        }
+        .yt-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+
+        /* Footer */
+        footer { background: #020617; color: #94a3b8; padding: 70px 0 20px; margin-top: 50px; }
+        footer a { color: #cbd5e1; text-decoration: none; transition: 0.3s; }
+        footer a:hover { color: var(--accent); }
+
+        /* Buttons & Inputs */
+        .btn-gradient { background: var(--gradient-btn); color: white; border: none; padding: 15px 35px; border-radius: 50px; font-weight: 700; transition: 0.4s; }
+        .btn-gradient:hover { transform: translateY(-3px); box-shadow: 0 15px 35px var(--primary-glow); color: white; }
+        .pwa-btn { position: fixed; bottom: 30px; left: 20px; background: white; color: var(--dark-bg); padding: 10px 20px; border-radius: 12px; font-weight: 700; z-index: 1000; box-shadow: 0 5px 20px rgba(0,0,0,0.1); border: none; display: flex; gap: 8px; }
+        #floatingBtn { position: fixed; bottom: 30px; right: 30px; background: var(--dark-bg); color: white; border: 2px solid var(--accent); border-radius: 50px; padding: 12px 24px; font-weight: 700; z-index: 1000; display: flex; gap: 10px; }
+
+        /* Responsive */
+        @media (max-width: 991px) { .glass-panel { padding: 30px; } }
+    </style>
 </head>
 <body>
 
-<h1 style="text-align:center; padding: 40px 20px 0;">About Us</h1>
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html">
+                <img src="../image/Solo2ceologo.png" alt="Solo2CEO" class="brand-logo">
+                Solo2CEO
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <i class="fas fa-bars text-dark fs-4"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item"><a class="nav-link" href="../index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="about.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../services.html">Services</a></li>
+                    <li class="nav-item"><a class="nav-link" href="domain.html">Ecosystem</a></li>
+                    <li class="nav-item ms-lg-3 mt-3 mt-lg-0">
+                        <button class="btn btn-nav" data-bs-toggle="modal" data-bs-target="#inquiryModal">
+                            Let's Talk
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
-<section style="text-align: center; padding: 50px 20px; background: linear-gradient(135deg, #f8f9fa, #e3e6ea); border-radius: 10px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);">
-  <h2 style="font-size: 36px; font-weight: bold; color: #333;">Meet <span style="color: #007bff;">Arman Khan</span> – CEO of Solo2CEO</h2>
-  <p style="font-size: 18px; color: #555; max-width: 800px; margin: 10px auto;">
-    A visionary entrepreneur dedicated to transforming self-employment into powerful brands. From business strategy to digital innovation, Arman is on a mission to help individuals rise above the competition and build sustainable businesses.
-  </p>
-  <div class="pill-tags" style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin-top: 20px;">
-    <span style="background: #007bff; color: #fff; padding: 10px 18px; border-radius: 25px; font-size: 14px; font-weight: bold;">Entrepreneur</span>
-    <span style="background: #28a745; color: #fff; padding: 10px 18px; border-radius: 25px; font-size: 14px; font-weight: bold;">Freelancer</span>
-    <span style="background: #ffc107; color: #fff; padding: 10px 18px; border-radius: 25px; font-size: 14px; font-weight: bold;">Software Developer</span>
-    <span style="background: #dc3545; color: #fff; padding: 10px 18px; border-radius: 25px; font-size: 14px; font-weight: bold;">Business Owner</span>
-    <span style="background: #6f42c1; color: #fff; padding: 10px 18px; border-radius: 25px; font-size: 14px; font-weight: bold;">CEO of Solo2CEO</span>
-    <span style="background: #17a2b8; color: #fff; padding: 10px 18px; border-radius: 25px; font-size: 14px; font-weight: bold;">Philosopher | Social Activist</span>
-    <span style="background: #20c997; color: #fff; padding: 10px 18px; border-radius: 25px; font-size: 14px; font-weight: bold;">Public Speaker</span>
-  </div>
-  <br>
-  <p style="margin-top: 25px; font-size: 18px; color: #555; max-width: 800px; margin: auto;">
-    "I believe that self-employment without a brand is like a business without a future. If you don’t build your brand, someone else will take your place. Let's work together to turn your hustle into a recognized business."
-  </p>
-</section>
+    <header>
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="container position-relative z-1" data-aos="fade-up">
+            <span class="badge bg-light text-primary rounded-pill px-3 py-2 mb-3 fw-bold">The Visionary</span>
+            <h1 class="display-3 fw-bold mb-3">Meet Arman Khan</h1>
+            <p class="lead text-white-50 mx-auto" style="max-width: 700px;">
+                Founder & CEO of Solo2CEO. A visionary entrepreneur dedicated to transforming self-employment into powerful brands.
+            </p>
+        </div>
+    </header>
 
-<section style="max-width: 900px; margin: auto; padding: 50px; background: #f8f9fa; border-radius: 12px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);">
-  <h2 style="text-align: center; font-size: 36px; font-weight: bold; color: #007bff;">Why I Started Solo2CEO</h2>
-  <p style="font-size: 18px; color: #555; text-align: center; max-width: 800px; margin: auto;">
-    "I saw talented, self-employed individuals working tirelessly but never truly growing. They had the skills and dedication but lacked <strong>branding, digital marketing, and business strategy</strong>. Solo2CEO was born to bridge that gap and turn self-employment into thriving businesses."
-  </p>
-  <div style="margin-top: 30px; padding: 20px; background: #fff; border-left: 5px solid #007bff; border-radius: 8px;">
-    <h3 style="color: #333;">🚀 Our Vision</h3>
-    <ul style="list-style: none; padding-left: 0;">
-      <li>✅ Empower self-employed individuals to build strong, competitive brands.</li>
-      <li>✅ Replace outdated business models with <strong>modern branding and marketing</strong>.</li>
-      <li>✅ Provide affordable tools and strategies to help businesses stand out.</li>
-      <li>✅ Transition self-employed professionals into successful business owners.</li>
-    </ul>
-  </div>
-  <div style="margin-top: 30px; padding: 20px; background: #fff; border-left: 5px solid #dc3545; border-radius: 8px;">
-    <h3 style="color: #dc3545;">📉 The Problem</h3>
-    <ul style="list-style: none; padding-left: 0;">
-      <li>❌ Small business owners lack time for branding and strategy.</li>
-      <li>❌ They struggle to market themselves effectively.</li>
-      <li>❌ They remain invisible online, losing customers to big brands.</li>
-      <li>❌ Without a digital presence, their business growth is limited.</li>
-    </ul>
-  </div>
-  <div style="margin-top: 30px; padding: 20px; background: #fff; border-left: 5px solid #28a745; border-radius: 8px;">
-    <h3 style="color: #28a745;">🚀 The Solution</h3>
-    <ul style="list-style: none; padding-left: 0;">
-      <li>✅ Build brands with professional <strong>logos, identity, and presence</strong>.</li>
-      <li>✅ Manage social media and create <strong>engaging content</strong>.</li>
-      <li>✅ Develop digital marketing strategies for <strong>visibility and trust</strong>.</li>
-      <li>✅ Offer expert business strategies for <strong>long-term success</strong>.</li>
-      <li>✅ Provide services at an affordable rate to support small businesses.</li>
-    </ul>
-  </div>
-  <p style="text-align: center; font-size: 18px; color: #333; margin-top: 20px;">
-    <strong>"If you're self-employed today, we’ll help you become a business owner tomorrow." – Arman Khan</strong>
-  </p>
-</section>
+    <section class="container" data-aos="fade-up" data-aos-delay="100">
+        <div class="glass-panel text-center">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <p class="fs-5 text-muted mb-4" style="font-weight: 400;">
+                        "I believe that self-employment without a brand is like a business without a future. If you don’t build your brand, someone else will take your place."
+                    </p>
+                    <div class="d-flex flex-wrap justify-content-center gap-2">
+                        <span class="pill-badge">CEO of Solo2CEO</span>
+                        <span class="pill-badge">Entrepreneur</span>
+                        <span class="pill-badge">Software Developer</span>
+                        <span class="pill-badge">Philosopher</span>
+                        <span class="pill-badge">Social Activist</span>
+                        <span class="pill-badge">Public Speaker</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<!-- 🎥 Embedded YouTube Video Section -->
-<!-- 🎥 Embedded YouTube Video Section -->
-<section style="padding: 50px 20px; text-align: center; background: #f8f9fa;">
-    <h2 style="font-size: 32px; font-weight: bold; color: #333; margin-bottom: 30px;">🎥 Watch Our Journey</h2>
-    <div class="yt-wrapper" style="max-width: 600px; margin: 0 auto; position: relative; padding-bottom: 30%; height: 0; overflow: hidden; border-radius: 12px; box-shadow: 0 6px 20px rgba(0,0,0,0.2);">
-      <iframe 
-        src="https://www.youtube.com/embed/5EBdcH-30pQ?autoplay=1&mute=1&controls=1&modestbranding=1&rel=0"
-        frameborder="0" 
-        allow="autoplay; encrypted-media" 
-        allowfullscreen
-        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 12px;">
-      </iframe>
+    <section class="py-5">
+        <div class="container py-5">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <h6 class="text-primary fw-bold text-uppercase">The Origin Story</h6>
+                <h2 class="fw-bold">Why I Started Solo2CEO</h2>
+                <p class="text-muted mx-auto" style="max-width: 700px;">
+                    I saw talented individuals working tirelessly but never growing. They had skills but lacked branding. Solo2CEO was born to bridge that gap.
+                </p>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-lg-6" data-aos="fade-right">
+                    <div class="compare-card problem">
+                        <h4 class="fw-bold text-danger mb-4"><i class="fas fa-exclamation-triangle me-2"></i> The Problem</h4>
+                        <ul class="check-list ps-0 mb-0">
+                            <li><i class="fas fa-times-circle text-danger"></i> Small business owners lack time for branding.</li>
+                            <li><i class="fas fa-times-circle text-danger"></i> They struggle to market effectively.</li>
+                            <li><i class="fas fa-times-circle text-danger"></i> Invisible online, losing customers to big brands.</li>
+                            <li><i class="fas fa-times-circle text-danger"></i> Business growth hits a glass ceiling.</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6" data-aos="fade-left">
+                    <div class="compare-card solution shadow-lg">
+                        <h4 class="fw-bold text-success mb-4"><i class="fas fa-check-circle me-2"></i> The Solution</h4>
+                        <ul class="check-list ps-0 mb-0">
+                            <li><i class="fas fa-check text-success"></i> Professional Identity: Logos, Sites, & Socials.</li>
+                            <li><i class="fas fa-check text-success"></i> Content Management: We handle the creative stress.</li>
+                            <li><i class="fas fa-check text-success"></i> Digital Strategy: Visibility & Trust building.</li>
+                            <li><i class="fas fa-check text-success"></i> Affordable for the everyday entrepreneur.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-5 bg-dark position-relative">
+        <div class="orb orb-1" style="opacity: 0.2;"></div>
+        <div class="container py-5 text-center position-relative z-1" data-aos="zoom-in">
+            <h2 class="text-white fw-bold mb-5">🎥 Watch Our Journey</h2>
+            <div class="yt-wrapper">
+                <iframe 
+                    src="https://www.youtube.com/embed/5EBdcH-30pQ?rel=0&modestbranding=1"
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-5">
+        <div class="container py-5 text-center">
+            <div class="p-5 rounded-5 position-relative overflow-hidden text-white" style="background: linear-gradient(135deg, #4f46e5 0%, #ec4899 100%);" data-aos="fade-up">
+                <div class="position-relative z-2">
+                    <h2 class="fw-bold display-5 mb-3">Join the Movement</h2>
+                    <p class="lead mb-4 opacity-90">At Solo2CEO, we help you grow, expand, and compete. Let’s build your brand together.</p>
+                    <button class="btn btn-light rounded-pill px-5 py-3 fw-bold text-primary" data-bs-toggle="modal" data-bs-target="#inquiryModal">Start Transformation</button>
+                </div>
+                <div style="position: absolute; top: -50px; right: -50px; width: 200px; height: 200px; background: rgba(255,255,255,0.1); border-radius: 50%;"></div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="row gy-5">
+                <div class="col-lg-4">
+                    <h5 class="text-white fw-bold mb-3 d-flex align-items-center gap-2">
+                        <img src="../image/Solo2ceologo.png" width="30" height="30" class="rounded-circle"> Solo2CEO
+                    </h5>
+                    <p class="small opacity-75">Transforming self-employed hustles into recognized business brands through technology and strategy.</p>
+                </div>
+                <div class="col-lg-2 col-6">
+                    <h6 class="text-white fw-bold mb-3">Explore</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="../index.html">Home</a></li>
+                        <li><a href="../services.html">Services</a></li>
+                        <li><a href="domain.html">Ecosystem</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-6">
+                    <h6 class="text-white fw-bold mb-3">Legal</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4">
+                    <h6 class="text-white fw-bold mb-3">Follow Us</h6>
+                    <div class="d-flex gap-3">
+                        <a href="https://www.instagram.com/solo2_ceo" class="fs-4 text-white"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="fs-4 text-white"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="fs-4 text-white"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-top border-secondary border-opacity-25 mt-5 pt-4 text-center">
+                <small>&copy; 2025 Solo2CEO. All Rights Reserved.</small>
+            </div>
+        </div>
+    </footer>
+
+    <div class="modal fade" id="inquiryModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg" style="border-radius: 24px; overflow: hidden;">
+                <div class="modal-header border-0 bg-light p-4">
+                    <div>
+                        <h5 class="modal-title fw-bold text-dark">✨ Let's Connect</h5>
+                        <p class="small text-muted mb-0">Fill in the details below to start.</p>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4 pt-0">
+                    <form id="inquiryForm" class="mt-3">
+                        <div class="row g-3">
+                            <div class="col-12"><input type="text" name="name" class="form-control" placeholder="Full Name" required></div>
+                            <div class="col-12"><input type="email" name="email" class="form-control" placeholder="Email" required></div>
+                            <div class="col-12"><input type="tel" name="phone" class="form-control" placeholder="Phone" required></div>
+                            <div class="col-12">
+                                <select name="occupation" class="form-select" required>
+                                    <option value="">Occupation...</option>
+                                    <option value="Business Owner">Business Owner</option>
+                                    <option value="Self Employed">Self Employed</option>
+                                    <option value="Student">Student</option>
+                                </select>
+                            </div>
+                            <div class="col-12"><input type="text" name="location" class="form-control" placeholder="Location" required></div>
+                            <div class="col-12"><textarea name="message" class="form-control" rows="3" placeholder="Message..." required></textarea></div>
+                            <div class="col-12 mt-3"><button type="submit" id="submitBtn" class="btn btn-gradient w-100">🚀 Submit</button></div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-  </section>
-  
 
-<section style="text-align: center; padding: 30px; background:linear-gradient(135deg,rgb(57, 141, 225),rgb(184, 210, 80)); color: #fff; border-radius: 12px; margin-top: 50px;">
-  <h2>🌍 Join the Movement</h2>
-  <p>At Solo2CEO, we help small businesses <strong>grow, expand, and compete</strong> at the highest level. Let’s build your brand together.</p>
-  <a href="contact.html" style="background: #fff; color: #007bff; padding: 12px 24px; border-radius: 8px; font-size: 16px; font-weight: bold; text-decoration: none; display: inline-block; margin-top: 10px;">Get Started</a>
-</section>
+    <button id="floatingBtn" data-bs-toggle="modal" data-bs-target="#inquiryModal">
+        <i class="fas fa-comment-dots"></i> <span>Inquiry</span>
+    </button>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <script>
+        AOS.init({ duration: 800, once: true });
+
+        // Navbar Scroll
+        window.addEventListener('scroll', function() {
+            const nav = document.querySelector('.navbar');
+            if (window.scrollY > 50) nav.classList.add('scrolled');
+            else nav.classList.remove('scrolled');
+        });
+
+        // Google Sheet Logic
+        const scriptURL = "https://script.google.com/macros/s/AKfycbySmtlkyt9L3XuP0XT7BdeP1TfnoNEjFTJvBZIBaVoTYk615PQuRswhAVVPW5rTJG-5/exec";
+        document.getElementById("inquiryForm").addEventListener("submit", function(e){
+            e.preventDefault();
+            let btn = document.getElementById("submitBtn");
+            let originalText = btn.innerHTML;
+            btn.disabled = true; btn.innerHTML = 'Sending...';
+
+            let rawPhone = this.phone.value;
+            let finalPhone = rawPhone.trim().startsWith("+") ? "'" + rawPhone : rawPhone;
+
+            const data = {
+                name: this.name.value, email: this.email.value, phone: finalPhone,
+                occupation: this.occupation.value, location: this.location.value, message: this.message.value
+            };
+
+            fetch(scriptURL, { method: "POST", body: JSON.stringify(data) })
+            .then(res => res.json())
+            .then(response => {
+                btn.innerHTML = "✅ Sent!";
+                btn.style.background = "#10b981";
+                setTimeout(() => {
+                    btn.disabled = false; btn.innerHTML = originalText; btn.style.background = "";
+                    this.reset();
+                    bootstrap.Modal.getInstance(document.getElementById("inquiryModal")).hide();
+                }, 2500);
+            })
+            .catch(error => { console.error('Error!', error.message); btn.innerHTML = "❌ Error"; btn.disabled = false; });
+        });
+
+        // PWA Install Scripts (Condensed)
+        const isIos = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
+        const isInStandaloneMode = ('standalone' in window.navigator) && (window.navigator.standalone);
+        if(isIos && !isInStandaloneMode){
+            const btn = document.createElement('button'); btn.className = "pwa-btn"; 
+            btn.innerHTML = '<i class="fab fa-apple"></i> Install'; document.body.appendChild(btn);
+            btn.onclick = () => alert("Tap Share -> Add to Home Screen");
+        }
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault(); deferredPrompt = e;
+            const btn = document.createElement('button'); btn.className = "pwa-btn"; 
+            btn.innerHTML = '<i class="fab fa-android"></i> Install'; document.body.appendChild(btn);
+            btn.onclick = () => { deferredPrompt.prompt(); deferredPrompt.userChoice.then(c => { if(c.outcome==='accepted') btn.remove(); }); };
+        });
+        if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/service-worker.js'); }
+    </script>
 </body>
 </html>

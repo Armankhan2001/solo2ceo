@@ -1,113 +1,265 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Other Domains | Solo2CEO</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
-  
-  <style>
-    /* Custom Floating Animation */
-    @keyframes float {
-        0% { transform: translateY(0px); }
-        50% { transform: translateY(-8px); }
-        100% { transform: translateY(0px); }
-    }
-    .floating-logo {
-        animation: float 3s ease-in-out infinite;
-        display: inline-block;
-    }
-  </style>
+    <link rel="manifest" href="../manifest.json">
+    <meta name="theme-color" content="#4f46e5">
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Ecosystem | Solo2CEO</title>
+    
+    <link rel="icon" type="image/png" href="../image/Solo2ceologo.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* =========================================
+           1. PREMIUM DESIGN SYSTEM
+           ========================================= */
+        :root {
+            --primary: #4f46e5;       /* Indigo */
+            --primary-glow: rgba(79, 70, 229, 0.5);
+            --secondary: #ec4899;     /* Pink */
+            --accent: #06b6d4;        /* Cyan */
+            --dark-bg: #0f172a;       /* Slate 900 */
+            --text-main: #1e293b;
+            --text-light: #64748b;
+            --gradient-hero: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            --gradient-btn: linear-gradient(90deg, #4f46e5, #ec4899);
+        }
+
+        body { 
+            font-family: 'Outfit', sans-serif; 
+            background-color: #f8fafc; 
+            color: var(--text-main); 
+            overflow-x: hidden; 
+            line-height: 1.6;
+        }
+        
+        h1, h2, h3, h4, h5 { font-family: 'Space Grotesk', sans-serif; letter-spacing: -0.02em; }
+
+        /* Navbar */
+        .navbar { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); padding: 12px 0; border-bottom: 1px solid rgba(0,0,0,0.05); }
+        .navbar.scrolled { width: 90%; margin: 20px auto 0; border-radius: 50px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); top: 0; left: 0; right: 0; }
+        .navbar-brand { font-weight: 800; font-size: 1.4rem; color: var(--dark-bg) !important; display: flex; align-items: center; gap: 10px; }
+        .brand-logo { height: 40px; width: 40px; border-radius: 50%; object-fit: cover; }
+        .nav-link { font-weight: 600; color: var(--text-main) !important; margin: 0 12px; transition: 0.3s; position: relative; }
+        .nav-link:hover, .nav-link.active { color: var(--primary) !important; }
+        .btn-nav { background: var(--dark-bg); color: white !important; border-radius: 50px; padding: 10px 24px; font-weight: 600; transition: 0.3s; }
+        .btn-nav:hover { background: var(--primary); transform: translateY(-2px); }
+
+        /* Hero Header */
+        header {
+            background-color: #000000;
+            background-image: radial-gradient(at 50% 0%, #1e1b4b 0, transparent 50%);
+            color: white; padding: 150px 0 100px; position: relative; overflow: hidden; text-align: center;
+        }
+        .orb { position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.6; z-index: 0; }
+        .orb-1 { top: -10%; left: -10%; width: 500px; height: 500px; background: var(--primary); animation: drift 10s infinite alternate; }
+        .orb-2 { bottom: 10%; right: -5%; width: 400px; height: 400px; background: var(--secondary); animation: drift 12s infinite alternate-reverse; }
+        @keyframes drift { from { transform: translate(0,0); } to { transform: translate(30px, 40px); } }
+
+        .hero-title { font-size: 3.5rem; font-weight: 800; margin-bottom: 20px; }
+
+        /* Ecosystem Grid */
+        .section-padding { padding: 80px 0; }
+        
+        .domain-card {
+            background: white; border-radius: 20px; padding: 40px 30px;
+            text-align: center; border: 1px solid #e2e8f0; transition: 0.4s;
+            height: 100%; cursor: pointer; position: relative; overflow: hidden;
+        }
+        .domain-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(79, 70, 229, 0.1); border-color: var(--primary); }
+        
+        .domain-icon { font-size: 3rem; margin-bottom: 20px; display: inline-block; transition: 0.3s; }
+        .domain-card:hover .domain-icon { transform: scale(1.1); }
+
+        .domain-title { font-weight: 700; font-size: 1.25rem; color: var(--text-main); margin-bottom: 5px; }
+        .domain-desc { font-size: 0.9rem; color: var(--text-light); }
+
+        /* Footer */
+        footer { background: #020617; color: #94a3b8; padding: 70px 0 20px; margin-top: 50px; }
+        footer a { color: #cbd5e1; text-decoration: none; transition: 0.3s; }
+        footer a:hover { color: var(--accent); }
+
+        /* Inquiry Modal Button */
+        #floatingBtn { position: fixed; bottom: 30px; right: 30px; background: var(--dark-bg); color: white; border: 2px solid var(--accent); border-radius: 50px; padding: 12px 24px; font-weight: 700; z-index: 1000; box-shadow: 0 10px 30px rgba(0,0,0,0.3); transition: 0.3s; display: flex; gap: 10px; }
+        #floatingBtn:hover { transform: scale(1.05); background: var(--primary); border-color: var(--primary); }
+
+        @media (max-width: 991px) { .hero-title { font-size: 2.5rem; } }
+    </style>
 </head>
-<body class="bg-gradient-to-br from-blue-50 to-blue-100 font-[Poppins] text-gray-800">
+<body>
 
-  <div class="text-center pt-8 pb-2">
-      <h1 class="text-5xl font-bold text-blue-700 tracking-wide floating-logo">
-          Solo2Ceo
-      </h1>
-  </div>
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html">
+                <img src="../image/Solo2ceologo.png" alt="Solo2CEO" class="brand-logo">
+                Solo2CEO
+            </a>
+            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <i class="fas fa-bars text-dark fs-4"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item"><a class="nav-link" href="../index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../services.html">Services</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="domain.html">Ecosystem</a></li>
+                    <li class="nav-item ms-lg-3 mt-3 mt-lg-0">
+                        <a href="contact.html" class="btn btn-nav">Contact Us</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
-  <nav class="bg-white/80 backdrop-blur-md shadow-sm px-6 py-3 flex justify-end items-center sticky top-0 z-50">
-    <a href="contact.html" class="text-sm font-semibold text-blue-600 hover:text-blue-800 border border-blue-200 px-4 py-2 rounded-full hover:bg-blue-50 transition-all">
-      Contact Us
-    </a>
-  </nav>
+    <header>
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="container position-relative z-1" data-aos="fade-up">
+            <span class="badge bg-light text-dark rounded-pill px-3 py-2 mb-3 fw-bold border border-white opacity-75">OUR UNIVERSE</span>
+            <h1 class="hero-title text-white">Explore Our Ecosystem</h1>
+            <p class="lead text-white-50 mx-auto" style="max-width: 700px;">
+                We offer a wide range of services to meet all your travel, business, and lifestyle needs under one roof.
+            </p>
+        </div>
+    </header>
 
-  <main class="text-center px-4 py-10">
-    <h1 class="text-3xl font-bold text-blue-800 mb-4">Explore Our Ecosystem</h1>
-    <p class="text-lg text-gray-600 max-w-2xl mx-auto mb-10">
-      We offer a wide range of services to meet all your travel, business, and lifestyle needs.
-    </p>
+    <section class="section-padding">
+        <div class="container">
+            <div class="row g-4 justify-content-center">
+                
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="domain-card" onclick="location.href='astours.html'">
+                        <div class="domain-icon">✈️</div>
+                        <h3 class="domain-title">Travel Services</h3>
+                        <p class="domain-desc">Seamless travel planning & booking.</p>
+                    </div>
+                </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 px-4 max-w-6xl mx-auto">
-      
-      <div onclick="location.href='astours.html'" class="cursor-pointer bg-white rounded-2xl shadow-lg p-6 transition-transform hover:-translate-y-1 hover:shadow-xl border border-transparent hover:border-blue-100">
-        <div class="text-4xl mb-4">✈️</div>
-        <h3 class="text-xl font-semibold">Travel Services</h3>
-      </div>
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="domain-card" onclick="location.href='../business/Businesshub.html'">
+                        <div class="domain-icon">💼</div>
+                        <h3 class="domain-title">Business Hub</h3>
+                        <p class="domain-desc">Strategy, consulting & growth tools.</p>
+                    </div>
+                </div>
 
-      <div onclick="location.href='../business/Businesshub.html'" class="cursor-pointer bg-white rounded-2xl shadow-lg p-6 transition-transform hover:-translate-y-1 hover:shadow-xl border border-transparent hover:border-blue-100">
-        <div class="text-4xl mb-4">💼</div>
-        <h3 class="text-xl font-semibold">Business</h3>
-      </div>
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="300">
+                    <div class="domain-card" onclick="location.href='Education/Skills.html'">
+                        <div class="domain-icon">💡</div>
+                        <h3 class="domain-title">Skills & Training</h3>
+                        <p class="domain-desc">Upgrading your professional skillset.</p>
+                    </div>
+                </div>
 
-      <div onclick="location.href='Education/Skills.html'" class="cursor-pointer bg-white rounded-2xl shadow-lg p-6 transition-transform hover:-translate-y-1 hover:shadow-xl border border-transparent hover:border-blue-100">
-        <div class="text-4xl mb-4">💡</div>
-        <h3 class="text-xl font-semibold">Skills</h3>
-      </div>
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="400">
+                    <div class="domain-card" onclick="location.href='otherservices.html'">
+                        <div class="domain-icon">🏛️</div>
+                        <h3 class="domain-title">Political Consulting</h3>
+                        <p class="domain-desc">Campaign strategy & management.</p>
+                    </div>
+                </div>
 
-      <div onclick="location.href='otherservices.html'" class="cursor-pointer bg-white rounded-2xl shadow-lg p-6 transition-transform hover:-translate-y-1 hover:shadow-xl border border-transparent hover:border-blue-100">
-        <div class="text-4xl mb-4">🏛️</div>
-        <h3 class="text-xl font-semibold">Politics</h3>
-      </div>
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="500">
+                    <div class="domain-card" onclick="location.href='finance.html'">
+                        <div class="domain-icon">💰</div>
+                        <h3 class="domain-title">Finance</h3>
+                        <p class="domain-desc">Investment planning & wealth management.</p>
+                    </div>
+                </div>
 
-      <div onclick="location.href='finance.html'" class="cursor-pointer bg-white rounded-2xl shadow-lg p-6 transition-transform hover:-translate-y-1 hover:shadow-xl border border-transparent hover:border-blue-100">
-        <div class="text-4xl mb-4">💰</div>
-        <h3 class="text-xl font-semibold">Finance</h3>
-      </div>
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="600">
+                    <div class="domain-card" onclick="location.href='../Startups/startups.html'">
+                        <div class="domain-icon">🚀</div>
+                        <h3 class="domain-title">Startup Incubator</h3>
+                        <p class="domain-desc">Turning ideas into scalable businesses.</p>
+                    </div>
+                </div>
 
-      <div onclick="location.href='../Startups/startups.html'" class="cursor-pointer bg-white rounded-2xl shadow-lg p-6 transition-transform hover:-translate-y-1 hover:shadow-xl border border-transparent hover:border-blue-100">
-        <div class="text-4xl mb-4">🚀</div>
-        <h3 class="text-xl font-semibold">Startup</h3>
-      </div>
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="700">
+                    <div class="domain-card" onclick="location.href='otherservices.html'">
+                        <div class="domain-icon">🏋️</div>
+                        <h3 class="domain-title">Fitness</h3>
+                        <p class="domain-desc">Health, wellness & personal training.</p>
+                    </div>
+                </div>
 
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="800">
+                    <div class="domain-card" onclick="location.href='Education/Education.html'">
+                        <div class="domain-icon">🎓</div>
+                        <h3 class="domain-title">Education</h3>
+                        <p class="domain-desc">Academic guidance & resources.</p>
+                    </div>
+                </div>
 
-      <div onclick="location.href='otherservices.html'" class="cursor-pointer bg-white rounded-2xl shadow-lg p-6 transition-transform hover:-translate-y-1 hover:shadow-xl border border-transparent hover:border-blue-100">
-        <div class="text-4xl mb-4">🏋️</div>
-        <h3 class="text-xl font-semibold">Fitness</h3>
-      </div>
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="900">
+                    <div class="domain-card" onclick="location.href='../Socialwelfare/socialwelfare.html'" style="border-color: var(--secondary);">
+                        <div class="domain-icon">🤝</div>
+                        <h3 class="domain-title text-primary">Social Welfare</h3>
+                        <p class="domain-desc">Non-Profit Humanity Hub.</p>
+                    </div>
+                </div>
 
-      <div onclick="location.href='Education/Education.html'" class="cursor-pointer bg-white rounded-2xl shadow-lg p-6 transition-transform hover:-translate-y-1 hover:shadow-xl border border-transparent hover:border-blue-100">
-        <div class="text-4xl mb-4">🎓</div>
-        <h3 class="text-xl font-semibold">Education</h3>
-      </div>
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="1000">
+                    <div class="domain-card" onclick="location.href='otherservices.html'">
+                        <div class="domain-icon">💖</div>
+                        <h3 class="domain-title">Lifestyle</h3>
+                        <p class="domain-desc">Fashion, trends & living.</p>
+                    </div>
+                </div>
 
-      <div onclick="location.href='../Socialwelfare/socialwelfare.html'" class="cursor-pointer bg-white rounded-2xl shadow-lg p-6 transition-transform hover:-translate-y-1 hover:shadow-xl border border-transparent hover:border-blue-100">
-          <div class="text-4xl mb-4">🤝</div>
-          <h3 class="text-xl font-semibold text-blue-700">Social Welfare</h3>
-          <p class="text-gray-500 text-sm mt-2">Non-Profit Humanity Hub</p>
-      </div>
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="1100">
+                    <div class="domain-card" onclick="location.href='../Advertisement/index.html'">
+                        <div class="domain-icon">📢</div>
+                        <h3 class="domain-title">Advertisement</h3>
+                        <p class="domain-desc">Marketing & brand promotion.</p>
+                    </div>
+                </div>
 
-      <div onclick="location.href='otherservices.html'" class="cursor-pointer bg-white rounded-2xl shadow-lg p-6 transition-transform hover:-translate-y-1 hover:shadow-xl border border-transparent hover:border-blue-100">
-        <div class="text-4xl mb-4">💖</div>
-        <h3 class="text-xl font-semibold">Lifestyle</h3>
-      </div>
+            </div>
+        </div>
+    </section>
 
-      <div onclick="location.href='../Advertisement/index.html'" class="cursor-pointer bg-white rounded-2xl shadow-lg p-6 transition-transform hover:-translate-y-1 hover:shadow-xl border border-transparent hover:border-blue-100">
-        <div class="text-4xl mb-4">📢</div>
-        <h3 class="text-xl font-semibold">Advertisement</h3>
-      </div>
-      
-    </div>
-  </main>
+    <footer>
+        <div class="container text-center">
+            <h5 class="text-white fw-bold mb-3 d-flex justify-content-center align-items-center gap-2">
+                <img src="../image/Solo2ceologo.png" width="30" height="30" class="rounded-circle"> Solo2CEO
+            </h5>
+            <p class="small text-white-50 mb-4">Empowering Self-Employed Entrepreneurs.</p>
+            
+            <div class="d-flex justify-content-center gap-4 mb-4">
+                <a href="../index.html">Home</a>
+                <a href="../services.html">Services</a>
+                <a href="contact.html">Contact</a>
+            </div>
 
-  <footer id="footer" class="bg-gray-900 text-white py-6 text-center text-sm">
-    Follow us on Instagram:
-    <a href="https://instagram.com/solo2_ceo" class="text-blue-400 hover:text-blue-200" target="_blank">
-      @solo2_ceo
-    </a>
-  </footer>
+            <div class="border-top border-secondary border-opacity-25 pt-4">
+                <small>&copy; 2025 Solo2CEO. All Rights Reserved.</small>
+            </div>
+        </div>
+    </footer>
 
+    <button id="floatingBtn" onclick="location.href='contact.html'">
+        <i class="fas fa-comment-dots"></i> <span>Contact</span>
+    </button>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <script>
+        AOS.init({ duration: 800, once: true });
+
+        // Navbar Scroll
+        window.addEventListener('scroll', function() {
+            const nav = document.querySelector('.navbar');
+            if (window.scrollY > 50) nav.classList.add('scrolled');
+            else nav.classList.remove('scrolled');
+        });
+    </script>
 </body>
 </html>

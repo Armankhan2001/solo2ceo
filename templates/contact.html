@@ -1,288 +1,294 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#2575fc">
-  
+    <link rel="manifest" href="../manifest.json">
+    <meta name="theme-color" content="#4f46e5">
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact Us | Solo2CEO</title>
-    <link rel="icon" type="image/png" href="image/Solo2ceologo.png">
     
+    <link rel="icon" type="image/png" href="../image/Solo2ceologo.png">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f3f4f6;
-            color: #333;
-            overflow-x: hidden;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
+        /* =========================================
+           1. PREMIUM DESIGN SYSTEM
+           ========================================= */
+        :root {
+            --primary: #4f46e5;       /* Indigo */
+            --primary-glow: rgba(79, 70, 229, 0.5);
+            --secondary: #ec4899;     /* Pink/Magenta */
+            --accent: #06b6d4;        /* Cyan */
+            --dark-bg: #0f172a;       /* Slate 900 */
+            --text-main: #1e293b;
+            --text-light: #64748b;
+            --gradient-hero: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            --gradient-btn: linear-gradient(90deg, #4f46e5, #ec4899);
         }
 
-        /* --- Navbar --- */
-        .navbar {
-            background: linear-gradient(135deg, #6a11cb, #2575fc);
-            padding: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        body { 
+            font-family: 'Outfit', sans-serif; 
+            background-color: #f8fafc; 
+            color: var(--text-main); 
+            overflow-x: hidden; 
+            line-height: 1.6;
         }
-        .navbar-brand, .nav-link {
-            font-family: 'Montserrat', sans-serif;
-            color: white !important;
-            font-weight: bold;
-            transition: 0.3s;
-        }
-        .nav-link:hover {
-            color: #ffcc00 !important;
-            transform: scale(1.1);
-        }
+        
+        h1, h2, h3, h4, h5 { font-family: 'Space Grotesk', sans-serif; letter-spacing: -0.02em; }
 
-        /* --- Header --- */
+        /* Navbar */
+        .navbar { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); padding: 12px 0; border-bottom: 1px solid rgba(0,0,0,0.05); }
+        .navbar-brand { font-weight: 800; font-size: 1.4rem; color: var(--dark-bg) !important; display: flex; align-items: center; gap: 10px; }
+        .brand-logo { height: 40px; width: 40px; border-radius: 50%; object-fit: cover; }
+        .nav-link { font-weight: 600; color: var(--text-main) !important; margin: 0 12px; transition: 0.3s; position: relative; }
+        .nav-link:hover, .nav-link.active { color: var(--primary) !important; }
+        .btn-nav { background: var(--dark-bg); color: white !important; border-radius: 50px; padding: 10px 24px; font-weight: 600; transition: 0.3s; }
+        .btn-nav:hover { background: var(--primary); transform: translateY(-2px); }
+
+        /* Hero Header */
         header {
-            background: linear-gradient(135deg, #6a11cb, #2575fc);
-            color: #fff;
-            padding: 80px 20px 100px;
-            text-align: center;
-            border-bottom-left-radius: 50px;
-            border-bottom-right-radius: 50px;
-            margin-bottom: -60px;
+            background-color: #000000;
+            background-image: radial-gradient(at 50% 0%, #1e1b4b 0, transparent 50%);
+            color: white; padding: 180px 0 120px; position: relative; overflow: hidden; text-align: center;
         }
-        header h1 { font-size: 3rem; font-weight: bold; font-family: 'Montserrat', sans-serif; }
-        header p { font-size: 1.1rem; opacity: 0.9; max-width: 600px; margin: 10px auto 0; }
+        .orb { position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.6; z-index: 0; }
+        .orb-1 { top: -10%; left: -10%; width: 500px; height: 500px; background: var(--primary); animation: drift 10s infinite alternate; }
+        .orb-2 { bottom: 10%; right: -5%; width: 400px; height: 400px; background: var(--secondary); animation: drift 12s infinite alternate-reverse; }
+        @keyframes drift { from { transform: translate(0,0); } to { transform: translate(30px, 40px); } }
 
-        /* --- Contact Card --- */
-        .contact-container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
-            overflow: hidden;
-            margin-bottom: 50px;
+        .hero-title { font-size: 3.5rem; font-weight: 800; line-height: 1.1; margin-bottom: 20px; }
+
+        /* Contact Card */
+        .glass-panel {
+            background: white; border-radius: 24px; padding: 0; overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.05); margin-top: -80px; position: relative; z-index: 5;
+            border: 1px solid rgba(255,255,255,0.5);
         }
 
-        .info-box { padding: 40px; background: #fff; }
-        .info-item { display: flex; align-items: flex-start; margin-bottom: 30px; }
+        .info-col { background: #f8fafc; padding: 50px; }
+        .form-col { padding: 50px; }
+
+        .info-item { display: flex; margin-bottom: 30px; }
         .info-icon {
-            width: 50px; height: 50px;
-            background: rgba(37, 117, 252, 0.1);
-            color: #2575fc;
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.5rem;
-            margin-right: 20px;
-            flex-shrink: 0;
+            width: 50px; height: 50px; background: white; color: var(--primary);
+            border-radius: 12px; display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem; margin-right: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05);
         }
-        .info-content h5 { font-weight: bold; color: #222; margin-bottom: 5px; }
-        .info-content p, .info-content a { color: #666; font-size: 0.95rem; text-decoration: none; margin: 0; display: block;}
-        .info-content a:hover { color: #6a11cb; }
+        .info-text h5 { font-weight: 700; margin-bottom: 5px; }
+        .info-text p, .info-text a { color: var(--text-light); text-decoration: none; font-size: 0.95rem; margin: 0; display: block; }
+        .info-text a:hover { color: var(--primary); }
 
-        /* --- Form --- */
-        .form-box { background: #f8f9fa; padding: 40px; }
+        /* Form Inputs */
         .form-control, .form-select {
-            border-radius: 10px;
-            padding: 12px;
-            border: 1px solid #e1e1e1;
-            margin-bottom: 20px;
+            border-radius: 12px; padding: 12px 15px; border: 1px solid #e2e8f0; background: #f8fafc;
         }
-        .form-control:focus, .form-select:focus {
-            box-shadow: 0 0 0 3px rgba(37, 117, 252, 0.2);
-            border-color: #2575fc;
-        }
-        .btn-submit {
-            background: linear-gradient(135deg, #6a11cb, #2575fc);
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 10px;
-            font-weight: bold;
-            width: 100%;
-            transition: 0.3s;
-        }
-        .btn-submit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(37, 117, 252, 0.3);
-        }
+        .form-control:focus { border-color: var(--primary); box-shadow: 0 0 0 4px var(--primary-glow); background: white; }
 
-        /* --- Footer --- */
-        footer {
-            background: #222;
-            color: white;
-            padding: 30px;
-            text-align: center;
-            margin-top: auto;
+        .btn-gradient {
+            background: var(--gradient-btn); color: white; border: none;
+            padding: 15px 35px; border-radius: 50px; font-weight: 700;
+            width: 100%; transition: 0.4s;
         }
-        footer a { color: #fff; text-decoration: none; font-weight: bold; }
-        footer a:hover { color: #ffcc00; }
+        .btn-gradient:hover { transform: translateY(-3px); box-shadow: 0 15px 35px var(--primary-glow); color: white; }
+
+        /* Map */
+        .map-frame { border-radius: 20px; overflow: hidden; height: 250px; width: 100%; margin-top: 30px; border: 1px solid #e2e8f0; }
+
+        /* Footer */
+        footer { background: #020617; color: #94a3b8; padding: 70px 0 20px; margin-top: 50px; }
+        footer a { color: #cbd5e1; text-decoration: none; transition: 0.3s; }
+        footer a:hover { color: var(--primary); }
+
+        @media (max-width: 991px) { .hero-title { font-size: 2.8rem; } .glass-panel { margin-top: -40px; } }
     </style>
 </head>
 <body>
 
-    <nav class="navbar navbar-expand-lg sticky-top">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="../index.html">Solo2CEO</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-          <span class="navbar-toggler-icon" style="filter: invert(1);"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav ms-auto">
-            <li class="nav-item"><a class="nav-link" href="../index.html">Home</a></li>
-            <li class="nav-item"><a class="nav-link" href="../templates/domain.html">Ecosystem</a></li>
-            <li class="nav-item"><a class="nav-link active" href="#">Contact</a></li>
-          </ul>
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html">
+                <img src="../image/Solo2ceologo.png" alt="Solo2CEO" class="brand-logo">
+                Solo2CEO
+            </a>
+            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <i class="fas fa-bars text-dark fs-4"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item"><a class="nav-link" href="../index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../services.html">Services</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="contact.html">Contact</a></li>
+                    <li class="nav-item ms-lg-3 mt-3 mt-lg-0">
+                        <a href="../index.html#inquiryModal" class="btn btn-nav">Let's Talk</a>
+                    </li>
+                </ul>
+            </div>
         </div>
-      </div>
     </nav>
 
     <header>
-        <h1>Get In Touch</h1>
-        <p>Ready to elevate your business? Visit our headquarters or send us a message.</p>
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="container position-relative z-1" data-aos="fade-up">
+            <span class="badge bg-light text-dark rounded-pill px-3 py-2 mb-3 fw-bold border border-white opacity-75">CONTACT US</span>
+            <h1 class="hero-title text-white">Get In Touch</h1>
+            <p class="lead text-white-50 mx-auto" style="max-width: 600px;">
+                Ready to elevate your business? Visit our headquarters or send us a message directly.
+            </p>
+        </div>
     </header>
 
-    <div class="container" style="position: relative; z-index: 2;">
-        <div class="contact-container row g-0">
-            
-            <div class="col-lg-6 info-box">
-                <h3 class="mb-4 fw-bold text-primary">Contact Information</h3>
-                
-                <div class="info-item">
-                    <div class="info-icon"><i class="fas fa-map-marker-alt"></i></div>
-                    <div class="info-content">
-                        <h5>Headquarters</h5>
-                        <p>Shop No. 101, Near Noori Masjid,</p>
-                        <p>Tilak Nagar, Sakinaka, Mumbai 400072</p>
+    <section class="container pb-5" data-aos="fade-up" data-aos-delay="100">
+        <div class="glass-panel">
+            <div class="row g-0">
+                <div class="col-lg-5 info-col">
+                    <h3 class="fw-bold mb-4 text-dark">Contact Info</h3>
+                    
+                    <div class="info-item">
+                        <div class="info-icon"><i class="fas fa-map-marker-alt"></i></div>
+                        <div class="info-text">
+                            <h5>Headquarters</h5>
+                            <p>Shop No. 101, Near Noori Masjid,</p>
+                            <p>Tilak Nagar, Sakinaka, Mumbai 400072</p>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-icon"><i class="fas fa-phone-alt"></i></div>
+                        <div class="info-text">
+                            <h5>Phone Support</h5>
+                            <a href="tel:+917021360582" class="fw-bold text-dark">+91 70213 60582</a>
+                            <a href="tel:+918850102255">+91 88501 02255</a>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-icon"><i class="fas fa-envelope"></i></div>
+                        <div class="info-text">
+                            <h5>Email Us</h5>
+                            <a href="mailto:solo2ceoo@gmail.com" class="fw-bold text-dark">solo2ceo@gmail.com</a>
+                            <p>We reply within 24 hours.</p>
+                        </div>
+                    </div>
+
+                    <div class="map-frame">
+                        <iframe 
+                            src="https://maps.google.com/maps?q=Tilak%20Nagar%2C%20Sakinaka%2C%20Mumbai&t=&z=15&ie=UTF8&iwloc=&output=embed" 
+                            width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy">
+                        </iframe>
                     </div>
                 </div>
 
-                <div class="info-item">
-                    <div class="info-icon"><i class="fas fa-phone-alt"></i></div>
-                    <div class="info-content">
-                        <h5>Phone Support</h5>
-                        <a href="tel:+917021360582">+91 70213 60582 (Primary)</a>
-                        <a href="tel:+918850102255" class="mt-1 fw-bold text-dark">+91 88501 02255 (Support)</a>
-                    </div>
-                </div>
-
-                <div class="info-item">
-                    <div class="info-icon"><i class="fas fa-envelope"></i></div>
-                    <div class="info-content">
-                        <h5>Email Us</h5>
-                        <a href="mailto:solo2ceo@gmail.com">solo2ceo@gmail.com</a>
-                        <p class="text-muted small mt-1">We reply within 24 hours.</p>
-                    </div>
-                </div>
-
-                <div class="rounded-4 overflow-hidden shadow-sm mt-3" style="height: 250px;">
-                    <iframe 
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3770.005115201659!2d72.8856!3d19.1085!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTnCsDA2JzMwLjYiTiA3MsKwNTMnMDguMiJF!5e0!3m2!1sen!2sin!4v1639038000000!5m2!1sen!2sin" 
-                        width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy">
-                    </iframe>
+                <div class="col-lg-7 form-col">
+                    <h3 class="fw-bold mb-4 text-dark">Send a Message</h3>
+                    <form id="contactPageForm">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="small fw-bold text-muted ms-1">Full Name</label>
+                                <input type="text" class="form-control" name="name" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="small fw-bold text-muted ms-1">Phone Number</label>
+                                <input type="tel" class="form-control" name="phone" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="small fw-bold text-muted ms-1">Email Address</label>
+                                <input type="email" class="form-control" name="email" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="small fw-bold text-muted ms-1">Occupation</label>
+                                <select class="form-select" name="occupation" required>
+                                    <option value="">Select...</option>
+                                    <option value="Business Owner">Business Owner</option>
+                                    <option value="Self Employed">Self Employed</option>
+                                    <option value="Student">Student</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="small fw-bold text-muted ms-1">Location</label>
+                                <input type="text" class="form-control" name="location" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="small fw-bold text-muted ms-1">Message</label>
+                                <textarea class="form-control" name="message" rows="4" required></textarea>
+                            </div>
+                            <div class="col-12 mt-4">
+                                <button type="submit" id="msgSubmitBtn" class="btn-gradient">🚀 Send Message</button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
-
-            <div class="col-lg-6 form-box">
-                <h3 class="mb-4 fw-bold">Send a Message</h3>
-                <form id="contactPageForm">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label class="form-label fw-semibold">Your Name</label>
-                            <input type="text" class="form-control" name="name" placeholder="Full Name" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-semibold">Phone Number</label>
-                            <input type="tel" class="form-control" name="phone" placeholder="+91 88501 02255" required>
-                        </div>
-                    </div>
-
-                    <label class="form-label fw-semibold">Email Address</label>
-                    <input type="email" class="form-control" name="email" placeholder="name@example.com" required>
-
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label class="form-label fw-semibold">Occupation</label>
-                            <select class="form-select" name="occupation" required>
-                                <option value="" selected disabled>Select...</option>
-                                <option value="Student">Student</option>
-                                <option value="Self Employed">Self Employed</option>
-                                <option value="Business Owner">Business Owner</option>
-                                <option value="Other">Other</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-semibold">Location</label>
-                            <input type="text" class="form-control" name="location" placeholder="City / Area" required>
-                        </div>
-                    </div>
-
-                    <label class="form-label fw-semibold">Message</label>
-                    <textarea class="form-control" name="message" rows="4" placeholder="How can we help you?" required></textarea>
-
-                    <button type="submit" id="msgSubmitBtn" class="btn-submit">
-                        🚀 Send Message
-                    </button>
-                </form>
-            </div>
-
         </div>
-    </div>
+    </section>
 
-    <footer id="footer">
-        <p class="mb-2">Designed by Solo2CEO</p>
-        Follow us on Instagram:
-        <a href="https://instagram.com/solo2_ceo" class="text-warning" target="_blank">
-          @solo2_ceo
-        </a>
+    <footer>
+        <div class="container text-center">
+            <h5 class="text-white fw-bold mb-3 d-flex justify-content-center align-items-center gap-2">
+                <img src="../image/Solo2ceologo.png" width="30" height="30" class="rounded-circle"> Solo2CEO
+            </h5>
+            <p class="small text-white-50 mb-4">Empowering Self-Employed Entrepreneurs.</p>
+            
+            <div class="d-flex justify-content-center gap-4 mb-4">
+                <a href="../index.html">Home</a>
+                <a href="../services.html">Services</a>
+                <a href="domain.html">Ecosystem</a>
+            </div>
+
+            <div class="border-top border-secondary border-opacity-25 pt-4">
+                <small>&copy; 2025 Solo2CEO. All Rights Reserved.</small>
+            </div>
+        </div>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
     <script>
-        // Animations
-        gsap.from(".navbar", { y: -50, opacity: 0, duration: 1, ease: "power3.out" });
-        gsap.from("header h1", { scale: 0.8, opacity: 0, duration: 1, ease: "back.out(1.7)" });
-        gsap.from(".contact-container", { y: 100, opacity: 0, duration: 1, delay: 0.3, ease: "power3.out" });
+        AOS.init({ duration: 800, once: true });
 
-        // Form Logic
+        // Navbar Scroll
+        window.addEventListener('scroll', function() {
+            const nav = document.querySelector('.navbar');
+            if (window.scrollY > 50) nav.classList.add('scrolled');
+            else nav.classList.remove('scrolled');
+        });
+
+        // Google Sheet Logic
+        const scriptURL = "https://script.google.com/macros/s/AKfycbySmtlkyt9L3XuP0XT7BdeP1TfnoNEjFTJvBZIBaVoTYk615PQuRswhAVVPW5rTJG-5/exec";
         document.getElementById("contactPageForm").addEventListener("submit", function(e){
             e.preventDefault();
             let btn = document.getElementById("msgSubmitBtn");
             let originalText = btn.innerHTML;
-            
-            btn.disabled = true;
-            btn.innerHTML = "⏳ Sending...";
+            btn.disabled = true; btn.innerHTML = 'Sending...';
 
-            // Use LOWERCASE keys here to match the Script's expectations
+            let rawPhone = this.phone.value;
+            let finalPhone = rawPhone.trim().startsWith("+") ? "'" + rawPhone : rawPhone;
+
             const data = {
-                name: this.name.value,
-                email: this.email.value,
-                phone: this.phone.value,
-                occupation: this.occupation.value,
-                location: this.location.value,
-                message: this.message.value
+                name: this.name.value, email: this.email.value, phone: finalPhone,
+                occupation: this.occupation.value, location: this.location.value, message: this.message.value
             };
 
-            fetch("https://script.google.com/macros/s/AKfycbySmtlkyt9L3XuP0XT7BdeP1TfnoNEjFTJvBZIBaVoTYk615PQuRswhAVVPW5rTJG-5/exec", {
-                method: "POST",
-                body: JSON.stringify(data)
-            })
+            fetch(scriptURL, { method: "POST", body: JSON.stringify(data) })
             .then(res => res.json())
             .then(response => {
                 btn.innerHTML = "✅ Message Sent!";
+                btn.style.background = "#10b981";
                 setTimeout(() => {
-                    btn.disabled = false;
-                    btn.innerHTML = originalText;
-                    document.getElementById("contactPageForm").reset();
+                    btn.disabled = false; btn.innerHTML = originalText; btn.style.background = "";
+                    this.reset();
                 }, 3000);
             })
-            .catch(error => {
-                console.error(error);
-                btn.innerHTML = "❌ Error. Try Again.";
-                btn.disabled = false;
-            });
+            .catch(error => { console.error('Error!', error.message); btn.innerHTML = "❌ Error"; btn.disabled = false; });
         });
     </script>
-
 </body>
 </html>

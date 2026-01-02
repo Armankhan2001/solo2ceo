@@ -6,7 +6,8 @@
     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Solo2CEO | Digital Creative Agency</title>
+    <meta name="description" content="Solo2CEO Services: Web Development, Social Media Management, AI Automation, and Branding.">
+    <title>Our Services | Solo2CEO Agency</title>
     
     <link rel="icon" type="image/png" href="image/Solo2ceologo.png">
 
@@ -22,14 +23,15 @@
         :root {
             --primary: #4f46e5;       /* Indigo */
             --primary-glow: rgba(79, 70, 229, 0.5);
-            --secondary: #ec4899;     /* Pink/Magenta for Creatives */
+            --secondary: #ec4899;     /* Pink/Magenta */
             --accent: #06b6d4;        /* Cyan */
             --dark-bg: #0f172a;       /* Slate 900 */
             --surface: #ffffff;
             --text-main: #1e293b;
+            --text-light: #64748b;
             --gradient-hero: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
             --gradient-btn: linear-gradient(90deg, #4f46e5, #ec4899);
-            --gradient-text: linear-gradient(to right, #818cf8, #ec4899);
+            --glass-border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         /* Base Typography */
@@ -38,7 +40,7 @@
             background-color: #f8fafc; 
             color: var(--text-main); 
             overflow-x: hidden; 
-            line-height: 1.6;
+            line-height: 1.7;
         }
         
         h1, h2, h3, h4, h5, .display-font { 
@@ -54,7 +56,6 @@
         .navbar {
             background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
             padding: 12px 0;
             transition: all 0.4s ease;
             border-bottom: 1px solid rgba(0,0,0,0.05);
@@ -70,21 +71,13 @@
             display: flex; align-items: center; gap: 10px;
         }
         
-        /* Logo Styling */
-        .brand-logo {
-            height: 40px;
-            width: 40px;
-            object-fit: cover;
-            border-radius: 50%;
-            /* Optional: Add a subtle shadow or border to the logo */
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
-        }
+        .brand-logo { height: 40px; width: 40px; border-radius: 50%; object-fit: cover; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         
         .nav-link { 
             font-weight: 600; color: var(--text-main) !important; 
             margin: 0 12px; font-size: 0.95rem; transition: 0.3s; position: relative;
         }
-        .nav-link:hover { color: var(--primary) !important; }
+        .nav-link:hover, .nav-link.active { color: var(--primary) !important; }
 
         .btn-nav {
             background: var(--dark-bg); color: white !important;
@@ -102,7 +95,7 @@
                 radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
                 radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
                 radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
-            color: white; padding: 200px 0 150px; position: relative; overflow: hidden; text-align: center;
+            color: white; padding: 180px 0 120px; position: relative; overflow: hidden; text-align: center;
         }
 
         .orb { position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.6; z-index: 0; }
@@ -110,91 +103,93 @@
         .orb-2 { bottom: 10%; right: -5%; width: 400px; height: 400px; background: var(--secondary); animation: drift 12s infinite alternate-reverse; }
         @keyframes drift { from { transform: translate(0,0); } to { transform: translate(30px, 40px); } }
 
-        header .container { position: relative; z-index: 2; }
-
-        .hero-badge {
-            background: rgba(255,255,255,0.1); backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.2); color: var(--accent);
-            padding: 8px 20px; border-radius: 30px; font-weight: 600; font-size: 0.9rem;
-            display: inline-block; margin-bottom: 25px;
-        }
-
         .hero-title {
             font-size: 4rem; font-weight: 800; line-height: 1.1; margin-bottom: 25px;
             background: linear-gradient(to right, #fff, #e0e7ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
 
-        .hero-subtitle {
-            font-size: 1.3rem; color: #cbd5e1; max-width: 750px; margin: 0 auto 40px; font-weight: 300;
-        }
-
         /* =========================================
-           4. SECTIONS
+           4. SERVICE DETAIL CARDS
            ========================================= */
         .section-padding { padding: 100px 0; }
 
-        /* The "Headache" Comparison Panel */
-        .glass-panel {
-            background: white; border-radius: 24px; padding: 50px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.05); margin-top: -80px;
-            position: relative; z-index: 5; border: 1px solid rgba(255,255,255,0.5);
+        .detail-card {
+            background: white; border-radius: 24px; padding: 0; overflow: hidden;
+            border: 1px solid #e2e8f0; transition: 0.4s; height: 100%;
+            position: relative;
         }
+        .detail-card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.08); border-color: var(--primary); }
+        
+        .card-img-top {
+            height: 250px; width: 100%; object-fit: cover;
+            transition: 0.5s;
+        }
+        .detail-card:hover .card-img-top { transform: scale(1.05); }
+        
+        .card-body { padding: 30px; }
+        .feature-list li { margin-bottom: 10px; font-size: 0.95rem; color: var(--text-light); }
+        .feature-list i { color: var(--secondary); margin-right: 10px; }
 
-        /* Service Cards */
-        .service-card {
-            background: white; padding: 40px; border-radius: 24px;
-            border: 1px solid #f1f5f9; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            height: 100%; position: relative; overflow: hidden;
-        }
-        .service-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 20px 40px rgba(79, 70, 229, 0.15); border-color: var(--primary);
-        }
-        .service-card::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%;
-            background: var(--gradient-btn); opacity: 0; transition: 0.3s;
-        }
-        .service-card:hover::before { opacity: 1; }
-
-        .icon-box {
-            width: 70px; height: 70px; background: #f1f5f9; color: var(--primary);
-            border-radius: 20px; display: flex; align-items: center; justify-content: center;
-            font-size: 1.8rem; margin-bottom: 25px; transition: 0.4s;
-        }
-        .service-card:hover .icon-box { background: var(--gradient-btn); color: white; transform: rotateY(180deg); }
-
-        /* Testimonials */
-        .testimonial-card {
-            background: #ffffff; border-radius: 20px; padding: 30px;
-            border: 1px solid #e2e8f0; position: relative; transition: 0.3s;
-        }
-        .testimonial-card:hover { border-color: var(--secondary); box-shadow: 0 10px 30px rgba(124, 58, 237, 0.1); }
-        .quote-mark { font-size: 3rem; color: #f1f5f9; position: absolute; top: 15px; right: 20px; }
-
-        /* Contact Section */
-        .cta-section {
-            background: var(--dark-bg); border-radius: 30px; padding: 80px 40px;
-            text-align: center; color: white; position: relative; overflow: hidden;
+        /* Tech Stack */
+        .tech-badge {
+            background: #f1f5f9; padding: 5px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: 600; color: var(--text-main); display: inline-block; margin-right: 5px; margin-bottom: 5px;
         }
 
         /* =========================================
-           5. BUTTONS & UTILS
+           5. PROCESS TIMELINE
+           ========================================= */
+        .process-step { position: relative; padding-left: 50px; margin-bottom: 40px; }
+        .process-step::before {
+            content: ''; position: absolute; left: 15px; top: 0; bottom: -40px; width: 2px; background: #e2e8f0;
+        }
+        .process-step:last-child::before { display: none; }
+        .step-number {
+            position: absolute; left: 0; top: 0; width: 32px; height: 32px;
+            background: var(--gradient-btn); color: white; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; font-weight: bold;
+            box-shadow: 0 0 0 5px rgba(255,255,255,1); z-index: 2;
+        }
+
+        /* =========================================
+           6. PRICING TABLES (Glassmorphism)
+           ========================================= */
+        .pricing-card {
+            background: white; border-radius: 24px; padding: 40px;
+            position: relative; transition: 0.3s; border: 1px solid #f1f5f9;
+            height: 100%; text-align: center;
+        }
+        .pricing-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); border-color: var(--primary); }
+        
+        .pricing-card.popular {
+            background: #0f172a; color: white; border: 1px solid var(--primary);
+            box-shadow: 0 20px 50px rgba(79, 70, 229, 0.2);
+        }
+        .pricing-card.popular .text-muted { color: #94a3b8 !important; }
+        .pricing-card.popular h5, .pricing-card.popular .price-tag { color: white !important; }
+        .pricing-card.popular .btn-outline { border-color: white; color: white; }
+        .pricing-card.popular .btn-outline:hover { background: white; color: black; }
+
+        .price-tag { font-size: 2.5rem; font-weight: 800; color: var(--dark-bg); margin: 20px 0; }
+        .badge-pop {
+            position: absolute; top: 20px; right: 20px; background: var(--gradient-btn);
+            color: white; font-size: 0.7rem; padding: 5px 12px; border-radius: 20px; font-weight: 700;
+        }
+
+        /* =========================================
+           7. UTILITIES
            ========================================= */
         .btn-gradient {
             background: var(--gradient-btn); color: white; border: none;
-            padding: 15px 35px; border-radius: 50px; font-weight: 700;
+            padding: 12px 30px; border-radius: 50px; font-weight: 700;
             box-shadow: 0 10px 25px var(--primary-glow); transition: 0.4s;
         }
         .btn-gradient:hover { transform: translateY(-3px); box-shadow: 0 15px 35px var(--primary-glow); color: white; }
-        
-        .btn-glass {
-            background: rgba(255,255,255,0.1); backdrop-filter: blur(5px);
-            border: 1px solid rgba(255,255,255,0.3); color: white; padding: 15px 35px;
-            border-radius: 50px; font-weight: 600; transition: 0.3s;
-        }
-        .btn-glass:hover { background: white; color: var(--primary); }
 
-        /* Floating Button */
+        .form-control, .form-select {
+            border-radius: 12px; padding: 12px 15px; border: 1px solid #e2e8f0; background: #f8fafc;
+        }
+        .form-control:focus { border-color: var(--primary); box-shadow: 0 0 0 4px var(--primary-glow); background: white; }
+
         #floatingBtn {
             position: fixed; bottom: 30px; right: 30px;
             background: var(--dark-bg); color: white; border: 2px solid var(--accent);
@@ -204,30 +199,17 @@
         }
         #floatingBtn:hover { transform: scale(1.05); background: var(--primary); border-color: var(--primary); }
 
-        /* PWA Button */
         .pwa-btn {
-            position: fixed; bottom: 30px; left: 20px;
-            background: white; color: var(--dark-bg); border: none; padding: 10px 20px;
-            border-radius: 12px; font-weight: 700; font-size: 0.9rem; cursor: pointer;
+            position: fixed; bottom: 30px; left: 20px; background: white; color: var(--dark-bg);
+            border: none; padding: 10px 20px; border-radius: 12px; font-weight: 700;
             z-index: 1000; box-shadow: 0 5px 20px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 8px;
-        }
-
-        .form-control, .form-select {
-            border-radius: 12px; padding: 12px 15px; border: 1px solid #e2e8f0;
-            background: #f8fafc; transition: 0.3s;
-        }
-        .form-control:focus, .form-select:focus {
-            background: white; border-color: var(--primary); box-shadow: 0 0 0 4px var(--primary-glow);
         }
 
         footer { background: #020617; color: #94a3b8; padding: 70px 0 20px; margin-top: 50px; }
         footer a { color: #cbd5e1; text-decoration: none; transition: 0.3s; }
         footer a:hover { color: var(--accent); }
 
-        @media (max-width: 991px) {
-            .hero-title { font-size: 2.8rem; }
-            .glass-panel { padding: 30px; margin-top: -40px; }
-        }
+        @media (max-width: 991px) { .hero-title { font-size: 2.8rem; } }
     </style>
 </head>
 <body>
@@ -238,7 +220,6 @@
                 <img src="image/Solo2ceologo.png" alt="Solo2CEO Logo" class="brand-logo">
                 Solo2CEO
             </a>
-            
             <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <i class="fas fa-bars text-dark fs-4"></i>
             </button>
@@ -246,11 +227,11 @@
                 <ul class="navbar-nav ms-auto align-items-center">
                     <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="templates/about.html">About</a></li>
-                    <li class="nav-item"><a class="nav-link" href="services.html">Services</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="services.html">Services</a></li>
                     <li class="nav-item"><a class="nav-link" href="templates/domain.html">Ecosystem</a></li>
                     <li class="nav-item ms-lg-3 mt-3 mt-lg-0">
                         <button class="btn btn-nav" data-bs-toggle="modal" data-bs-target="#inquiryModal">
-                            Let's Talk <i class="fas fa-arrow-right ms-2 small"></i>
+                            Let's Talk
                         </button>
                     </li>
                 </ul>
@@ -261,161 +242,261 @@
     <header>
         <div class="orb orb-1"></div>
         <div class="orb orb-2"></div>
-        <div class="container" data-aos="fade-up">
-            <div class="hero-badge">
-                <i class="fas fa-magic me-2"></i> Full-Service Digital Agency
+        <div class="container position-relative z-1" data-aos="fade-up">
+            <div class="d-inline-block border border-white border-opacity-25 rounded-pill px-4 py-1 mb-4 text-warning fw-bold bg-white bg-opacity-10 backdrop-blur">
+                🚀 Agency Services
             </div>
-            <h1 class="hero-title">We Handle Your Socials.<br>You <span style="background: var(--gradient-text); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Handle The Business.</span></h1>
-            <p class="hero-subtitle">
-                Forget the stress of posting, editing, and designing. We are your personal Digital Agency providing <strong>High-End Creatives</strong> & <strong>Social Media Management</strong> at startup-friendly rates.
+            <h1 class="hero-title">Premium Digital Solutions<br>for Modern Brands</h1>
+            <p class="lead text-white-50 mx-auto mb-5" style="max-width: 700px;">
+                We are a full-service agency. We build your tech, manage your socials, and design your brand so you can focus on being the CEO.
             </p>
-            <div class="d-flex justify-content-center gap-3 flex-wrap">
-                <a href="#services" class="btn btn-gradient">See How It Works</a>
-                <button class="btn btn-glass" data-bs-toggle="modal" data-bs-target="#inquiryModal">
-                    <i class="fas fa-play me-2"></i> Get Started
-                </button>
+            <div class="d-flex justify-content-center gap-3">
+                <a href="#packages" class="btn btn-gradient">View Pricing</a>
+                <a href="#web-dev" class="btn btn-outline-light rounded-pill px-4 py-3 fw-bold">Explore Services</a>
             </div>
         </div>
     </header>
 
-    <section class="container" data-aos="fade-up" data-aos-delay="100">
-        <div class="glass-panel text-center">
+    <section id="web-dev" class="section-padding">
+        <div class="container">
+            <div class="row align-items-center mb-5">
+                <div class="col-lg-6">
+                    <h6 class="text-primary fw-bold text-uppercase">The Foundation</h6>
+                    <h2 class="fw-bold display-5">Web Development & Tech</h2>
+                </div>
+                <div class="col-lg-6 text-lg-end">
+                    <p class="text-muted">Your website is your 24/7 salesperson. We build fast, secure, and beautiful platforms.</p>
+                </div>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="detail-card">
+                        <div style="overflow: hidden;">
+                            <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80" class="card-img-top" alt="Web Dev">
+                        </div>
+                        <div class="card-body">
+                            <h4 class="fw-bold h5">Custom Websites</h4>
+                            <p class="text-muted small">Tailor-made designs that reflect your brand identity. No generic templates.</p>
+                            <ul class="feature-list list-unstyled">
+                                <li><i class="fas fa-check-circle"></i> Mobile Responsive</li>
+                                <li><i class="fas fa-check-circle"></i> SEO Optimized Structure</li>
+                                <li><i class="fas fa-check-circle"></i> Speed Optimization</li>
+                            </ul>
+                            <div class="mt-3">
+                                <span class="tech-badge">HTML5</span>
+                                <span class="tech-badge">React</span>
+                                <span class="tech-badge">Bootstrap</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="detail-card">
+                        <div style="overflow: hidden;">
+                            <img src="data:image/jpeg;base64,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" class="card-img-top" alt="E-Commerce">
+                        </div>
+                        <div class="card-body">
+                            <h4 class="fw-bold h5">E-Commerce Stores</h4>
+                            <p class="text-muted small">Turn visitors into buyers with seamless shopping experiences.</p>
+                            <ul class="feature-list list-unstyled">
+                                <li><i class="fas fa-check-circle"></i> Payment Gateway Integration</li>
+                                <li><i class="fas fa-check-circle"></i> Inventory Management</li>
+                                <li><i class="fas fa-check-circle"></i> WhatsApp Order System</li>
+                            </ul>
+                            <div class="mt-3">
+                                <span class="tech-badge">Shopify</span>
+                                <span class="tech-badge">WooCommerce</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+                    <div class="detail-card">
+                        <div style="overflow: hidden;">
+                            <img src="https://images.unsplash.com/photo-1531746790731-6c087fecd65a?auto=format&fit=crop&w=800&q=80" class="card-img-top" alt="AI">
+                        </div>
+                        <div class="card-body">
+                            <h4 class="fw-bold h5">AI Integration</h4>
+                            <p class="text-muted small">Automate your business workflows with smart AI tools.</p>
+                            <ul class="feature-list list-unstyled">
+                                <li><i class="fas fa-check-circle"></i> Customer Support Chatbots</li>
+                                <li><i class="fas fa-check-circle"></i> Auto-Lead Capture</li>
+                                <li><i class="fas fa-check-circle"></i> CRM Automation</li>
+                            </ul>
+                            <div class="mt-3">
+                                <span class="tech-badge">ChatGPT 4</span>
+                                <span class="tech-badge">Python</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-padding bg-light">
+        <div class="container">
+            <div class="row align-items-center mb-5">
+                <div class="col-lg-6">
+                    <h6 class="text-secondary fw-bold text-uppercase">No More Headaches</h6>
+                    <h2 class="fw-bold display-5">Creative & Social Management</h2>
+                </div>
+                <div class="col-lg-6 text-lg-end">
+                    <p class="text-muted">We take the stress of content creation off your shoulders. We post, engage, and grow your account.</p>
+                </div>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-lg-6" data-aos="fade-right">
+                    <div class="bg-white p-5 rounded-4 shadow-sm h-100 border">
+                        <div class="icon-box mb-4 text-secondary fs-1"><i class="fas fa-paint-brush"></i></div>
+                        <h3 class="fw-bold mb-3">High-End Digital Creatives</h3>
+                        <p class="text-muted mb-4">You need visuals that stop the scroll. Our design team creates agency-level assets for your brand.</p>
+                        <div class="row g-3">
+                            <div class="col-sm-6">
+                                <ul class="feature-list list-unstyled">
+                                    <li><i class="fas fa-check text-secondary"></i> <strong>Reel Editing:</strong> Professional cuts & captions.</li>
+                                    <li><i class="fas fa-check text-secondary"></i> <strong>Graphic Design:</strong> Carousel posts & stories.</li>
+                                </ul>
+                            </div>
+                            <div class="col-sm-6">
+                                <ul class="feature-list list-unstyled">
+                                    <li><i class="fas fa-check text-secondary"></i> <strong>Brand Kit:</strong> Logos, fonts, and color palettes.</li>
+                                    <li><i class="fas fa-check text-secondary"></i> <strong>Ad Creatives:</strong> Banners that convert.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6" data-aos="fade-left">
+                    <div class="bg-dark text-white p-5 rounded-4 shadow-lg h-100 position-relative overflow-hidden">
+                        <div class="position-relative z-1">
+                            <div class="icon-box mb-4 text-warning fs-1"><i class="fas fa-rocket"></i></div>
+                            <h3 class="fw-bold mb-3">Full Social Management</h3>
+                            <p class="text-white-50 mb-4">We handle everything. Consistency is key, and we ensure your brand shows up every single day.</p>
+                            <ul class="feature-list list-unstyled">
+                                <li class="text-white"><i class="fas fa-check text-warning"></i> Content Calendar Strategy</li>
+                                <li class="text-white"><i class="fas fa-check text-warning"></i> Caption Writing & Hashtag Research</li>
+                                <li class="text-white"><i class="fas fa-check text-warning"></i> Community Engagement (Replies/DMs)</li>
+                                <li class="text-white"><i class="fas fa-check text-warning"></i> Monthly Analytics Report</li>
+                            </ul>
+                        </div>
+                        <div class="orb orb-1" style="width: 200px; height: 200px; top: -20px; right: -20px; opacity: 0.3;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="packages" class="section-padding">
+        <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <h6 class="text-primary fw-bold text-uppercase">Transparent Investment</h6>
+                <h2 class="fw-bold display-5">Packages That Scale</h2>
+                <p class="text-muted">Agency quality at startup-friendly rates.</p>
+            </div>
+
+            <div class="row g-4 align-items-center">
+                <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="pricing-card">
+                        <h5 class="fw-bold text-muted">Starter Web</h5>
+                        <div class="price-tag">₹15k <span class="fs-6 fw-normal text-muted">/ one-time</span></div>
+                        <p class="text-muted small mb-4">For professionals needing a solid digital presence.</p>
+                        <hr class="opacity-10 my-4">
+                        <ul class="feature-list list-unstyled text-start mx-auto" style="max-width: 250px;">
+                            <li><i class="fas fa-check-circle text-primary"></i> 5-Page Responsive Site</li>
+                            <li><i class="fas fa-check-circle text-primary"></i> Basic SEO Setup</li>
+                            <li><i class="fas fa-check-circle text-primary"></i> Contact Form</li>
+                            <li><i class="fas fa-check-circle text-primary"></i> 1 Month Support</li>
+                        </ul>
+                        <button class="btn btn-outline-primary rounded-pill w-100 mt-4 fw-bold" onclick="openModal()">Get Started</button>
+                    </div>
+                </div>
+
+                <div class="col-lg-4" data-aos="fade-up">
+                    <div class="pricing-card popular">
+                        <span class="badge-pop">MOST POPULAR</span>
+                        <h5 class="fw-bold text-white">Business Growth</h5>
+                        <div class="price-tag text-white">₹35k <span class="fs-6 fw-normal text-white-50">/ one-time</span></div>
+                        <p class="text-white-50 small mb-4">Complete Web + Branding solution.</p>
+                        <hr class="opacity-25 my-4 border-white">
+                        <ul class="feature-list list-unstyled text-start mx-auto" style="max-width: 250px;">
+                            <li class="text-white"><i class="fas fa-check-circle text-warning"></i> 10-Page Advanced Site</li>
+                            <li class="text-white"><i class="fas fa-check-circle text-warning"></i> <strong>Full Branding Kit</strong></li>
+                            <li class="text-white"><i class="fas fa-check-circle text-warning"></i> <strong>AI Chatbot Integration</strong></li>
+                            <li class="text-white"><i class="fas fa-check-circle text-warning"></i> Google Business Setup</li>
+                        </ul>
+                        <button class="btn btn-light rounded-pill w-100 mt-4 fw-bold text-primary" onclick="openModal()">Choose Growth</button>
+                    </div>
+                </div>
+
+                <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="pricing-card">
+                        <h5 class="fw-bold text-dark">Social Monthly</h5>
+                        <div class="price-tag">Custom <span class="fs-6 fw-normal text-muted">/ month</span></div>
+                        <p class="text-muted small mb-4">Recurring creative & management services.</p>
+                        <hr class="opacity-10 my-4">
+                        <ul class="feature-list list-unstyled text-start mx-auto" style="max-width: 250px;">
+                            <li><i class="fas fa-check-circle text-secondary"></i> 12-15 Posts/Month</li>
+                            <li><i class="fas fa-check-circle text-secondary"></i> 4-5 Reels Editing</li>
+                            <li><i class="fas fa-check-circle text-secondary"></i> Community Management</li>
+                            <li><i class="fas fa-check-circle text-secondary"></i> Monthly Strategy Call</li>
+                        </ul>
+                        <button class="btn btn-outline-dark rounded-pill w-100 mt-4 fw-bold" onclick="openModal()">Request Quote</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-padding bg-light">
+        <div class="container">
             <div class="row justify-content-center">
-                <div class="col-lg-10">
-                    <span class="text-primary fw-bold text-uppercase ls-1 small">The Problem</span>
-                    <h3 class="fw-bold mb-4 mt-2">Drowning in <span class="text-danger">Social Media Stress?</span></h3>
-                    <p class="lead text-muted mb-4" style="font-weight: 400;">
-                        Running a business is hard enough. You shouldn't have to worry about captions, hashtags, video editing, and graphic design.
-                    </p>
-                    <div class="row g-3 mt-4">
-                        <div class="col-md-4">
-                            <div class="p-3 bg-light rounded-4 border">
-                                <i class="fas fa-brain text-secondary fs-2 mb-2"></i>
-                                <h6 class="fw-bold">We Take The Headache</h6>
-                                <p class="small text-muted mb-0">We manage everything. You just approve the posts.</p>
+                <div class="col-lg-8">
+                    <div class="text-center mb-5">
+                        <h2 class="fw-bold">Frequently Asked Questions</h2>
+                    </div>
+                    <div class="accordion" id="faqAccordion">
+                        <div class="accordion-item border-0 mb-3 rounded-4 shadow-sm overflow-hidden">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button fw-bold collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                                    How long does a website take to build?
+                                </button>
+                            </h2>
+                            <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body text-muted">
+                                    Standard websites typically take 7-14 days. Complex E-commerce or AI projects may take 3-4 weeks depending on requirements.
+                                </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="p-3 bg-light rounded-4 border">
-                                <i class="fas fa-wallet text-success fs-2 mb-2"></i>
-                                <h6 class="fw-bold">Minimum Charges</h6>
-                                <p class="small text-muted mb-0">Agency-level quality at freelance-level prices.</p>
+                        <div class="accordion-item border-0 mb-3 rounded-4 shadow-sm overflow-hidden">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button fw-bold collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                                    Do I have to provide content for Social Media?
+                                </button>
+                            </h2>
+                            <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body text-muted">
+                                    We encourage raw photos/videos from you, but we handle all the editing, captioning, hashtag research, and graphic design. We make your raw content look professional.
+                                </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="p-3 bg-light rounded-4 border">
-                                <i class="fas fa-paint-brush text-primary fs-2 mb-2"></i>
-                                <h6 class="fw-bold">Digital Creatives</h6>
-                                <p class="small text-muted mb-0">Reels, graphics, and ads that look professional.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="services" class="section-padding">
-        <div class="container">
-            <div class="text-center mb-5" data-aos="fade-up">
-                <h6 class="text-primary fw-bold text-uppercase ls-1">What We Do</h6>
-                <h2 class="fw-bold display-5">Your Complete Digital Team</h2>
-            </div>
-
-            <div class="row g-4">
-                <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="100">
-                    <div class="service-card">
-                        <div class="icon-box"><i class="fab fa-instagram"></i></div>
-                        <h4 class="fw-bold h5">Social Management</h4>
-                        <p class="text-muted small mb-0">We handle your Instagram, LinkedIn, and Facebook completely. Posting, engagement, and scheduling—done for you.</p>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="200">
-                    <div class="service-card">
-                        <div class="icon-box" style="color: var(--secondary);"><i class="fas fa-palette"></i></div>
-                        <h4 class="fw-bold h5">Digital Creatives</h4>
-                        <p class="text-muted small mb-0">Stunning visuals, Reel editing, and ad graphics. We create content that stops the scroll and builds your brand.</p>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="300">
-                    <div class="service-card">
-                        <div class="icon-box"><i class="fas fa-chart-line"></i></div>
-                        <h4 class="fw-bold h5">Business Growth</h4>
-                        <p class="text-muted small mb-0">One-on-one strategy to help you scale operations while we handle the digital noise.</p>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="400">
-                    <div class="service-card">
-                        <div class="icon-box"><i class="fas fa-fingerprint"></i></div>
-                        <h4 class="fw-bold h5">Brand Identity</h4>
-                        <p class="text-muted small mb-0">From Logos to Brand Kits. We ensure you look like a market leader, not just another freelancer.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="py-5 bg-dark text-white text-center">
-        <div class="container" data-aos="zoom-in">
-            <h2 class="fw-bold mb-3">Why Pay Big Agency Fees?</h2>
-            <p class="text-white-50 mb-4 fs-5">Get premium Digital Creatives & Management for <strong>very minimum charges.</strong></p>
-            <button class="btn btn-outline-light rounded-pill px-5" data-bs-toggle="modal" data-bs-target="#inquiryModal">Get A Quote</button>
-        </div>
-    </section>
-
-    <section id="testimonials" class="section-padding" style="background: #f1f5f9;">
-        <div class="container">
-            <div class="text-center mb-5" data-aos="fade-up">
-                <h2 class="fw-bold">Client Success</h2>
-                <p class="text-muted">Real entrepreneurs, real results.</p>
-            </div>
-            <div class="row g-4">
-                <div class="col-md-6" data-aos="zoom-in">
-                    <div class="testimonial-card">
-                        <i class="fas fa-quote-right quote-mark"></i>
-                        <p class="fst-italic text-dark mb-3 fs-5">"Solo2CEO handles all my Instagram posts. I don't even have to think about it anymore. The creatives are amazing!"</p>
-                        <div class="d-flex align-items-center gap-3 mt-4">
-                            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 40px; height: 40px;">A</div>
-                            <div>
-                                <h6 class="fw-bold mb-0">Amit Sharma</h6>
-                                <small class="text-muted">Fashion Store Owner</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6" data-aos="zoom-in" data-aos-delay="100">
-                    <div class="testimonial-card">
-                        <i class="fas fa-quote-right quote-mark"></i>
-                        <p class="fst-italic text-dark mb-3 fs-5">"Affordable and high quality. They took my raw videos and turned them into viral Reels. Highly recommend."</p>
-                        <div class="d-flex align-items-center gap-3 mt-4">
-                            <div class="bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 40px; height: 40px;">P</div>
-                            <div>
-                                <h6 class="fw-bold mb-0">Priya Mehta</h6>
-                                <small class="text-muted">Makeup Artist</small>
+                        <div class="accordion-item border-0 mb-3 rounded-4 shadow-sm overflow-hidden">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button fw-bold collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                                    Can I customize a package?
+                                </button>
+                            </h2>
+                            <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body text-muted">
+                                    Absolutely. We offer tailored solutions. Just submit an inquiry with your specific needs and budget.
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <section id="contact" class="container py-5">
-        <div class="cta-section" data-aos="fade-up">
-            <div class="position-relative z-2">
-                <h2 class="fw-bold display-5 mb-3">Ready to Offload the Stress?</h2>
-                <p class="lead mb-5 text-white-50">Let us handle the creatives. You handle the cash flow.</p>
-                <div class="d-flex justify-content-center gap-3 flex-wrap">
-                    <button class="btn btn-light rounded-pill px-5 py-3 fw-bold text-primary" data-bs-toggle="modal" data-bs-target="#inquiryModal">
-                        Start Now
-                    </button>
-                    <a href="https://whatsapp.com/channel/0029VbAT0oPBKfi7XQuPnO2L" target="_blank" class="btn btn-outline-light rounded-pill px-5 py-3 fw-bold">
-                        <i class="fab fa-whatsapp me-2"></i> WhatsApp
-                    </a>
-                </div>
-                <p class="mt-4 fw-bold text-info"><i class="fas fa-phone-alt me-2"></i>+91 7021360582</p>
-            </div>
-            <div class="orb orb-1" style="width: 300px; height: 300px; top: -50px; left: -50px; opacity: 0.3;"></div>
         </div>
     </section>
 
@@ -424,18 +505,18 @@
             <div class="row gy-5">
                 <div class="col-lg-4">
                     <h5 class="text-white fw-bold mb-3 d-flex align-items-center gap-2">
-                        <i class="fas fa-layer-group text-primary"></i> Solo2CEO
+                        <img src="image/Solo2ceologo.png" width="30" height="30" class="rounded-circle"> Solo2CEO
                     </h5>
                     <p class="small opacity-75">
-                        Your Personal Digital Agency. We transform self-employed hustles into recognized brands through high-end creatives and stress-free social management.
+                        Your Personal Digital Agency. Transforming self-employed hustles into recognized brands through high-end creatives and technology.
                     </p>
                 </div>
                 <div class="col-lg-2 col-6">
                     <h6 class="text-white fw-bold mb-3">Explore</h6>
                     <ul class="list-unstyled">
                         <li><a href="index.html">Home</a></li>
+                        <li><a href="templates/about.html">About Us</a></li>
                         <li><a href="services.html">Services</a></li>
-                        <li><a href="templates/domain.html">Ecosystem</a></li>
                     </ul>
                 </div>
                 <div class="col-lg-2 col-6">
@@ -465,7 +546,7 @@
             <div class="modal-content border-0 shadow-lg" style="border-radius: 24px; overflow: hidden;">
                 <div class="modal-header border-0 bg-light p-4">
                     <div>
-                        <h5 class="modal-title fw-bold text-dark">✨ Join / Inquiry</h5>
+                        <h5 class="modal-title fw-bold text-dark">✨ Start Your Project</h5>
                         <p class="small text-muted mb-0">Tell us what you need. We'll handle the rest.</p>
                     </div>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -473,21 +554,12 @@
                 <div class="modal-body p-4 pt-0">
                     <form id="inquiryForm" class="mt-3">
                         <div class="row g-3">
-                            <div class="col-12">
-                                <label class="small fw-bold text-muted ms-1">Full Name</label>
-                                <input type="text" name="name" class="form-control bg-light border-0 py-3" required>
-                            </div>
-                            <div class="col-12">
-                                <label class="small fw-bold text-muted ms-1">Email Address</label>
-                                <input type="email" name="email" class="form-control bg-light border-0 py-3" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="small fw-bold text-muted ms-1">Phone</label>
-                                <input type="tel" name="phone" class="form-control bg-light border-0 py-3" required>
-                            </div>
+                            <div class="col-12"><label class="small fw-bold text-muted ms-1">Full Name</label><input type="text" name="name" class="form-control" required></div>
+                            <div class="col-12"><label class="small fw-bold text-muted ms-1">Email Address</label><input type="email" name="email" class="form-control" required></div>
+                            <div class="col-md-6"><label class="small fw-bold text-muted ms-1">Phone</label><input type="tel" name="phone" class="form-control" required></div>
                             <div class="col-md-6">
                                 <label class="small fw-bold text-muted ms-1">Occupation</label>
-                                <select name="occupation" class="form-select bg-light border-0 py-3" required>
+                                <select name="occupation" class="form-select" required>
                                     <option value="">Select...</option>
                                     <option value="Business Owner">Business Owner</option>
                                     <option value="Self Employed">Self Employed</option>
@@ -495,20 +567,11 @@
                                     <option value="Salaried">Salaried</option>
                                 </select>
                             </div>
-                            <div class="col-12">
-                                <label class="small fw-bold text-muted ms-1">Location</label>
-                                <input type="text" name="location" class="form-control bg-light border-0 py-3" required>
-                            </div>
-                            <div class="col-12">
-                                <label class="small fw-bold text-muted ms-1">Message</label>
-                                <textarea name="message" class="form-control bg-light border-0" rows="3" placeholder="I need help with social media..." required></textarea>
-                            </div>
-                            <div class="col-12 mt-4">
-                                <button type="submit" id="submitBtn" class="btn btn-gradient w-100 py-3">🚀 Submit Inquiry</button>
-                            </div>
+                            <div class="col-12"><label class="small fw-bold text-muted ms-1">Location</label><input type="text" name="location" class="form-control" required></div>
+                            <div class="col-12"><label class="small fw-bold text-muted ms-1">Message</label><textarea name="message" class="form-control" rows="3" placeholder="I need a website / social media help..." required></textarea></div>
+                            <div class="col-12 mt-4"><button type="submit" id="submitBtn" class="btn btn-gradient w-100 py-3">🚀 Submit Inquiry</button></div>
                         </div>
                     </form>
-
                     <div class="mt-4 p-3 rounded-3 text-center" style="background: #eff6ff; border: 1px dashed #6366f1;">
                         <p class="mb-2 fw-bold text-primary small">📢 We Are Hiring!</p>
                         <a href="Advertisement/apply.html" target="_blank" class="btn btn-dark btn-sm rounded-pill px-4">Apply for a Job</a>
@@ -519,7 +582,7 @@
     </div>
 
     <button id="floatingBtn" data-bs-toggle="modal" data-bs-target="#inquiryModal">
-        <i class="fas fa-comment-dots"></i> <span>Inquiry / Join</span>
+        <i class="fas fa-comment-dots"></i> <span>Inquiry</span>
     </button>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -534,6 +597,10 @@
             else nav.classList.remove('scrolled');
         });
 
+        // Modal Helper
+        const inquiryModal = new bootstrap.Modal(document.getElementById("inquiryModal"));
+        function openModal(){ inquiryModal.show(); }
+
         const scriptURL = "https://script.google.com/macros/s/AKfycbySmtlkyt9L3XuP0XT7BdeP1TfnoNEjFTJvBZIBaVoTYk615PQuRswhAVVPW5rTJG-5/exec";
 
         document.getElementById("inquiryForm").addEventListener("submit", function(e){
@@ -546,12 +613,8 @@
             let finalPhone = rawPhone.trim().startsWith("+") ? "'" + rawPhone : rawPhone;
 
             const data = {
-                name: this.name.value,
-                email: this.email.value,
-                phone: finalPhone,
-                occupation: this.occupation.value,
-                location: this.location.value,
-                message: this.message.value
+                name: this.name.value, email: this.email.value, phone: finalPhone,
+                occupation: this.occupation.value, location: this.location.value, message: this.message.value
             };
 
             fetch(scriptURL, { method: "POST", body: JSON.stringify(data) })
@@ -562,13 +625,13 @@
                 setTimeout(() => {
                     btn.disabled = false; btn.innerHTML = originalText; btn.style.background = "";
                     this.reset();
-                    bootstrap.Modal.getInstance(document.getElementById("inquiryModal")).hide();
+                    inquiryModal.hide();
                 }, 2500);
             })
             .catch(error => { console.error('Error!', error.message); btn.innerHTML = "❌ Error. Try Again."; btn.disabled = false; });
         });
 
-        // PWA
+        // PWA Logic
         const isIos = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
         const isInStandaloneMode = ('standalone' in window.navigator) && (window.navigator.standalone);
         if(isIos && !isInStandaloneMode){

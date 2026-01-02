@@ -1,222 +1,404 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Solo2CEO | Our Services</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#4f46e5">
     
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Our Services | Social Media, Branding, Web Development & AI">
+    <title>Solo2CEO | Agency Services</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="icon" type="image/png" href="image/Solo2ceologo.png">
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Poppins', 'sans-serif'],
-                    },
-                    colors: {
-                        brand: {
-                            gold: '#FFD700',
-                            dark: '#111827',
-                            gray: '#1F2937'
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <style>
-        .glass-nav {
-            background: rgba(17, 24, 39, 0.95);
-            backdrop-filter: blur(10px);
+        /* =========================================
+           1. PREMIUM DESIGN SYSTEM
+           ========================================= */
+        :root {
+            --primary: #4f46e5;       /* Indigo */
+            --primary-glow: rgba(79, 70, 229, 0.5);
+            --secondary: #ec4899;     /* Pink/Magenta */
+            --accent: #ffd700;        /* Gold */
+            --dark-bg: #0f172a;       /* Slate 900 */
+            --text-main: #1e293b;
+            --gradient-hero: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            --gradient-btn: linear-gradient(90deg, #4f46e5, #ec4899);
         }
-        .service-card:hover .icon-box {
-            background-color: #FFD700;
-            color: #111827;
-            transform: rotateY(360deg);
+
+        body { font-family: 'Outfit', sans-serif; background-color: #f8fafc; color: var(--text-main); overflow-x: hidden; line-height: 1.6; }
+        h1, h2, h3, h4, h5 { font-family: 'Space Grotesk', sans-serif; letter-spacing: -0.02em; }
+        html { scroll-behavior: smooth; }
+
+        /* Floating Navbar */
+        .navbar { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); padding: 12px 0; border-bottom: 1px solid rgba(0,0,0,0.05); }
+        .navbar.scrolled { width: 90%; margin: 20px auto 0; border-radius: 50px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); top: 0; left: 0; right: 0; }
+        .navbar-brand { font-weight: 800; font-size: 1.4rem; color: var(--dark-bg) !important; display: flex; align-items: center; gap: 10px; }
+        .brand-logo { height: 40px; width: 40px; border-radius: 50%; object-fit: cover; }
+        .nav-link { font-weight: 600; color: var(--text-main) !important; margin: 0 12px; transition: 0.3s; position: relative; }
+        .nav-link:hover, .nav-link.active { color: var(--primary) !important; }
+        .btn-nav { background: var(--dark-bg); color: white !important; border-radius: 50px; padding: 10px 24px; font-weight: 600; transition: 0.3s; }
+        .btn-nav:hover { background: var(--primary); transform: translateY(-2px); }
+
+        /* Hero */
+        header {
+            background-color: #000000;
+            background-image: radial-gradient(at 50% 0%, #1e1b4b 0, transparent 50%);
+            color: white; padding: 180px 0 120px; position: relative; overflow: hidden; text-align: center;
         }
+        .orb { position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.6; z-index: 0; }
+        .orb-1 { top: -10%; left: -10%; width: 500px; height: 500px; background: var(--primary); animation: drift 10s infinite alternate; }
+        .orb-2 { bottom: 10%; right: -5%; width: 400px; height: 400px; background: var(--secondary); animation: drift 12s infinite alternate-reverse; }
+        @keyframes drift { from { transform: translate(0,0); } to { transform: translate(30px, 40px); } }
+
+        .hero-title { font-size: 3.5rem; font-weight: 800; line-height: 1.1; margin-bottom: 25px; }
+        .text-gradient { background: linear-gradient(to right, #fff, #a5b4fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        /* Service Cards */
+        .section-padding { padding: 100px 0; }
+        .service-card {
+            background: white; padding: 35px; border-radius: 24px; border: 1px solid #f1f5f9;
+            transition: all 0.4s ease; height: 100%; position: relative; overflow: hidden;
+        }
+        .service-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(79, 70, 229, 0.1); border-color: var(--primary); }
+        .service-card::before { content: ''; position: absolute; bottom: 0; left: 0; height: 4px; width: 0; background: var(--gradient-btn); transition: 0.4s; }
+        .service-card:hover::before { width: 100%; }
+
         .icon-box {
-            transition: all 0.6s ease;
+            width: 60px; height: 60px; background: #f8fafc; color: var(--primary);
+            border-radius: 16px; display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; margin-bottom: 25px; transition: 0.4s;
         }
+        .service-card:hover .icon-box { background: var(--gradient-btn); color: white; transform: rotateY(360deg); }
+
+        .check-list li { list-style: none; margin-bottom: 8px; font-size: 0.9rem; color: #64748b; }
+        .check-list i { color: var(--accent); margin-right: 8px; }
+
+        /* Proposal Cards */
+        .proposal-card {
+            background: white; border-radius: 20px; padding: 30px; display: flex; align-items: center;
+            justify-content: space-between; border: 1px solid #e2e8f0; transition: 0.3s; text-decoration: none;
+        }
+        .proposal-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.05); border-color: var(--primary); }
+        .proposal-icon { font-size: 2rem; color: var(--text-main); margin-right: 20px; }
+
+        /* Buttons & Footer */
+        .btn-gradient { background: var(--gradient-btn); color: white; border: none; padding: 12px 30px; border-radius: 50px; font-weight: 700; transition: 0.4s; }
+        .btn-gradient:hover { transform: translateY(-3px); box-shadow: 0 15px 35px var(--primary-glow); color: white; }
+        footer { background: #020617; color: #94a3b8; padding: 70px 0 20px; margin-top: 50px; }
+        footer a { color: #cbd5e1; text-decoration: none; transition: 0.3s; }
+        footer a:hover { color: var(--primary); }
+
+        /* Floating Button */
+        #floatingBtn { position: fixed; bottom: 30px; right: 30px; background: var(--dark-bg); color: white; border: 2px solid var(--accent); border-radius: 50px; padding: 12px 24px; font-weight: 700; z-index: 1000; box-shadow: 0 10px 30px rgba(0,0,0,0.3); transition: 0.3s; display: flex; gap: 10px; }
+        #floatingBtn:hover { transform: scale(1.05); background: var(--primary); border-color: var(--primary); }
+        .pwa-btn { position: fixed; bottom: 30px; left: 20px; background: white; color: var(--dark-bg); padding: 10px 20px; border-radius: 12px; font-weight: 700; z-index: 1000; box-shadow: 0 5px 20px rgba(0,0,0,0.1); border: none; display: flex; gap: 8px; }
+
+        @media (max-width: 991px) { .hero-title { font-size: 2.5rem; } }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800 overflow-x-hidden">
+<body>
 
-    <header class="glass-nav text-white fixed w-full top-0 z-50 shadow-lg transition-all duration-300">
-        <div class="container mx-auto flex justify-between items-center px-6 py-4">
-            <a href="index.html" class="text-2xl font-bold tracking-wider flex items-center gap-2">
-                <i class="fa-solid fa-rocket text-brand-gold"></i> Solo<span class="text-brand-gold">2</span>CEO
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <img src="image/Solo2ceologo.png" alt="Solo2CEO" class="brand-logo">
+                Solo2CEO
             </a>
-            
-            <nav class="hidden md:flex space-x-8 text-sm font-medium">
-                <a href="templates/about.html" class="hover:text-brand-gold transition duration-300">About</a>
-                <a href="services.html" class="text-brand-gold border-b-2 border-brand-gold pb-1">Services</a>
-                <a href="templates/contact.html" class="hover:text-brand-gold transition duration-300">Contact</a>
-            </nav>
-
-            <button class="md:hidden text-2xl focus:outline-none text-brand-gold">
-                <i class="fa-solid fa-bars"></i>
+            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <i class="fas fa-bars text-dark fs-4"></i>
             </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="templates/about.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="services.html">Services</a></li>
+                    <li class="nav-item"><a class="nav-link" href="templates/contact.html">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link" href="templates/domain.html">Ecosystem</a></li>
+                    <li class="nav-item ms-lg-3 mt-3 mt-lg-0">
+                        <button class="btn btn-nav" data-bs-toggle="modal" data-bs-target="#inquiryModal">
+                            Let's Talk
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header>
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="container position-relative z-1" data-aos="fade-up">
+            <span class="badge bg-light text-dark rounded-pill px-3 py-2 mb-3 fw-bold border border-white opacity-75">LEVEL UP YOUR BUSINESS</span>
+            <h1 class="hero-title">From Solo Hustle<br>to <span class="text-gradient">CEO Mindset</span></h1>
+            <p class="lead text-white-50 mx-auto mb-5" style="max-width: 700px;">
+                We provide the branding, strategy, and growth solutions you need to stop trading time for money and start building an empire.
+            </p>
+            <div class="d-flex justify-content-center gap-3">
+                <a href="#services" class="btn btn-gradient">Explore Services</a>
+            </div>
         </div>
     </header>
 
-    <section class="relative bg-brand-dark text-white pt-32 pb-20 lg:pt-40 lg:pb-28 overflow-hidden">
-        <div class="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-gray-800 to-transparent opacity-30"></div>
-        
-        <div class="container mx-auto px-6 text-center relative z-10" data-aos="fade-up">
-            <span class="text-brand-gold font-semibold tracking-widest uppercase text-sm mb-2 block">Level Up Your Business</span>
-            <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">
-                From Solo Hustle <br> to <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-gold to-yellow-200">CEO Mindset</span>
-            </h1>
-            <p class="text-gray-300 text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed">
-                We provide the branding, strategy, and growth solutions you need to stop trading time for money and start building an empire.
-            </p>
-            <div class="flex flex-col sm:flex-row justify-center gap-4">
-                <a href="#services" class="px-8 py-3 bg-brand-gold text-brand-dark font-bold rounded-full hover:bg-white transition duration-300 shadow-[0_0_20px_rgba(255,215,0,0.3)]">
-                    Explore Services
-                </a>
+    <section id="services" class="section-padding">
+        <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <h6 class="text-primary fw-bold text-uppercase">What We Do</h6>
+                <h2 class="fw-bold display-5">A Complete Ecosystem</h2>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="service-card">
+                        <div class="icon-box"><i class="fab fa-instagram"></i></div>
+                        <h4 class="fw-bold h5">Social Media Growth</h4>
+                        <p class="text-muted small mb-3">Dominate the feed with a brand that speaks louder than words.</p>
+                        <ul class="check-list ps-0 mb-0">
+                            <li><i class="fas fa-check"></i> Instagram & Facebook Setup</li>
+                            <li><i class="fas fa-check"></i> Profile Branding & Bio Optimization</li>
+                            <li><i class="fas fa-check"></i> Reels & Viral Content Strategy</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="service-card">
+                        <div class="icon-box"><i class="fas fa-chess"></i></div>
+                        <h4 class="fw-bold h5">Business Strategy</h4>
+                        <p class="text-muted small mb-3">Stop guessing. Start scaling with a roadmap designed for you.</p>
+                        <ul class="check-list ps-0 mb-0">
+                            <li><i class="fas fa-check"></i> 1-on-1 Consulting Sessions</li>
+                            <li><i class="fas fa-check"></i> Competitor Analysis</li>
+                            <li><i class="fas fa-check"></i> Custom Growth Roadmap</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="300">
+                    <div class="service-card">
+                        <div class="icon-box"><i class="fas fa-camera-retro"></i></div>
+                        <h4 class="fw-bold h5">Content Creation</h4>
+                        <p class="text-muted small mb-3">High-quality visuals that convert viewers into paying clients.</p>
+                        <ul class="check-list ps-0 mb-0">
+                            <li><i class="fas fa-check"></i> Product Photography</li>
+                            <li><i class="fas fa-check"></i> Scripted Storytelling</li>
+                            <li><i class="fas fa-check"></i> Professional Video Editing</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="400">
+                    <div class="service-card">
+                        <div class="icon-box"><i class="fas fa-bullhorn"></i></div>
+                        <h4 class="fw-bold h5">Paid Advertising</h4>
+                        <p class="text-muted small mb-3">Accelerate your reach with targeted ad campaigns.</p>
+                        <ul class="check-list ps-0 mb-0">
+                            <li><i class="fas fa-check"></i> Facebook & IG Ad Setup</li>
+                            <li><i class="fas fa-check"></i> Google My Business SEO</li>
+                            <li><i class="fas fa-check"></i> Influencer Marketing</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="500">
+                    <div class="service-card">
+                        <div class="icon-box"><i class="fas fa-users"></i></div>
+                        <h4 class="fw-bold h5">Community Building</h4>
+                        <p class="text-muted small mb-3">Turn customers into a loyal tribe that advocates for you.</p>
+                        <ul class="check-list ps-0 mb-0">
+                            <li><i class="fas fa-check"></i> Reputation Management</li>
+                            <li><i class="fas fa-check"></i> DM & Comment Engagement</li>
+                            <li><i class="fas fa-check"></i> Contests & Campaigns</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="600">
+                    <div class="service-card bg-dark text-white border-0" style="background: var(--dark-bg);">
+                        <div class="icon-box bg-white text-dark"><i class="fas fa-rocket"></i></div>
+                        <h4 class="fw-bold h5 text-white">Ready to Scale?</h4>
+                        <p class="text-white-50 small mb-4">Let's build a custom package tailored specifically for your needs.</p>
+                        <button class="btn btn-outline-light rounded-pill w-100 fw-bold" data-bs-toggle="modal" data-bs-target="#inquiryModal">Contact Us Today</button>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    <section id="services" class="py-20 bg-gray-50">
-        <div class="container mx-auto px-6">
-            <div class="text-center mb-16" data-aos="fade-up">
-                <h2 class="text-3xl font-bold text-gray-900">What We Do</h2>
-                <div class="w-20 h-1 bg-brand-gold mx-auto mt-4 rounded-full"></div>
+    <section class="section-padding bg-light">
+        <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <h2 class="fw-bold">View Detailed Proposals</h2>
+                <p class="text-muted">Want to see the nitty-gritty details? Check our PDF proposals.</p>
             </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                
-                <div class="service-card bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-b-4 border-transparent hover:border-brand-gold" data-aos="fade-up" data-aos-delay="100">
-                    <div class="icon-box w-14 h-14 bg-gray-100 text-gray-900 rounded-lg flex items-center justify-center text-2xl mb-6">
-                        <i class="fa-brands fa-instagram"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3 text-gray-900">Social Media Growth</h3>
-                    <p class="text-gray-600 text-sm mb-4">Dominate the feed with a brand that speaks louder than words.</p>
-                    <ul class="text-sm text-gray-500 space-y-2">
-                        <li><i class="fa-solid fa-check text-brand-gold mr-2"></i>Instagram & Facebook Setup</li>
-                        <li><i class="fa-solid fa-check text-brand-gold mr-2"></i>Profile Branding & Bio Optimization</li>
-                        <li><i class="fa-solid fa-check text-brand-gold mr-2"></i>Reels & Viral Content Strategy</li>
-                    </ul>
-                </div>
-
-                <div class="service-card bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-b-4 border-transparent hover:border-brand-gold" data-aos="fade-up" data-aos-delay="200">
-                    <div class="icon-box w-14 h-14 bg-gray-100 text-gray-900 rounded-lg flex items-center justify-center text-2xl mb-6">
-                        <i class="fa-solid fa-chess"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3 text-gray-900">Business Strategy</h3>
-                    <p class="text-gray-600 text-sm mb-4">Stop guessing. Start scaling with a roadmap designed for you.</p>
-                    <ul class="text-sm text-gray-500 space-y-2">
-                        <li><i class="fa-solid fa-check text-brand-gold mr-2"></i>1-on-1 Consulting Sessions</li>
-                        <li><i class="fa-solid fa-check text-brand-gold mr-2"></i>Competitor Analysis</li>
-                        <li><i class="fa-solid fa-check text-brand-gold mr-2"></i>Custom Growth Roadmap</li>
-                    </ul>
-                </div>
-
-                <div class="service-card bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-b-4 border-transparent hover:border-brand-gold" data-aos="fade-up" data-aos-delay="300">
-                    <div class="icon-box w-14 h-14 bg-gray-100 text-gray-900 rounded-lg flex items-center justify-center text-2xl mb-6">
-                        <i class="fa-solid fa-camera-retro"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3 text-gray-900">Content Creation</h3>
-                    <p class="text-gray-600 text-sm mb-4">High-quality visuals that convert viewers into paying clients.</p>
-                    <ul class="text-sm text-gray-500 space-y-2">
-                        <li><i class="fa-solid fa-check text-brand-gold mr-2"></i>Product Photography</li>
-                        <li><i class="fa-solid fa-check text-brand-gold mr-2"></i>Scripted Storytelling</li>
-                        <li><i class="fa-solid fa-check text-brand-gold mr-2"></i>Professional Editing</li>
-                    </ul>
-                </div>
-
-                <div class="service-card bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-b-4 border-transparent hover:border-brand-gold" data-aos="fade-up" data-aos-delay="100">
-                    <div class="icon-box w-14 h-14 bg-gray-100 text-gray-900 rounded-lg flex items-center justify-center text-2xl mb-6">
-                        <i class="fa-solid fa-bullhorn"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3 text-gray-900">Paid Advertising</h3>
-                    <p class="text-gray-600 text-sm mb-4">Accelerate your reach with targeted ad campaigns.</p>
-                    <ul class="text-sm text-gray-500 space-y-2">
-                        <li><i class="fa-solid fa-check text-brand-gold mr-2"></i>Facebook & IG Ad Setup</li>
-                        <li><i class="fa-solid fa-check text-brand-gold mr-2"></i>Google My Business SEO</li>
-                        <li><i class="fa-solid fa-check text-brand-gold mr-2"></i>Influencer Marketing</li>
-                    </ul>
-                </div>
-
-                <div class="service-card bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-b-4 border-transparent hover:border-brand-gold" data-aos="fade-up" data-aos-delay="200">
-                    <div class="icon-box w-14 h-14 bg-gray-100 text-gray-900 rounded-lg flex items-center justify-center text-2xl mb-6">
-                        <i class="fa-solid fa-users-viewfinder"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3 text-gray-900">Community Building</h3>
-                    <p class="text-gray-600 text-sm mb-4">Turn customers into a loyal tribe that advocates for you.</p>
-                    <ul class="text-sm text-gray-500 space-y-2">
-                        <li><i class="fa-solid fa-check text-brand-gold mr-2"></i>Reputation Management</li>
-                        <li><i class="fa-solid fa-check text-brand-gold mr-2"></i>DM & Comment Engagement</li>
-                        <li><i class="fa-solid fa-check text-brand-gold mr-2"></i>Contests & Campaigns</li>
-                    </ul>
-                </div>
-
-                 <div class="bg-brand-dark p-8 rounded-2xl shadow-lg flex flex-col justify-center items-center text-center text-white border-2 border-brand-gold" data-aos="fade-up" data-aos-delay="300">
-                    <h3 class="text-2xl font-bold mb-2">Ready to Scale?</h3>
-                    <p class="text-gray-300 text-sm mb-6">Let's build a custom package for your needs.</p>
-                    <a href="templates/contact.html" class="px-6 py-3 bg-brand-gold text-brand-dark font-bold rounded-lg hover:bg-white transition duration-300 w-full">
-                        Contact Us Today
+            <div class="row g-4 justify-content-center">
+                <div class="col-md-5" data-aos="fade-right">
+                    <a href="Website_Proposal.html" class="proposal-card">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-laptop-code proposal-icon text-primary"></i>
+                            <div>
+                                <h5 class="fw-bold mb-1 text-dark">Website Proposal</h5>
+                                <small class="text-muted">Tech stack, timeline & pricing.</small>
+                            </div>
+                        </div>
+                        <i class="fas fa-arrow-right text-primary"></i>
                     </a>
                 </div>
-
+                <div class="col-md-5" data-aos="fade-left">
+                    <a href="Social_Proposal.html" class="proposal-card">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-hashtag proposal-icon text-secondary"></i>
+                            <div>
+                                <h5 class="fw-bold mb-1 text-dark">Social Media Proposal</h5>
+                                <small class="text-muted">Content plan & deliverables.</small>
+                            </div>
+                        </div>
+                        <i class="fas fa-arrow-right text-secondary"></i>
+                    </a>
+                </div>
             </div>
         </div>
     </section>
 
-    <section class="py-16 bg-white border-t border-gray-100">
-        <div class="container mx-auto px-6 text-center" data-aos="zoom-in">
-            <h2 class="text-2xl font-bold text-gray-900 mb-8">View Our Detailed Proposals</h2>
-            <div class="flex flex-col md:flex-row justify-center gap-6">
-                <a href="Website_Proposal.html" class="group relative px-8 py-4 bg-gray-100 rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all">
-                    <div class="absolute inset-0 w-0 bg-brand-gold transition-all duration-[250ms] ease-out group-hover:w-full opacity-20"></div>
-                    <span class="relative text-gray-900 font-bold flex items-center gap-2">
-                        <i class="fa-solid fa-laptop-code text-brand-gray group-hover:text-black"></i> View Website Proposal
-                    </span>
-                </a>
-                <a href="Social_Proposal.html" class="group relative px-8 py-4 bg-brand-dark rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all">
-                    <div class="absolute inset-0 w-0 bg-brand-gold transition-all duration-[250ms] ease-out group-hover:w-full opacity-100"></div>
-                    <span class="relative text-white group-hover:text-brand-dark font-bold flex items-center gap-2">
-                        <i class="fa-solid fa-hashtag"></i> View Social Media Proposal
-                    </span>
-                </a>
+    <footer>
+        <div class="container">
+            <div class="row gy-5">
+                <div class="col-lg-4">
+                    <h5 class="text-white fw-bold mb-3 d-flex align-items-center gap-2">
+                        <img src="image/Solo2ceologo.png" width="30" height="30" class="rounded-circle"> Solo2CEO
+                    </h5>
+                    <p class="small opacity-75">Empowering Self-Employed Entrepreneurs to build recognized brands.</p>
+                </div>
+                <div class="col-lg-4">
+                    <h6 class="text-white fw-bold mb-3">Quick Links</h6>
+                    <div class="d-flex gap-3 text-small">
+                        <a href="templates/about.html">About</a>
+                        <a href="services.html">Services</a>
+                        <a href="templates/contact.html">Contact</a>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <h6 class="text-white fw-bold mb-3">Follow Us</h6>
+                    <div class="d-flex gap-3">
+                        <a href="https://www.instagram.com/solo2_ceo" class="fs-4 text-white"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="fs-4 text-white"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="fs-4 text-white"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
             </div>
-        </div>
-    </section>
-
-    <footer class="bg-brand-dark text-white py-12 border-t border-gray-800">
-        <div class="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center">
-            <div class="mb-6 md:mb-0">
-                <a href="#" class="text-2xl font-bold flex items-center gap-2">
-                    <i class="fa-solid fa-rocket text-brand-gold"></i> Solo2CEO
-                </a>
-                <p class="text-gray-400 text-sm mt-2">Empowering Self-Employed Entrepreneurs.</p>
-            </div>
-            <div class="flex space-x-6 mb-6 md:mb-0">
-                <a href="#" class="text-gray-400 hover:text-brand-gold transition text-xl"><i class="fa-brands fa-instagram"></i></a>
-                <a href="#" class="text-gray-400 hover:text-brand-gold transition text-xl"><i class="fa-brands fa-linkedin"></i></a>
-                <a href="#" class="text-gray-400 hover:text-brand-gold transition text-xl"><i class="fa-brands fa-twitter"></i></a>
-            </div>
-            <div class="text-gray-500 text-sm">
-                &copy; 2025 Solo2CEO. All rights reserved.
+            <div class="border-top border-secondary border-opacity-25 mt-5 pt-4 text-center">
+                <small>&copy; 2025 Solo2CEO. All Rights Reserved.</small>
             </div>
         </div>
     </footer>
 
+    <div class="modal fade" id="inquiryModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg" style="border-radius: 24px; overflow: hidden;">
+                <div class="modal-header border-0 bg-light p-4">
+                    <div>
+                        <h5 class="modal-title fw-bold text-dark">✨ Join / Inquiry</h5>
+                        <p class="small text-muted mb-0">Tell us what you need. We'll handle the rest.</p>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4 pt-0">
+                    <form id="inquiryForm" class="mt-3">
+                        <div class="row g-3">
+                            <div class="col-12"><input type="text" name="name" class="form-control" placeholder="Full Name" required></div>
+                            <div class="col-12"><input type="email" name="email" class="form-control" placeholder="Email Address" required></div>
+                            <div class="col-md-6"><input type="tel" name="phone" class="form-control" placeholder="Phone" required></div>
+                            <div class="col-md-6">
+                                <select name="occupation" class="form-select" required>
+                                    <option value="">Occupation...</option>
+                                    <option value="Business Owner">Business Owner</option>
+                                    <option value="Self Employed">Self Employed</option>
+                                    <option value="Student">Student</option>
+                                    <option value="Salaried">Salaried</option>
+                                </select>
+                            </div>
+                            <div class="col-12"><input type="text" name="location" class="form-control" placeholder="Location" required></div>
+                            <div class="col-12"><textarea name="message" class="form-control" rows="3" placeholder="Message..." required></textarea></div>
+                            <div class="col-12 mt-3"><button type="submit" id="submitBtn" class="btn btn-gradient w-100">🚀 Submit</button></div>
+                        </div>
+                    </form>
+                    <div class="mt-4 p-3 rounded-3 text-center" style="background: #eff6ff; border: 1px dashed #6366f1;">
+                        <p class="mb-2 fw-bold text-primary small">📢 We Are Hiring!</p>
+                        <a href="Advertisement/apply.html" target="_blank" class="btn btn-dark btn-sm rounded-pill px-4">Apply Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button id="floatingBtn" data-bs-toggle="modal" data-bs-target="#inquiryModal">
+        <i class="fas fa-comment-dots"></i> <span>Inquiry</span>
+    </button>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
     <script>
-        AOS.init({
-            duration: 800,
-            once: true,
+        AOS.init({ duration: 800, once: true });
+
+        // Navbar Scroll
+        window.addEventListener('scroll', function() {
+            const nav = document.querySelector('.navbar');
+            if (window.scrollY > 50) nav.classList.add('scrolled');
+            else nav.classList.remove('scrolled');
         });
+
+        // Google Sheet Logic
+        const scriptURL = "https://script.google.com/macros/s/AKfycbySmtlkyt9L3XuP0XT7BdeP1TfnoNEjFTJvBZIBaVoTYk615PQuRswhAVVPW5rTJG-5/exec";
+        document.getElementById("inquiryForm").addEventListener("submit", function(e){
+            e.preventDefault();
+            let btn = document.getElementById("submitBtn");
+            let originalText = btn.innerHTML;
+            btn.disabled = true; btn.innerHTML = 'Sending...';
+
+            let rawPhone = this.phone.value;
+            let finalPhone = rawPhone.trim().startsWith("+") ? "'" + rawPhone : rawPhone;
+
+            const data = {
+                name: this.name.value, email: this.email.value, phone: finalPhone,
+                occupation: this.occupation.value, location: this.location.value, message: this.message.value
+            };
+
+            fetch(scriptURL, { method: "POST", body: JSON.stringify(data) })
+            .then(res => res.json())
+            .then(response => {
+                btn.innerHTML = "✅ Sent!";
+                btn.style.background = "#10b981";
+                setTimeout(() => {
+                    btn.disabled = false; btn.innerHTML = originalText; btn.style.background = "";
+                    this.reset();
+                    bootstrap.Modal.getInstance(document.getElementById("inquiryModal")).hide();
+                }, 2500);
+            })
+            .catch(error => { console.error('Error!', error.message); btn.innerHTML = "❌ Error"; btn.disabled = false; });
+        });
+
+        // PWA
+        const isIos = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
+        const isInStandaloneMode = ('standalone' in window.navigator) && (window.navigator.standalone);
+        if(isIos && !isInStandaloneMode){
+            const btn = document.createElement('button'); btn.className = "pwa-btn"; 
+            btn.innerHTML = '<i class="fab fa-apple"></i> Install'; document.body.appendChild(btn);
+            btn.onclick = () => alert("Tap Share -> Add to Home Screen");
+        }
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault(); deferredPrompt = e;
+            const btn = document.createElement('button'); btn.className = "pwa-btn"; 
+            btn.innerHTML = '<i class="fab fa-android"></i> Install'; document.body.appendChild(btn);
+            btn.onclick = () => { deferredPrompt.prompt(); deferredPrompt.userChoice.then(c => { if(c.outcome==='accepted') btn.remove(); }); };
+        });
+        if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/service-worker.js'); }
     </script>
 </body>
 </html>
