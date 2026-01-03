@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mumbra Voice | Election Analytics</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;600&display=swap');
+        
+        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; }
+        h1, h2, h3, .brand-font { font-family: 'Space Grotesk', sans-serif; }
+        
+        /* Advanced Gradients */
+        .hero-bg {
+            background: radial-gradient(circle at 10% 20%, rgb(37, 99, 235) 0%, rgb(30, 64, 175) 40%, rgb(17, 24, 39) 90%);
+        }
+        
+        /* Glassmorphism */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+        
+        .glass-dark {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Animations */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-entry { animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        
+        @keyframes pulse-ring {
+            0% { transform: scale(0.33); opacity: 1; }
+            80%, 100% { opacity: 0; }
+        }
+        .ring-animation::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; height: 100%; width: 100%;
+            border-radius: 50%;
+            border: 3px solid #ef4444;
+            animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+        }
+
+        /* Loading Shimmer */
+        .skeleton {
+            background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+        @keyframes loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+    </style>
+</head>
+<body class="text-slate-800 antialiased">
+
+    <script>
+        // 🔴 PASTE YOUR APPS SCRIPT URL HERE
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxfQz7SfF0FTyGFZxdbU-HiAWT2x0m-43Idz0ZHpY7wIBJn9xbbAz5HI7lPdaYCq7Wt5A/exec"; 
+    </script>
+
+    <header class="hero-bg text-white pb-32 relative overflow-hidden rounded-b-[3rem] shadow-2xl">
+        <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-500 rounded-full blur-[120px] opacity-20"></div>
+        <div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-purple-500 rounded-full blur-[100px] opacity-20"></div>
+
+        <nav class="relative z-10 container mx-auto px-6 py-6 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="bg-white/10 p-2.5 rounded-xl backdrop-blur-md border border-white/10 shadow-lg">
+                    <i class="fa-solid fa-bullhorn text-yellow-400 text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-2xl tracking-tight brand-font">Mumbra<span class="text-blue-300">Voice</span></h1>
+                </div>
+            </div>
+            <button onclick="openIssueModal()" class="bg-white text-blue-900 px-6 py-2.5 rounded-full font-bold text-sm shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:shadow-[0_0_30px_rgba(255,255,255,0.5)] transition-all transform hover:-translate-y-0.5 flex items-center gap-2">
+                <i class="fa-solid fa-pen-to-square"></i> Report Issue
+            </button>
+        </nav>
+
+        <div class="relative z-10 container mx-auto px-6 pt-8 flex flex-col items-center">
+            <div class="glass-dark px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest text-blue-200 mb-6 border border-blue-500/30">
+                Official Civic Dashboard
+            </div>
+            <h1 class="text-5xl md:text-7xl font-bold text-center leading-tight mb-6">
+                Know Your Leader.<br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-orange-400">Vote on Performance.</span>
+            </h1>
+            
+            <div class="grid grid-cols-3 gap-4 md:gap-8 mt-8 w-full max-w-4xl">
+                <div class="glass-dark p-6 rounded-2xl text-center backdrop-blur-xl border-t border-white/20 transform hover:-translate-y-1 transition duration-300">
+                    <div id="statTotal" class="text-4xl font-bold mb-1 brand-font skeleton h-10 w-20 mx-auto rounded"></div>
+                    <div class="text-xs text-blue-200 uppercase tracking-wider font-semibold">Total Reports</div>
+                </div>
+                <div class="glass-dark p-6 rounded-2xl text-center backdrop-blur-xl border-t border-white/20 transform hover:-translate-y-1 transition duration-300 relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-1 h-full bg-green-500"></div>
+                    <div id="statResolved" class="text-4xl font-bold mb-1 brand-font text-green-400 skeleton h-10 w-20 mx-auto rounded"></div>
+                    <div class="text-xs text-green-200 uppercase tracking-wider font-semibold">Fixed</div>
+                </div>
+                <div class="glass-dark p-6 rounded-2xl text-center backdrop-blur-xl border-t border-white/20 transform hover:-translate-y-1 transition duration-300 relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-1 h-full bg-orange-500"></div>
+                    <div id="statPending" class="text-4xl font-bold mb-1 brand-font text-orange-400 skeleton h-10 w-20 mx-auto rounded"></div>
+                    <div class="text-xs text-orange-200 uppercase tracking-wider font-semibold">Pending</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 -mt-12 relative z-20 pb-20">
+
+        <section class="mb-16">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-8 gap-4 px-2">
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-800 brand-font">Elected Representatives</h2>
+                    <p class="text-slate-500 text-sm">Performance based on citizen feedback.</p>
+                </div>
+                <div class="relative w-full md:w-72">
+                    <i class="fa-solid fa-search absolute left-4 top-3.5 text-gray-400"></i>
+                    <input type="text" id="searchBox" placeholder="Search Ward or Party..." class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 bg-white shadow-sm focus:ring-2 focus:ring-blue-500 outline-none transition" onkeyup="filterWards()">
+                </div>
+            </div>
+
+            <div id="wardGrid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 h-72 flex flex-col justify-between">
+                    <div class="flex gap-4 items-center">
+                        <div class="skeleton w-20 h-20 rounded-full"></div>
+                        <div class="flex-1 space-y-2">
+                            <div class="skeleton h-5 w-3/4 rounded"></div>
+                            <div class="skeleton h-4 w-1/2 rounded"></div>
+                        </div>
+                    </div>
+                    <div class="space-y-3 mt-4">
+                        <div class="skeleton h-2 w-full rounded-full"></div>
+                        <div class="flex justify-between">
+                            <div class="skeleton h-8 w-20 rounded"></div>
+                            <div class="skeleton h-8 w-20 rounded"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden">
+            <div class="p-6 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <div class="relative w-3 h-3 ring-animation">
+                        <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+                    </div>
+                    <h2 class="font-bold text-lg text-slate-800 brand-font">Live Community Issues</h2>
+                </div>
+                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider bg-white border px-3 py-1 rounded-full shadow-sm">Real-time</span>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead class="bg-slate-50 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                        <tr>
+                            <th class="p-5 pl-8">Status</th>
+                            <th class="p-5">Issue & Location</th>
+                            <th class="p-5 text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="issueTableBody" class="divide-y divide-slate-100 text-sm">
+                        <tr>
+                            <td colspan="3" class="p-8 text-center text-slate-400">
+                                <i class="fa-solid fa-circle-notch fa-spin mr-2"></i> Connecting to Mumbra Database...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <div id="issueModal" class="fixed inset-0 bg-slate-900/60 hidden z-50 flex items-center justify-center p-4 backdrop-blur-md transition-all">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden transform scale-95 opacity-0 transition-all duration-300" id="issueModalContent">
+            <div class="bg-blue-600 p-6 flex justify-between items-center text-white">
+                <div>
+                    <h3 class="font-bold text-xl brand-font">Report Issue</h3>
+                    <p class="text-xs text-blue-100 opacity-80">Make your voice heard</p>
+                </div>
+                <button onclick="closeIssueModal()" class="bg-white/20 hover:bg-white/30 p-2 rounded-full transition"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="issueForm" onsubmit="submitIssue(event)" class="p-6 space-y-5">
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 uppercase mb-2">Select Ward</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-location-dot absolute left-4 top-3.5 text-slate-400"></i>
+                        <select id="modalWardSelect" name="ward" class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none appearance-none font-medium text-slate-700" required>
+                            <option>Loading...</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 uppercase mb-2">Category</label>
+                    <div class="grid grid-cols-2 gap-3">
+                        <label class="border p-3 rounded-xl cursor-pointer hover:bg-blue-50 hover:border-blue-200 transition flex items-center gap-3 group">
+                            <input type="radio" name="type" value="Water" required class="accent-blue-600">
+                            <i class="fa-solid fa-droplet text-blue-400 group-hover:scale-110 transition"></i> <span class="text-sm font-semibold">Water</span>
+                        </label>
+                        <label class="border p-3 rounded-xl cursor-pointer hover:bg-gray-50 hover:border-gray-300 transition flex items-center gap-3 group">
+                            <input type="radio" name="type" value="Roads" class="accent-gray-600">
+                            <i class="fa-solid fa-road text-gray-400 group-hover:scale-110 transition"></i> <span class="text-sm font-semibold">Roads</span>
+                        </label>
+                        <label class="border p-3 rounded-xl cursor-pointer hover:bg-green-50 hover:border-green-200 transition flex items-center gap-3 group">
+                            <input type="radio" name="type" value="Garbage" class="accent-green-600">
+                            <i class="fa-solid fa-trash text-green-400 group-hover:scale-110 transition"></i> <span class="text-sm font-semibold">Garbage</span>
+                        </label>
+                        <label class="border p-3 rounded-xl cursor-pointer hover:bg-yellow-50 hover:border-yellow-200 transition flex items-center gap-3 group">
+                            <input type="radio" name="type" value="Electricity" class="accent-yellow-600">
+                            <i class="fa-solid fa-bolt text-yellow-400 group-hover:scale-110 transition"></i> <span class="text-sm font-semibold">Power</span>
+                        </label>
+                    </div>
+                </div>
+                <textarea name="desc" rows="3" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Describe the location and problem..." required></textarea>
+                <button type="submit" id="subBtn" class="w-full bg-blue-600 text-white font-bold py-3.5 rounded-xl shadow-lg hover:bg-blue-700 transition transform active:scale-95">Submit Report</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="commentModal" class="fixed inset-0 bg-slate-900/50 hidden z-50 flex justify-end backdrop-blur-sm transition-opacity">
+        <div class="bg-white w-full max-w-md h-full shadow-2xl flex flex-col transform translate-x-full transition-transform duration-300" id="commentDrawer">
+            <div class="bg-white p-4 border-b border-slate-100 flex justify-between items-center z-10 shadow-sm">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center">
+                        <i class="fa-solid fa-comments"></i>
+                    </div>
+                    <div>
+                        <h3 id="commentTitle" class="font-bold text-slate-800 text-sm">Comments</h3>
+                        <p id="commentSubtitle" class="text-[10px] text-slate-400 uppercase tracking-wide">Public Forum</p>
+                    </div>
+                </div>
+                <button onclick="closeCommentModal()" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 text-slate-400 transition"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <div id="chatContainer" class="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50 scroll-smooth"></div>
+            
+            <div class="p-4 bg-white border-t border-slate-100">
+                <form onsubmit="submitComment(event)" class="flex flex-col gap-2">
+                    <input type="hidden" id="activeParentId"><input type="hidden" id="activeType">
+                    <input id="userName" placeholder="Your Name (Optional)" class="text-xs border-none bg-transparent px-2 py-1 text-slate-500 focus:outline-none">
+                    <div class="flex gap-2">
+                        <input id="userMsg" placeholder="Type a message..." class="flex-1 bg-slate-100 rounded-full px-4 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none transition" required>
+                        <button type="submit" id="msgBtn" class="w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center hover:bg-blue-700 shadow-md transition transform active:scale-90"><i class="fa-solid fa-paper-plane text-xs"></i></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+    <script>
+        let appData = { wards: [], issues: [], comments: [] };
+
+        async function init() {
+            try {
+                const res = await fetch(`${SCRIPT_URL}?action=getData`);
+                appData = await res.json();
+                
+                document.querySelectorAll('.skeleton').forEach(el => el.classList.remove('skeleton'));
+                renderStats();
+                renderAll();
+            } catch (e) { console.error(e); showToast("Connection Error", "red"); }
+        }
+
+        function renderStats() {
+            const total = appData.issues.length;
+            const resolved = appData.issues.filter(i => i.Status === 'Resolved').length;
+            document.getElementById('statTotal').innerText = total;
+            document.getElementById('statResolved').innerText = resolved;
+            document.getElementById('statPending').innerText = total - resolved;
+        }
+
+        function renderAll() {
+            const grid = document.getElementById('wardGrid');
+            const table = document.getElementById('issueTableBody');
+            const select = document.getElementById('modalWardSelect');
+            
+            grid.innerHTML = ''; table.innerHTML = ''; select.innerHTML = '<option value="">Select Ward...</option>';
+
+            // 1. RENDER WARDS (With Party Logos)
+            appData.wards.forEach((w, index) => {
+                const wIssues = appData.issues.filter(i => i.Ward_Number == w.Ward_Number);
+                const resolved = wIssues.filter(i => i.Status === 'Resolved').length;
+                const total = wIssues.length;
+                const percent = total === 0 ? 0 : Math.round((resolved/total)*100);
+                const reviewCount = appData.comments ? appData.comments.filter(c => c.Parent_ID == w.Ward_Number).length : 0;
+                
+                // --- PARTY LOGO LOGIC ---
+                // If Party Logo URL exists, use it. If not, use generic icon.
+                const partyLogo = w.Party_Logo_URL 
+                    ? `<img src="${w.Party_Logo_URL}" class="w-full h-full object-contain">`
+                    : `<i class="fa-solid fa-flag text-gray-400 text-xs"></i>`;
+
+                select.innerHTML += `<option value="${w.Ward_Number}">${w.Area_Name} (${w.Leader_Name})</option>`;
+
+                // Progress Bar Color
+                const barColor = percent >= 75 ? 'bg-green-500' : percent >= 40 ? 'bg-yellow-400' : 'bg-red-500';
+
+                grid.innerHTML += `
+                <div class="bg-white rounded-3xl p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] border border-slate-100 hover:border-blue-200 transition-all duration-300 group ward-card flex flex-col animate-entry" style="animation-delay: ${index * 100}ms" data-s="${w.Ward_Number} ${w.Leader_Name} ${w.Party_Name}">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="flex gap-4 items-center">
+                            <div class="relative">
+                                <img src="${w.Leader_Image_URL || 'https://placehold.co/100'}" class="w-16 h-16 rounded-full object-cover border-[3px] border-white shadow-md">
+                                <div class="absolute -bottom-1 -right-1 w-7 h-7 bg-white rounded-full flex items-center justify-center shadow-sm border border-slate-100 overflow-hidden p-0.5">
+                                    ${partyLogo}
+                                </div>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg text-slate-800 leading-tight brand-font">${w.Leader_Name}</h3>
+                                <div class="flex items-center gap-2 mt-1">
+                                    <span class="text-[10px] font-bold uppercase tracking-wide text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">${w.Party_Name}</span>
+                                    <span class="text-xs text-slate-400">Ward ${w.Ward_Number}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex-1">
+                        <div class="flex justify-between items-end mb-2">
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Work Rate</span>
+                            <span class="text-2xl font-bold text-slate-700 brand-font">${percent}<span class="text-sm text-slate-400">%</span></span>
+                        </div>
+                        <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden mb-6">
+                            <div class="h-full rounded-full ${barColor} transition-all duration-1000" style="width:${percent}%"></div>
+                        </div>
+                        
+                        <div class="flex justify-between text-xs text-slate-500 bg-slate-50 p-3 rounded-xl border border-slate-100 mb-4">
+                            <div class="text-center w-1/2 border-r border-slate-200">
+                                <div class="font-bold text-slate-700 text-lg">${resolved}</div>
+                                <div>Solved</div>
+                            </div>
+                            <div class="text-center w-1/2">
+                                <div class="font-bold text-slate-700 text-lg">${total - resolved}</div>
+                                <div>Pending</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button onclick="openComments('Ward', '${w.Ward_Number}', 'Review: ${w.Leader_Name}')" class="w-full py-3 rounded-xl border-2 border-slate-100 text-slate-600 font-bold text-sm hover:border-blue-500 hover:text-blue-600 transition flex items-center justify-center gap-2 group-hover:bg-blue-50">
+                        <i class="fa-regular fa-comments"></i> Public Reviews (${reviewCount})
+                    </button>
+                </div>`;
+            });
+
+            // 2. RENDER ISSUES
+            const icons = { 'Water': 'fa-droplet text-blue-500', 'Roads': 'fa-road text-slate-500', 'Garbage': 'fa-trash text-green-500', 'Electricity': 'fa-bolt text-yellow-500' };
+
+            [...appData.issues].reverse().forEach((i, idx) => {
+                if(idx > 15) return; 
+                const statusBadge = i.Status === 'Resolved' 
+                    ? `<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700"><i class="fa-solid fa-check"></i> Solved</span>` 
+                    : `<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-700"><i class="fa-regular fa-clock"></i> Pending</span>`;
+                
+                const iconClass = icons[i.Issue_Type] || 'fa-circle-info text-slate-400';
+                const count = appData.comments ? appData.comments.filter(c => c.Parent_ID == i.Issue_ID).length : 0;
+
+                table.innerHTML += `
+                <tr class="hover:bg-slate-50/80 transition border-b border-slate-50 last:border-0 group">
+                    <td class="p-5 pl-8 align-top w-32">${statusBadge}</td>
+                    <td class="p-5 align-top">
+                        <div class="flex gap-4">
+                            <div class="mt-1 w-10 h-10 rounded-lg bg-white border border-slate-100 shadow-sm flex items-center justify-center flex-shrink-0">
+                                <i class="fa-solid ${iconClass}"></i>
+                            </div>
+                            <div>
+                                <div class="font-bold text-slate-700 text-sm">${i.Issue_Type}</div>
+                                <div class="text-xs text-slate-500 mt-1 leading-relaxed max-w-lg">${i.Description}</div>
+                                <div class="mt-2 flex gap-2">
+                                    <span class="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded">Ward ${i.Ward_Number}</span>
+                                    <span class="text-[10px] text-slate-400 py-0.5">${i.Timestamp.split(',')[0]}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="p-5 text-center align-middle">
+                        <button onclick="openComments('Issue', '${i.Issue_ID}', '${i.Issue_Type}')" class="text-slate-300 hover:text-blue-600 transition relative p-2">
+                            <i class="fa-solid fa-message text-xl"></i>
+                            ${count > 0 ? `<span class="absolute top-0 right-0 bg-red-500 text-white text-[9px] font-bold w-4 h-4 flex items-center justify-center rounded-full shadow-sm border border-white">${count}</span>` : ''}
+                        </button>
+                    </td>
+                </tr>`;
+            });
+        }
+
+        // --- FILTER ---
+        function filterWards() {
+            const term = document.getElementById('searchBox').value.toLowerCase();
+            document.querySelectorAll('.ward-card').forEach(c => {
+                c.style.display = c.dataset.s.toLowerCase().includes(term) ? 'flex' : 'none';
+            });
+        }
+
+        // --- MODAL & CHAT UI ---
+        function openIssueModal() {
+            const m = document.getElementById('issueModal');
+            m.classList.remove('hidden');
+            setTimeout(() => { m.children[0].classList.remove('scale-95', 'opacity-0'); m.children[0].classList.add('scale-100', 'opacity-100'); }, 10);
+        }
+        function closeIssueModal() {
+            const m = document.getElementById('issueModal');
+            m.children[0].classList.remove('scale-100', 'opacity-100');
+            m.children[0].classList.add('scale-95', 'opacity-0');
+            setTimeout(() => m.classList.add('hidden'), 300);
+        }
+
+        function openComments(type, id, title) {
+            const m = document.getElementById('commentModal');
+            m.classList.remove('hidden');
+            setTimeout(() => { m.children[0].classList.remove('translate-x-full'); }, 10);
+            
+            document.getElementById('commentTitle').innerText = title;
+            document.getElementById('commentSubtitle').innerText = type === 'Ward' ? 'Rate this Leader' : 'Discuss Issue';
+            document.getElementById('activeParentId').value = id;
+            document.getElementById('activeType').value = type;
+            renderChat(id);
+        }
+        function closeCommentModal() {
+            const m = document.getElementById('commentModal');
+            m.children[0].classList.add('translate-x-full');
+            setTimeout(() => m.classList.add('hidden'), 300);
+        }
+
+        // --- SUBMISSION LOGIC ---
+        async function submitIssue(e) {
+            e.preventDefault();
+            const btn = document.getElementById('subBtn');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing...';
+            btn.disabled = true;
+            
+            const f = document.getElementById('issueForm');
+            try {
+                await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({
+                    action: 'addIssue', ward: f.ward.value, type: f.type.value, desc: f.desc.value
+                })});
+                showToast("Report Submitted!", "green");
+                closeIssueModal(); f.reset(); setTimeout(init, 2000);
+            } catch(e) { showToast("Error!", "red"); } 
+            finally { btn.innerHTML = 'Submit Report'; btn.disabled = false; }
+        }
+
+        function renderChat(pid) {
+            const c = document.getElementById('chatContainer');
+            c.innerHTML = '';
+            const comments = appData.comments ? appData.comments.filter(x => x.Parent_ID == pid) : [];
+            if(comments.length === 0) c.innerHTML = '<div class="text-center text-slate-400 mt-10 text-sm">No comments yet.</div>';
+            
+            comments.forEach(cm => {
+                c.innerHTML += `
+                <div class="flex gap-3 animate-entry">
+                    <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-xs font-bold">${(cm.User_Name||'A').charAt(0)}</div>
+                    <div class="flex-1">
+                        <div class="bg-white p-3 rounded-2xl rounded-tl-none shadow-sm text-sm text-slate-700 border border-slate-100">
+                            <span class="block text-xs font-bold text-blue-600 mb-1">${cm.User_Name||'Citizen'}</span>
+                            ${cm.Message}
+                        </div>
+                    </div>
+                </div>`;
+            });
+            c.scrollTop = c.scrollHeight;
+        }
+
+        async function submitComment(e) {
+            e.preventDefault();
+            const msg = document.getElementById('userMsg').value;
+            if(!msg) return;
+            
+            // Optimistic
+            const c = document.getElementById('chatContainer');
+            if(c.innerHTML.includes('No comments')) c.innerHTML = '';
+            c.innerHTML += `<div class="flex gap-3 justify-end opacity-50"><div class="bg-blue-600 text-white p-3 rounded-2xl rounded-tr-none text-sm shadow">${msg}</div></div>`;
+            c.scrollTop = c.scrollHeight;
+            document.getElementById('userMsg').value = '';
+
+            await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({
+                action: 'addComment', parentId: document.getElementById('activeParentId').value,
+                type: document.getElementById('activeType').value, name: document.getElementById('userName').value, message: msg
+            })});
+            
+            // Background refresh
+            const res = await fetch(`${SCRIPT_URL}?action=getData`);
+            appData = await res.json();
+            renderChat(document.getElementById('activeParentId').value);
+            renderAll();
+        }
+
+        function showToast(m, c) {
+            Toastify({ text: m, duration: 3000, style: { background: c==='green'?'#10b981':'#ef4444', borderRadius:'30px' }, gravity: "top", position: "center" }).showToast();
+        }
+
+        init();
+    </script>
+</body>
+</html>

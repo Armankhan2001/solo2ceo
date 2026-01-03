@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mumbra Admin Command Center</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    
+    <style>
+        /* Custom Scrollbar for dark theme */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1f2937; }
+        ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+        
+        .glass-panel {
+            background: rgba(31, 41, 55, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100 font-sans min-h-screen">
+
+    <script>
+        // 🔴 STEP 1: PASTE YOUR NEW APPS SCRIPT WEB APP URL HERE
+        const API_URL = "https://script.google.com/macros/s/AKfycbyt1_62QVytMjNtc51CVObEC1rE_BIkMYBOmQE_ia_qjqrQvabl38kVuEE53hZhPI_Vkg/exec"; 
+        
+        // 🔴 STEP 2: SET YOUR ADMIN PASSWORD HERE (Must match the one in Code.gs)
+        const LOCAL_ADMIN_PASS = "mumbraadmin123"; 
+    </script>
+
+    <div id="loginOverlay" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-95 backdrop-blur-sm">
+        <div class="bg-gray-800 p-8 rounded-2xl shadow-2xl border border-gray-700 w-full max-w-sm text-center">
+            <div class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg shadow-blue-500/50">
+                <i class="fa-solid fa-user-shield text-2xl text-white"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-white mb-2">Admin Access</h2>
+            <p class="text-gray-400 text-sm mb-6">Enter secure key to manage Mumbra DB</p>
+            
+            <form onsubmit="handleLogin(event)">
+                <input type="password" id="passwordInput" placeholder="Enter Password..." 
+                    class="w-full bg-gray-700 text-white border border-gray-600 rounded-lg px-4 py-3 mb-4 focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
+                <button type="submit" 
+                    class="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-bold py-3 rounded-lg shadow-lg transform transition active:scale-95">
+                    Unlock Dashboard
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div id="dashboard" class="hidden opacity-0 transition-opacity duration-500">
+        
+        <nav class="bg-gray-800 border-b border-gray-700 sticky top-0 z-40 shadow-md">
+            <div class="container mx-auto px-4 h-16 flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <i class="fa-solid fa-layer-group text-blue-500 text-xl"></i>
+                    <h1 class="text-xl font-bold tracking-wide">Mumbra<span class="text-blue-500">Admin</span></h1>
+                </div>
+                <button onclick="logout()" class="text-sm text-gray-400 hover:text-white transition flex items-center gap-2">
+                    <i class="fa-solid fa-right-from-bracket"></i> Logout
+                </button>
+            </div>
+        </nav>
+
+        <div class="container mx-auto px-4 py-8 max-w-6xl">
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="glass-panel p-6 rounded-xl flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-400 text-xs uppercase font-bold tracking-wider">Total Issues</p>
+                        <h3 id="statTotal" class="text-3xl font-bold text-white mt-1">-</h3>
+                    </div>
+                    <div class="w-12 h-12 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-list"></i>
+                    </div>
+                </div>
+                <div class="glass-panel p-6 rounded-xl flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-400 text-xs uppercase font-bold tracking-wider">Pending</p>
+                        <h3 id="statPending" class="text-3xl font-bold text-yellow-400 mt-1">-</h3>
+                    </div>
+                    <div class="w-12 h-12 rounded-lg bg-yellow-500/20 text-yellow-400 flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-clock"></i>
+                    </div>
+                </div>
+                <div class="glass-panel p-6 rounded-xl flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-400 text-xs uppercase font-bold tracking-wider">Resolved</p>
+                        <h3 id="statResolved" class="text-3xl font-bold text-green-400 mt-1">-</h3>
+                    </div>
+                    <div class="w-12 h-12 rounded-lg bg-green-500/20 text-green-400 flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-check"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex space-x-4 mb-6 border-b border-gray-700 pb-1">
+                <button onclick="switchTab('issues')" id="tab-issues" class="pb-3 px-4 text-blue-400 border-b-2 border-blue-400 font-bold transition">
+                    <i class="fa-solid fa-list-check mr-2"></i> Manage Issues
+                </button>
+                <button onclick="switchTab('wards')" id="tab-wards" class="pb-3 px-4 text-gray-400 hover:text-white font-medium transition">
+                    <i class="fa-solid fa-user-plus mr-2"></i> Add Ward & Leader
+                </button>
+            </div>
+
+            <div id="view-issues" class="animate-fade-in">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold">Citizen Reports</h2>
+                    <button onclick="fetchData()" class="text-sm bg-gray-700 hover:bg-gray-600 px-3 py-1.5 rounded-lg transition">
+                        <i class="fa-solid fa-rotate mr-1"></i> Refresh
+                    </button>
+                </div>
+                
+                <div class="glass-panel rounded-xl overflow-hidden shadow-lg">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-gray-800 text-gray-400 text-xs uppercase tracking-wider border-b border-gray-700">
+                                    <th class="p-4 font-medium">Date</th>
+                                    <th class="p-4 font-medium">Ward</th>
+                                    <th class="p-4 font-medium w-1/3">Issue Detail</th>
+                                    <th class="p-4 font-medium">Status</th>
+                                    <th class="p-4 font-medium text-right">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="issuesTableBody" class="text-sm divide-y divide-gray-700">
+                                <tr>
+                                    <td colspan="5" class="p-8 text-center text-gray-500">
+                                        <i class="fa-solid fa-circle-notch fa-spin mr-2"></i> Loading database...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="view-wards" class="hidden animate-fade-in">
+                <div class="max-w-3xl mx-auto">
+                    <div class="glass-panel p-8 rounded-xl shadow-lg relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-32 h-32 bg-blue-500 opacity-5 rounded-full blur-3xl -mr-10 -mt-10"></div>
+
+                        <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+                            <span class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-sm"><i class="fa-solid fa-plus"></i></span>
+                            Add New Ward Leader
+                        </h2>
+                        
+                        <form id="wardForm" onsubmit="submitWard(event)" class="space-y-5">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Ward Number</label>
+                                    <input type="number" name="wardNo" placeholder="e.g. 105" required
+                                        class="w-full bg-gray-700 border border-gray-600 rounded-lg p-3 text-white focus:border-blue-500 focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Area Name</label>
+                                    <input type="text" name="area" placeholder="e.g. Rashid Compound" required
+                                        class="w-full bg-gray-700 border border-gray-600 rounded-lg p-3 text-white focus:border-blue-500 focus:outline-none">
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Candidate Name</label>
+                                <input type="text" name="leaderName" placeholder="Full Name" required
+                                    class="w-full bg-gray-700 border border-gray-600 rounded-lg p-3 text-white focus:border-blue-500 focus:outline-none">
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Party Name</label>
+                                    <input type="text" name="party" placeholder="e.g. NCP (SP)" required
+                                        class="w-full bg-gray-700 border border-gray-600 rounded-lg p-3 text-white focus:border-blue-500 focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Last Win Margin</label>
+                                    <input type="text" name="margin" placeholder="e.g. +4500 Votes"
+                                        class="w-full bg-gray-700 border border-gray-600 rounded-lg p-3 text-white focus:border-blue-500 focus:outline-none">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Leader Photo URL</label>
+                                    <input type="url" name="leaderImg" placeholder="https://..."
+                                        class="w-full bg-gray-700 border border-gray-600 rounded-lg p-3 text-white focus:border-blue-500 focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Party Logo URL</label>
+                                    <input type="url" name="partyLogo" placeholder="https://..."
+                                        class="w-full bg-gray-700 border border-gray-600 rounded-lg p-3 text-white focus:border-blue-500 focus:outline-none">
+                                </div>
+                            </div>
+
+                            <div class="pt-4">
+                                <button type="submit" id="addWardBtn"
+                                    class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-3 rounded-lg shadow-lg transition flex justify-center items-center gap-2">
+                                    <i class="fa-solid fa-save"></i> Save Details to Database
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+    <script>
+        let sessionPass = "";
+
+        // 1. LOGIN HANDLER
+        function handleLogin(e) {
+            e.preventDefault();
+            const input = document.getElementById('passwordInput').value;
+            if (input === LOCAL_ADMIN_PASS) {
+                sessionPass = input;
+                document.getElementById('loginOverlay').style.display = 'none';
+                document.getElementById('dashboard').classList.remove('hidden');
+                
+                // Slight delay for fade effect
+                setTimeout(() => {
+                    document.getElementById('dashboard').classList.remove('opacity-0');
+                    fetchData();
+                }, 100);
+                
+                showToast("Access Granted", "linear-gradient(to right, #00b09b, #96c93d)");
+            } else {
+                showToast("Access Denied: Wrong Password", "linear-gradient(to right, #ff5f6d, #ffc371)");
+                document.getElementById('passwordInput').value = "";
+            }
+        }
+
+        // 2. FETCH DATA
+        async function fetchData() {
+            const tbody = document.getElementById('issuesTableBody');
+            try {
+                const res = await fetch(`${API_URL}?action=getData`);
+                const data = await res.json();
+                
+                if(!data.issues) throw new Error("No data");
+
+                // Update Stats
+                const total = data.issues.length;
+                const resolved = data.issues.filter(i => i.Status === 'Resolved').length;
+                const pending = total - resolved;
+
+                document.getElementById('statTotal').innerText = total;
+                document.getElementById('statPending').innerText = pending;
+                document.getElementById('statResolved').innerText = resolved;
+
+                // Render Table
+                tbody.innerHTML = '';
+                
+                // Sort by Pending first
+                const sortedIssues = data.issues.sort((a,b) => (a.Status === 'Pending' ? -1 : 1));
+
+                sortedIssues.forEach(issue => {
+                    const isPending = issue.Status === 'Pending';
+                    const statusBadge = isPending 
+                        ? `<span class="bg-yellow-500/10 text-yellow-500 px-2 py-1 rounded text-xs border border-yellow-500/20 font-bold">PENDING</span>`
+                        : `<span class="bg-green-500/10 text-green-500 px-2 py-1 rounded text-xs border border-green-500/20 font-bold">RESOLVED</span>`;
+                    
+                    const actionBtn = isPending
+                        ? `<button onclick="markResolved('${issue.Issue_ID}', this)" class="bg-blue-600 hover:bg-blue-500 text-white text-xs px-3 py-1.5 rounded transition shadow">
+                             Resolve <i class="fa-solid fa-check ml-1"></i>
+                           </button>`
+                        : `<span class="text-gray-600 text-xs italic">Completed</span>`;
+
+                    const row = `
+                    <tr class="hover:bg-gray-800 transition group">
+                        <td class="p-4 text-gray-400 whitespace-nowrap">${issue.Timestamp.split(',')[0]}</td>
+                        <td class="p-4 text-white font-bold">
+                            <span class="bg-gray-700 px-2 py-1 rounded text-xs">Ward ${issue.Ward_Number}</span>
+                        </td>
+                        <td class="p-4">
+                            <div class="text-white font-medium mb-0.5">${issue.Issue_Type}</div>
+                            <div class="text-gray-500 text-xs leading-snug max-w-xs">${issue.Description}</div>
+                        </td>
+                        <td class="p-4">${statusBadge}</td>
+                        <td class="p-4 text-right">${actionBtn}</td>
+                    </tr>`;
+                    tbody.innerHTML += row;
+                });
+
+            } catch (err) {
+                console.error(err);
+                showToast("Failed to load data", "red");
+                tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-red-400">Error loading data. Check console.</td></tr>`;
+            }
+        }
+
+        // 3. MARK RESOLVED
+        async function markResolved(id, btn) {
+            if(!confirm("Are you sure this issue is solved?")) return;
+
+            // Optimistic UI Update (Change button instantly)
+            const originalText = btn.innerHTML;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i>`;
+            btn.disabled = true;
+
+            try {
+                const payload = {
+                    action: 'updateStatus',
+                    password: sessionPass, // Send Admin Pass
+                    issueId: id
+                };
+
+                await fetch(API_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(payload)
+                });
+
+                showToast("Issue Marked Resolved!", "#22c55e");
+                
+                // Update Row UI permanently
+                const row = btn.closest('tr');
+                row.querySelector('td:nth-child(4)').innerHTML = `<span class="bg-green-500/10 text-green-500 px-2 py-1 rounded text-xs border border-green-500/20 font-bold">RESOLVED</span>`;
+                btn.parentElement.innerHTML = `<span class="text-gray-600 text-xs italic">Completed</span>`;
+
+                // Update Stats Counter locally
+                const p = document.getElementById('statPending');
+                const r = document.getElementById('statResolved');
+                p.innerText = parseInt(p.innerText) - 1;
+                r.innerText = parseInt(r.innerText) + 1;
+
+            } catch (err) {
+                showToast("Update Failed", "red");
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        }
+
+        // 4. ADD WARD
+        async function submitWard(e) {
+            e.preventDefault();
+            const btn = document.getElementById('addWardBtn');
+            const form = document.getElementById('wardForm');
+            
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Saving to Database...`;
+            btn.disabled = true;
+
+            const payload = {
+                action: 'addWard',
+                password: sessionPass,
+                wardNo: form.wardNo.value,
+                area: form.area.value,
+                leaderName: form.leaderName.value,
+                party: form.party.value,
+                margin: form.margin.value,
+                leaderImg: form.leaderImg.value,
+                partyLogo: form.partyLogo.value
+            };
+
+            try {
+                await fetch(API_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(payload)
+                });
+
+                showToast("Ward Added Successfully!", "#22c55e");
+                form.reset();
+            } catch (err) {
+                showToast("Failed to add ward", "red");
+            } finally {
+                btn.innerHTML = `<i class="fa-solid fa-save"></i> Save Details to Database`;
+                btn.disabled = false;
+            }
+        }
+
+        // UTILITIES
+        function switchTab(tab) {
+            document.getElementById('view-issues').classList.add('hidden');
+            document.getElementById('view-wards').classList.add('hidden');
+            
+            document.getElementById(`tab-issues`).className = "pb-3 px-4 text-gray-400 hover:text-white font-medium transition";
+            document.getElementById(`tab-wards`).className = "pb-3 px-4 text-gray-400 hover:text-white font-medium transition";
+
+            document.getElementById(`view-${tab}`).classList.remove('hidden');
+            document.getElementById(`tab-${tab}`).className = "pb-3 px-4 text-blue-400 border-b-2 border-blue-400 font-bold transition";
+        }
+
+        function showToast(msg, bg) {
+            Toastify({
+                text: msg,
+                duration: 3000,
+                gravity: "top", 
+                position: "right", 
+                style: { background: bg, borderRadius: "8px", boxShadow: "0 4px 6px rgba(0,0,0,0.1)" },
+            }).showToast();
+        }
+
+        function logout() {
+            location.reload();
+        }
+    </script>
+</body>
+</html>
