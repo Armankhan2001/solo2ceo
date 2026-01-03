@@ -25,11 +25,12 @@
 <body class="bg-gray-900 text-gray-100 font-sans min-h-screen">
 
     <script>
-        // 🔴 STEP 1: PASTE YOUR NEW APPS SCRIPT WEB APP URL HERE
-        const API_URL = "https://script.google.com/macros/s/AKfycbyt1_62QVytMjNtc51CVObEC1rE_BIkMYBOmQE_ia_qjqrQvabl38kVuEE53hZhPI_Vkg/exec"; 
+        // 🔴 CONFIGURATION
+        const API_URL = "https://script.google.com/macros/s/AKfycbxfQz7SfF0FTyGFZxdbU-HiAWT2x0m-43Idz0ZHpY7wIBJn9xbbAz5HI7lPdaYCq7Wt5A/exec"; 
         
-        // 🔴 STEP 2: SET YOUR ADMIN PASSWORD HERE (Must match the one in Code.gs)
         const LOCAL_ADMIN_PASS = "mumbraadmin123"; 
+        
+        const SHEET_ID = "1wEkWwb2DEKcdkcfAOJHbFbND9L9bw2IvetVe-G-gwIM";
     </script>
 
     <div id="loginOverlay" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-95 backdrop-blur-sm">
@@ -97,12 +98,15 @@
                 </div>
             </div>
 
-            <div class="flex space-x-4 mb-6 border-b border-gray-700 pb-1">
-                <button onclick="switchTab('issues')" id="tab-issues" class="pb-3 px-4 text-blue-400 border-b-2 border-blue-400 font-bold transition">
+            <div class="flex space-x-4 mb-6 border-b border-gray-700 pb-1 overflow-x-auto">
+                <button onclick="switchTab('issues')" id="tab-issues" class="pb-3 px-4 text-blue-400 border-b-2 border-blue-400 font-bold transition whitespace-nowrap">
                     <i class="fa-solid fa-list-check mr-2"></i> Manage Issues
                 </button>
-                <button onclick="switchTab('wards')" id="tab-wards" class="pb-3 px-4 text-gray-400 hover:text-white font-medium transition">
+                <button onclick="switchTab('wards')" id="tab-wards" class="pb-3 px-4 text-gray-400 hover:text-white font-medium transition whitespace-nowrap">
                     <i class="fa-solid fa-user-plus mr-2"></i> Add Ward & Leader
+                </button>
+                <button onclick="switchTab('database')" id="tab-database" class="pb-3 px-4 text-gray-400 hover:text-white font-medium transition whitespace-nowrap">
+                    <i class="fa-solid fa-table mr-2"></i> Database View
                 </button>
             </div>
 
@@ -205,6 +209,25 @@
                 </div>
             </div>
 
+            <div id="view-database" class="hidden animate-fade-in h-[85vh]">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold flex items-center gap-2">
+                        <i class="fa-solid fa-database text-green-500"></i> Live Google Sheet
+                    </h2>
+                    <a href="https://docs.google.com/spreadsheets/d/1wEkWwb2DEKcdkcfAOJHbFbND9L9bw2IvetVe-G-gwIM/edit" target="_blank" 
+                       class="text-sm bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg transition">
+                        Open in New Tab <i class="fa-solid fa-external-link-alt ml-2"></i>
+                    </a>
+                </div>
+                <div class="glass-panel p-2 rounded-xl h-full shadow-2xl overflow-hidden">
+                    <iframe 
+                        src="https://docs.google.com/spreadsheets/d/1wEkWwb2DEKcdkcfAOJHbFbND9L9bw2IvetVe-G-gwIM/preview" 
+                        class="w-full h-full rounded-lg bg-white" 
+                        frameborder="0">
+                    </iframe>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -213,7 +236,6 @@
     <script>
         let sessionPass = "";
 
-        // 1. LOGIN HANDLER
         function handleLogin(e) {
             e.preventDefault();
             const input = document.getElementById('passwordInput').value;
@@ -221,21 +243,17 @@
                 sessionPass = input;
                 document.getElementById('loginOverlay').style.display = 'none';
                 document.getElementById('dashboard').classList.remove('hidden');
-                
-                // Slight delay for fade effect
                 setTimeout(() => {
                     document.getElementById('dashboard').classList.remove('opacity-0');
                     fetchData();
                 }, 100);
-                
                 showToast("Access Granted", "linear-gradient(to right, #00b09b, #96c93d)");
             } else {
-                showToast("Access Denied: Wrong Password", "linear-gradient(to right, #ff5f6d, #ffc371)");
+                showToast("Access Denied", "linear-gradient(to right, #ff5f6d, #ffc371)");
                 document.getElementById('passwordInput').value = "";
             }
         }
 
-        // 2. FETCH DATA
         async function fetchData() {
             const tbody = document.getElementById('issuesTableBody');
             try {
@@ -255,8 +273,6 @@
 
                 // Render Table
                 tbody.innerHTML = '';
-                
-                // Sort by Pending first
                 const sortedIssues = data.issues.sort((a,b) => (a.Status === 'Pending' ? -1 : 1));
 
                 sortedIssues.forEach(issue => {
@@ -266,21 +282,14 @@
                         : `<span class="bg-green-500/10 text-green-500 px-2 py-1 rounded text-xs border border-green-500/20 font-bold">RESOLVED</span>`;
                     
                     const actionBtn = isPending
-                        ? `<button onclick="markResolved('${issue.Issue_ID}', this)" class="bg-blue-600 hover:bg-blue-500 text-white text-xs px-3 py-1.5 rounded transition shadow">
-                             Resolve <i class="fa-solid fa-check ml-1"></i>
-                           </button>`
+                        ? `<button onclick="markResolved('${issue.Issue_ID}', this)" class="bg-blue-600 hover:bg-blue-500 text-white text-xs px-3 py-1.5 rounded transition shadow">Resolve <i class="fa-solid fa-check ml-1"></i></button>`
                         : `<span class="text-gray-600 text-xs italic">Completed</span>`;
 
                     const row = `
                     <tr class="hover:bg-gray-800 transition group">
                         <td class="p-4 text-gray-400 whitespace-nowrap">${issue.Timestamp.split(',')[0]}</td>
-                        <td class="p-4 text-white font-bold">
-                            <span class="bg-gray-700 px-2 py-1 rounded text-xs">Ward ${issue.Ward_Number}</span>
-                        </td>
-                        <td class="p-4">
-                            <div class="text-white font-medium mb-0.5">${issue.Issue_Type}</div>
-                            <div class="text-gray-500 text-xs leading-snug max-w-xs">${issue.Description}</div>
-                        </td>
+                        <td class="p-4 text-white font-bold"><span class="bg-gray-700 px-2 py-1 rounded text-xs">Ward ${issue.Ward_Number}</span></td>
+                        <td class="p-4"><div class="text-white font-medium mb-0.5">${issue.Issue_Type}</div><div class="text-gray-500 text-xs leading-snug max-w-xs">${issue.Description}</div></td>
                         <td class="p-4">${statusBadge}</td>
                         <td class="p-4 text-right">${actionBtn}</td>
                     </tr>`;
@@ -294,42 +303,27 @@
             }
         }
 
-        // 3. MARK RESOLVED
         async function markResolved(id, btn) {
             if(!confirm("Are you sure this issue is solved?")) return;
-
-            // Optimistic UI Update (Change button instantly)
             const originalText = btn.innerHTML;
             btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i>`;
             btn.disabled = true;
 
             try {
-                const payload = {
-                    action: 'updateStatus',
-                    password: sessionPass, // Send Admin Pass
-                    issueId: id
-                };
-
                 await fetch(API_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
+                    method: 'POST', mode: 'no-cors',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify(payload)
+                    body: JSON.stringify({ action: 'updateStatus', password: sessionPass, issueId: id })
                 });
-
                 showToast("Issue Marked Resolved!", "#22c55e");
-                
-                // Update Row UI permanently
                 const row = btn.closest('tr');
                 row.querySelector('td:nth-child(4)').innerHTML = `<span class="bg-green-500/10 text-green-500 px-2 py-1 rounded text-xs border border-green-500/20 font-bold">RESOLVED</span>`;
                 btn.parentElement.innerHTML = `<span class="text-gray-600 text-xs italic">Completed</span>`;
-
-                // Update Stats Counter locally
+                
                 const p = document.getElementById('statPending');
                 const r = document.getElementById('statResolved');
                 p.innerText = parseInt(p.innerText) - 1;
                 r.innerText = parseInt(r.innerText) + 1;
-
             } catch (err) {
                 showToast("Update Failed", "red");
                 btn.innerHTML = originalText;
@@ -337,70 +331,52 @@
             }
         }
 
-        // 4. ADD WARD
         async function submitWard(e) {
             e.preventDefault();
             const btn = document.getElementById('addWardBtn');
             const form = document.getElementById('wardForm');
-            
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Saving to Database...`;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Saving...`;
             btn.disabled = true;
-
-            const payload = {
-                action: 'addWard',
-                password: sessionPass,
-                wardNo: form.wardNo.value,
-                area: form.area.value,
-                leaderName: form.leaderName.value,
-                party: form.party.value,
-                margin: form.margin.value,
-                leaderImg: form.leaderImg.value,
-                partyLogo: form.partyLogo.value
-            };
 
             try {
                 await fetch(API_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify(payload)
+                    method: 'POST', mode: 'no-cors', headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        action: 'addWard', password: sessionPass,
+                        wardNo: form.wardNo.value, area: form.area.value, leaderName: form.leaderName.value,
+                        party: form.party.value, margin: form.margin.value, leaderImg: form.leaderImg.value, partyLogo: form.partyLogo.value
+                    })
                 });
-
                 showToast("Ward Added Successfully!", "#22c55e");
                 form.reset();
-            } catch (err) {
-                showToast("Failed to add ward", "red");
-            } finally {
-                btn.innerHTML = `<i class="fa-solid fa-save"></i> Save Details to Database`;
-                btn.disabled = false;
-            }
+            } catch (err) { showToast("Failed to add ward", "red"); } 
+            finally { btn.innerHTML = `<i class="fa-solid fa-save"></i> Save Details to Database`; btn.disabled = false; }
         }
 
-        // UTILITIES
+        // Updated Tab Switching Logic
         function switchTab(tab) {
-            document.getElementById('view-issues').classList.add('hidden');
-            document.getElementById('view-wards').classList.add('hidden');
-            
-            document.getElementById(`tab-issues`).className = "pb-3 px-4 text-gray-400 hover:text-white font-medium transition";
-            document.getElementById(`tab-wards`).className = "pb-3 px-4 text-gray-400 hover:text-white font-medium transition";
+            // Hide all views
+            ['issues', 'wards', 'database'].forEach(t => {
+                document.getElementById(`view-${t}`).classList.add('hidden');
+                // Reset Tab Styles
+                const btn = document.getElementById(`tab-${t}`);
+                btn.className = "pb-3 px-4 text-gray-400 hover:text-white font-medium transition whitespace-nowrap";
+                btn.classList.remove('text-blue-400', 'border-b-2', 'border-blue-400', 'font-bold');
+            });
 
+            // Show selected view
             document.getElementById(`view-${tab}`).classList.remove('hidden');
-            document.getElementById(`tab-${tab}`).className = "pb-3 px-4 text-blue-400 border-b-2 border-blue-400 font-bold transition";
+            
+            // Set Active Tab Style
+            const activeBtn = document.getElementById(`tab-${tab}`);
+            activeBtn.className = "pb-3 px-4 text-blue-400 border-b-2 border-blue-400 font-bold transition whitespace-nowrap";
         }
 
         function showToast(msg, bg) {
-            Toastify({
-                text: msg,
-                duration: 3000,
-                gravity: "top", 
-                position: "right", 
-                style: { background: bg, borderRadius: "8px", boxShadow: "0 4px 6px rgba(0,0,0,0.1)" },
-            }).showToast();
+            Toastify({ text: msg, duration: 3000, gravity: "top", position: "right", style: { background: bg, borderRadius: "8px" } }).showToast();
         }
 
-        function logout() {
-            location.reload();
-        }
+        function logout() { location.reload(); }
     </script>
 </body>
 </html>
