@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Arman Khan | Professional Resume</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Desktop View Styles */
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(145deg, #62a4c5, #79aa41);
+      background-attachment: fixed;
+      margin: 0;
+      padding: 0;
+    }
+
+    .sidebar {
+      padding: 2rem;
+      background: #fffaf3;
+      box-shadow: 6px 6px 24px rgba(0, 0, 0, 0.06);
+    }
+
+    .content {
+      padding: 2.5rem;
+      background: #ffffff;
+      box-shadow: 10px 10px 28px rgba(0, 0, 0, 0.08);
+    }
+
+    /* THE MAGIC: Ensures PDF looks exactly like Desktop */
+    @media print {
+      body {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        background: linear-gradient(145deg, #62a4c5, #79aa41) !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .max-w-6xl {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 20px !important;
+      }
+      /* Maintain Grid layout in PDF */
+      .grid {
+        display: grid !important;
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+      }
+      .col-span-2 {
+        grid-column: span 2 / span 2 !important;
+      }
+    }
+
+    /* Floating Download Button Style */
+    .download-btn {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: #1f2937;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 50px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      z-index: 1000;
+      transition: transform 0.2s;
+    }
+    .download-btn:hover {
+      transform: scale(1.05);
+      background: #111827;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="download-btn no-print" onclick="window.print()">
+    Download PDF Format 📄
+  </div>
+
+  <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 mt-10 mb-10">
+    <aside class="sidebar rounded-xl shadow-md">
+      <div class="text-center">
+        <img src="https://astoursinternational.in/image/Employee/arman3.png" alt="Profile" class="w-36 h-36 object-cover rounded-full mx-auto mb-4 border-4 border-white">
+        <h1 class="text-2xl font-bold text-gray-800">Arman Khan</h1>
+        <p class="text-sm text-gray-600 font-semibold">Senior Visa Executive & Web Developer</p>
+      </div>
+      <hr class="my-4 border-gray-300">
+
+      <div class="mt-6">
+        <h2 class="text-lg font-bold mb-2 text-gray-800">Contact</h2>
+        <p class="text-sm mb-1">📧 armankhan232019@gmail.com</p>
+        <p class="text-sm mb-1">📞 +91 885-010-2255</p>
+        <p class="text-sm">📍 Mumbai, Maharashtra 400072</p>
+      </div>
+      <hr class="my-4 border-gray-300">
+
+      <div class="mt-6">
+        <h2 class="text-lg font-bold mb-2 text-gray-800">Skills</h2>
+        <ul class="text-sm list-disc ml-5 space-y-1 text-gray-700">
+          <li>Visa Documentation</li>
+          <li>Visa Filing</li>
+          <li>End to End Visa Process</li>
+          <li>Client Management</li>
+        </ul>
+        <hr class="my-4 border-gray-300">
+        <ul class="text-sm list-disc ml-5 space-y-1 text-gray-700">
+          <li>Web Designing</li>
+          <li>Python Developer</li>
+          <li>Graphic Designing</li>
+          <li>Social Media Management</li>
+        </ul>
+      </div>
+      <hr class="my-4 border-gray-300">
+
+      <div class="mt-6">
+        <h2 class="text-lg font-bold mb-2 text-gray-800">Languages</h2>
+        <ul class="text-sm list-disc ml-5 text-gray-700">
+          <li>English (Good)</li>
+          <li>Hindi (Native)</li>
+          <li>Marathi (Good)</li>
+          <li>Urdu (Conversational)</li>
+          <li>Arabic (Reading)</li>
+        </ul>
+      </div>
+      <hr class="my-4 border-gray-300">
+
+      <div class="mt-6">
+        <h2 class="text-lg font-bold mb-2 text-gray-800">Portfolio</h2>
+        <ul class="text-sm list-disc ml-5 text-blue-600 font-semibold">
+          <li><a href="https://www.solo2ceo.info" target="_blank">www.solo2ceo.info</a></li>
+          <li><a href="https://www.sanskrutitravels.in" target="_blank">www.sanskrutitravels.in</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <section class="content rounded-xl shadow-md col-span-2">
+      <h2 class="text-2xl font-bold border-b-2 border-emerald-500 pb-2 mb-4 text-gray-800">Profile</h2>
+      <p class="text-sm text-gray-700 leading-relaxed">
+        Welcome! I’m <strong>Arman Khan</strong>, a Senior Visa Executive based in Mumbai with over 4 years of hands-on experience in managing end-to-end visa documentation and application processes.
+        <br><br>
+        I specialize in tourist, business, student and dependent visas for almost all major countries worldwide. I ensure accuracy, regulatory compliance, and timely submissions, with a detail-driven, transparent, and client-focused approach that helps individuals and businesses navigate complex visa requirements with confidence.
+      </p>
+
+      <h2 class="text-2xl font-bold border-b-2 border-emerald-500 pb-2 my-4 text-gray-800">Experience</h2>
+      
+      <div class="mb-6">
+        <h3 class="text-lg font-bold text-gray-800">Head Visa Executive – Trip Store Holidays</h3>
+        <p class="text-xs font-bold text-emerald-600">2025 – Present | Thane (w)</p>
+        <p class="text-sm mt-1 text-gray-700">Led the visa department, handling end-to-end process. Successfully managing the entire visa lifecycle including personalized consultation, accurate documentation, embassy coordination, and timely submissions. Recognized for driving efficiency in group and individual visa applications and improving approval rates.</p>
+      </div>
+
+      <div class="mb-6">
+        <h3 class="text-lg font-bold text-gray-800">Head Visa Executive – Sanskruti Travels</h3>
+        <p class="text-xs font-bold text-emerald-600">2024 – 2025 | Vidhyavihar (w)</p>
+        <p class="text-sm mt-1 text-gray-700">Independently managed end-to-end visa processing. Designed and developed the company’s official travel and visa website, managed holiday tour packages, and handled ticketing. Spearheaded social media strategy and ran targeted ad campaigns, significantly boosting online visibility.</p>
+      </div>
+
+      <div class="mb-6">
+        <h3 class="text-lg font-bold text-gray-800">Visa Executive – Purohit Visa Consultancy</h3>
+        <p class="text-xs font-bold text-emerald-600">2022 – 2024 | Andheri (E)</p>
+        <p class="text-sm mt-1 text-gray-700">Managed over <strong>5000+ visa applications</strong> across tourist, business, family and Student categories. Played a key role in strategizing lead generation and boosting customer engagement through personalized support and follow-ups.</p>
+      </div>
+
+      <h2 class="text-2xl font-bold border-b-2 border-emerald-500 pb-2 my-4 text-gray-800">Education</h2>
+      <ul class="list-none space-y-2 text-sm text-gray-700">
+        <li><strong>B.Sc.</strong> – Ramniranjan Jhunjhunwala College (2019–2022) | <span class="text-emerald-600 font-bold">SGPA: 9.70, CGPA: 8.45</span></li>
+        <li><strong>Higher Secondary</strong> – RJ College (2017–2019) | 52.31%</li>
+        <li><strong>SSC</strong> – Sharada High School (2007–2017) | 80.20%</li>
+      </ul>
+
+      <h2 class="text-2xl font-bold border-b-2 border-emerald-500 pb-2 my-4 text-gray-800">Projects</h2>
+      <ul class="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-gray-700">
+        <li><span class="font-bold text-emerald-600">●</span> <strong>Travel:</strong> Sanskruti Travels Website</li>
+        <li><span class="font-bold text-emerald-600">●</span> <strong>Digital:</strong> Solo2CEO Brand Building</li>
+        <li><span class="font-bold text-emerald-600">●</span> <strong>Dev:</strong> Student Tracker 360 CRUD API</li>
+        <li><span class="font-bold text-emerald-600">●</span> <strong>E-com:</strong> Full-stack Sales Platform</li>
+        <li><span class="font-bold text-emerald-600">●</span> <strong>Tools:</strong> Multi-format File Parser</li>
+      </ul>
+
+      <h2 class="text-2xl font-bold border-b-2 border-emerald-500 pb-2 my-4 text-gray-800">Interests</h2>
+      <p class="text-sm text-gray-700 font-medium italic">Travel, Tech Blogs, Philosophy, Full-stack Development, Creative Design</p>
+    </section>
+  </div>
+</body>
+
+</html>
