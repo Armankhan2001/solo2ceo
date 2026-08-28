@@ -4,291 +4,403 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Arman Khan | Senior Visa Manager & Operations Specialist</title>
+  <title>Arman Khan | Senior Visa Operations Lead & Manager</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
   <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
     body {
-      font-family: 'Inter', sans-serif;
-      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-      background-attachment: fixed;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: #060911;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.15) 0px, transparent 45%),
+        radial-gradient(at 100% 100%, rgba(30, 41, 59, 0.6) 0px, transparent 45%);
+      color: #1e293b;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 28px 12px;
     }
 
-    .resume-container {
-      backdrop-filter: blur(8px);
+    /* Fixed Exact A4 Canvas (Standard 210mm x 297mm Ratio) */
+    .resume-canvas {
+      width: 794px;
+      height: 1123px;
+      max-height: 1123px;
+      background: #ffffff;
+      box-shadow: 0 30px 70px -15px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.1);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: row;
     }
 
-    /* Strict Printing Logic to preserve Desktop layout alignment */
+    .para-justify {
+      text-align: justify;
+      text-justify: inter-word;
+    }
+
+    @page {
+      size: A4 portrait;
+      margin: 0mm;
+    }
+
     @media print {
-      @page {
-        size: A4 portrait;
-        margin: 0mm;
-      }
-      
       body {
-        background: #ffffff !important;
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
+        background: transparent !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        min-height: auto !important;
       }
-      
+
       .no-print {
         display: none !important;
       }
-      
-      .resume-container {
+
+      .resume-canvas {
         width: 100% !important;
-        max-width: 100% !important;
-        margin: 0 !important;
-        padding: 0 !important;
+        height: 297mm !important;
+        max-height: 297mm !important;
         box-shadow: none !important;
-        display: flex !important;
-        flex-direction: row !important;
-        min-height: 297mm !important;
-      }
-      
-      aside {
-        width: 32% !important;
-        background-color: #f8fafc !important;
-        padding: 2.5rem 1.5rem !important;
+        border-radius: 0 !important;
+        page-break-after: avoid !important;
+        page-break-before: avoid !important;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
       }
-      
-      main {
-        width: 68% !important;
-        background-color: #ffffff !important;
-        padding: 2.5rem !important;
-      }
 
-      .section-block {
-        page-break-inside: avoid !important;
-        break-inside: avoid !important;
+      aside {
+        background-color: #f8fafc !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
       }
     }
 
-    /* Floating Button Animation */
     .btn-glow {
-      box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
-      transition: all 0.3s ease;
+      box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.45);
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .btn-glow:hover {
-      box-shadow: 0 0 30px rgba(16, 185, 129, 0.7);
+      box-shadow: 0 15px 30px -5px rgba(16, 185, 129, 0.7);
       transform: translateY(-2px);
     }
   </style>
 </head>
 
-<body class="p-0 md:p-8 flex justify-center items-center min-h-screen">
+<body>
 
-  <!-- Action Button Wrapper -->
-  <button onclick="window.print()" class="no-print btn-glow fixed bottom-8 right-8 bg-emerald-500 hover:bg-emerald-600 text-white font-bold px-6 py-3 rounded-full flex items-center gap-2 z-50 text-sm tracking-wide transition-all">
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-    </svg>
-    Download Premium PDF
-  </button>
+  <!-- Floating Download Action -->
+  <div class="no-print fixed bottom-8 right-8 z-50 flex items-center gap-3">
+    <button onclick="window.print()" class="btn-glow bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs uppercase tracking-wider px-6 py-3.5 rounded-full flex items-center gap-2.5 shadow-2xl transition cursor-pointer">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+      </svg>
+      <span>Download / Print PDF</span>
+    </button>
+  </div>
 
-  <!-- Document Core -->
-  <div class="resume-container w-full max-w-5xl bg-white md:rounded-2xl shadow-2xl flex flex-col md:flex-row overflow-hidden min-h-[297mm]">
+  <!-- A4 Canvas Sheet -->
+  <div class="resume-canvas rounded-2xl">
     
-    <!-- Left Column: Branding & Core Specifics -->
-    <aside class="w-full md:w-[32%] bg-slate-50 border-r border-slate-100 p-8 flex flex-col justify-between">
-      <div>
-        <!-- Profile Identity -->
-        <div class="text-center md:text-left">
-          <div class="relative inline-block md:block mb-4">
-            <img src="https://astoursinternational.in/image/Employee/arman3.png" alt="Arman Khan" class="w-32 h-32 object-cover rounded-2xl mx-auto md:mx-0 border-2 border-emerald-500/30 p-1 shadow-sm">
+    <!-- Top Modern Accent Line -->
+    <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-emerald-500 via-teal-500 to-slate-800 z-10"></div>
+
+    <!-- LEFT SIDEBAR (32%) -->
+    <aside class="w-[32%] bg-slate-50 border-r border-slate-200/80 p-6 pt-7 flex flex-col justify-between select-none">
+      <div class="space-y-4">
+        
+        <!-- Profile Identity Card -->
+        <div class="text-left">
+          <div class="relative w-28 h-28 mb-3 rounded-2xl overflow-hidden border-2 border-emerald-500/30 p-1 bg-white shadow-sm">
+            <img src="https://astoursinternational.in/image/Employee/arman3.png" alt="Arman Khan" class="w-full h-full object-cover rounded-xl" onerror="this.src='https://via.placeholder.com/150'">
           </div>
-          <h1 class="text-2xl font-bold text-slate-800 tracking-tight">Arman Khan</h1>
-          <p class="text-emerald-600 font-semibold text-sm mt-1 tracking-wider uppercase text-xs">Senior Visa Manager</p>
+          <h1 class="text-xl font-extrabold text-slate-900 tracking-tight leading-tight">Arman Khan</h1>
+          <p class="text-emerald-700 font-bold text-[10px] uppercase tracking-widest mt-1 flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            Senior Visa Operations Lead
+          </p>
         </div>
 
-        <hr class="my-6 border-slate-200">
+        <div class="h-px bg-slate-200"></div>
 
-        <!-- Contact Framework -->
-        <div class="space-y-3.5 section-block">
-          <h2 class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Contact Context</h2>
-          <div class="flex items-center gap-3 text-sm text-slate-600">
-            <span class="text-emerald-500">📧</span>
-            <span class="truncate">armankhan232019@gmail.com</span>
-          </div>
-          <div class="flex items-center gap-3 text-sm text-slate-600">
-            <span class="text-emerald-500">📞</span>
-            <span>+91 885-010-2255</span>
-          </div>
-          <div class="flex items-center gap-3 text-sm text-slate-600">
-            <span class="text-emerald-500">📍</span>
-            <span>Mumbai, MH 400072</span>
+        <!-- Contact Information -->
+        <div class="space-y-2">
+          <h2 class="text-[9.5px] font-extrabold uppercase tracking-widest text-slate-400">Contact Details</h2>
+          <div class="space-y-1.5 text-[10.5px] text-slate-700">
+            <div class="flex items-center gap-2 bg-white px-2 py-1 rounded border border-slate-200/70 shadow-2xs">
+              <span class="text-emerald-600 font-bold text-xs">✉</span>
+              <span class="truncate text-[10px] font-medium">armankhan232019@gmail.com</span>
+            </div>
+            <div class="flex items-center gap-2 bg-white px-2 py-1 rounded border border-slate-200/70 shadow-2xs">
+              <span class="text-emerald-600 font-bold text-xs">📞</span>
+              <span class="text-[10px] font-medium">+91 885-010-2255</span>
+            </div>
+            <div class="flex items-center gap-2 bg-white px-2 py-1 rounded border border-slate-200/70 shadow-2xs">
+              <span class="text-emerald-600 font-bold text-xs">📍</span>
+              <span class="text-[10px] font-medium">Mumbai, MH 400072</span>
+            </div>
           </div>
         </div>
 
-        <hr class="my-6 border-slate-200">
+        <div class="h-px bg-slate-200"></div>
 
-        <!-- Specialized Skillsets -->
-        <div class="section-block">
-          <h2 class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3">Core Expertise</h2>
-          <div class="flex flex-wrap gap-1.5 mb-4">
-            <span class="bg-slate-200/60 text-slate-700 text-xs px-2.5 py-1 rounded font-medium">B2B Core Operations</span>
-            <span class="bg-slate-200/60 text-slate-700 text-xs px-2.5 py-1 rounded font-medium">End-to-End Filing</span>
-            <span class="bg-slate-200/60 text-slate-700 text-xs px-2.5 py-1 rounded font-medium">Consulate Relations</span>
-            <span class="bg-slate-200/60 text-slate-700 text-xs px-2.5 py-1 rounded font-medium">Complex Documentation</span>
-            <span class="bg-slate-200/60 text-slate-700 text-xs px-2.5 py-1 rounded font-medium">Corporate Strategy</span>
+        <!-- Strategic Expertise -->
+        <div class="space-y-2">
+          <h2 class="text-[9.5px] font-extrabold uppercase tracking-widest text-slate-400">Core Expertise</h2>
+          <div class="flex flex-col gap-1.5 text-[10.5px] font-semibold text-slate-700">
+            <div class="bg-white border border-slate-200/90 px-2.5 py-1.5 rounded flex items-center gap-1.5 shadow-2xs hover:border-emerald-300 transition">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              Global Visa Operations
+            </div>
+            <div class="bg-white border border-slate-200/90 px-2.5 py-1.5 rounded flex items-center gap-1.5 shadow-2xs hover:border-emerald-300 transition">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              Visa Strategy &amp; Compliance
+            </div>
+            <div class="bg-white border border-slate-200/90 px-2.5 py-1.5 rounded flex items-center gap-1.5 shadow-2xs hover:border-emerald-300 transition">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              Embassy &amp; Consulate Relations
+            </div>
+            <div class="bg-white border border-slate-200/90 px-2.5 py-1.5 rounded flex items-center gap-1.5 shadow-2xs hover:border-emerald-300 transition">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              Corporate &amp; B2B Visa Management
+            </div>
+            <div class="bg-white border border-slate-200/90 px-2.5 py-1.5 rounded flex items-center gap-1.5 shadow-2xs hover:border-emerald-300 transition">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              Cross-Functional Sales Enablement
+            </div>
+            <div class="bg-white border border-slate-200/90 px-2.5 py-1.5 rounded flex items-center gap-1.5 shadow-2xs hover:border-emerald-300 transition">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              High-Risk Document Vetting
+            </div>
           </div>
+        </div>
 
-          <h2 class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3 mt-5">Technical Infrastructure</h2>
+        <div class="h-px bg-slate-200"></div>
+
+        <!-- Technical Stack -->
+        <div class="space-y-2">
+          <h2 class="text-[9.5px] font-extrabold uppercase tracking-widest text-slate-400">Technical Assets</h2>
           <div class="flex flex-wrap gap-1.5">
-            <span class="bg-emerald-50 text-emerald-700 text-xs px-2.5 py-1 rounded font-medium border border-emerald-100">Full-Stack Python</span>
-            <span class="bg-emerald-50 text-emerald-700 text-xs px-2.5 py-1 rounded font-medium border border-emerald-100">Web Design Architecture</span>
-            <span class="bg-emerald-50 text-emerald-700 text-xs px-2.5 py-1 rounded font-medium border border-emerald-100">API Engineering</span>
-            <span class="bg-emerald-50 text-emerald-700 text-xs px-2.5 py-1 rounded font-medium border border-emerald-100">Digital Advertising</span>
+            <span class="bg-emerald-50 text-emerald-800 border border-emerald-200/80 text-[10px] px-2 py-0.5 rounded font-semibold">Full-Stack Python</span>
+            <span class="bg-emerald-50 text-emerald-800 border border-emerald-200/80 text-[10px] px-2 py-0.5 rounded font-semibold">Web Architecture</span>
+            <span class="bg-emerald-50 text-emerald-800 border border-emerald-200/80 text-[10px] px-2 py-0.5 rounded font-semibold">API Engineering</span>
+            <span class="bg-emerald-50 text-emerald-800 border border-emerald-200/80 text-[10px] px-2 py-0.5 rounded font-semibold">Digital Ads</span>
+            <span class="bg-emerald-50 text-emerald-800 border border-emerald-200/80 text-[10px] px-2 py-0.5 rounded font-semibold">Travel CRM Portals</span>
+            <span class="bg-emerald-50 text-emerald-800 border border-emerald-200/80 text-[10px] px-2 py-0.5 rounded font-semibold">Process Automation</span>
           </div>
         </div>
 
-        <hr class="my-6 border-slate-200">
+        <div class="h-px bg-slate-200"></div>
 
-        <!-- Linguistic Capabilities -->
-        <div class="section-block">
-          <h2 class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3">Linguistics</h2>
-          <div class="grid grid-cols-2 gap-2 text-xs font-medium text-slate-600">
-            <div>• English <span class="text-slate-400 font-normal">(Proficient)</span></div>
-            <div>• Hindi <span class="text-slate-400 font-normal">(Native)</span></div>
-            <div>• Marathi <span class="text-slate-400 font-normal">(Good)</span></div>
-            <div>• Urdu <span class="text-slate-400 font-normal">(Fluent)</span></div>
-            <div>• Arabic <span class="text-slate-400 font-normal">(Literate)</span></div>
+        <!-- Languages -->
+        <div class="space-y-2">
+          <h2 class="text-[9.5px] font-extrabold uppercase tracking-widest text-slate-400">Linguistics</h2>
+          <div class="grid grid-cols-2 gap-y-1.5 gap-x-2 text-[10.5px] text-slate-700 font-medium">
+            <div>• English <span class="text-slate-400 text-[9px] font-normal">(Proficient)</span></div>
+            <div>• Hindi <span class="text-slate-400 text-[9px] font-normal">(Native)</span></div>
+            <div>• Marathi <span class="text-slate-400 text-[9px] font-normal">(Good)</span></div>
+            <div>• Urdu <span class="text-slate-400 text-[9px] font-normal">(Fluent)</span></div>
+            <div class="col-span-2">• Arabic <span class="text-slate-400 text-[9px] font-normal">(Literate)</span></div>
           </div>
         </div>
       </div>
 
-      <!-- Digital Portfolios -->
-      <div class="mt-8 section-block">
-        <h2 class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Digital Footprint</h2>
-        <div class="space-y-1 text-xs">
-          <a href="https://www.solo2ceo.in" target="_blank" class="text-emerald-600 hover:underline block font-medium">www.solo2ceo.info</a>
-          <a href="https://www.sanskrutitravels.in" target="_blank" class="text-emerald-600 hover:underline block font-medium">www.sanskrutitravels.in</a>
+      <!-- Footprint -->
+      <div class="pt-3 border-t border-slate-200">
+        <h2 class="text-[9.5px] font-extrabold uppercase tracking-widest text-slate-400 mb-1">Digital Footprint</h2>
+        <div class="space-y-1 text-[10.5px]">
+          <a href="https://www.solo2ceo.in" target="_blank" class="text-emerald-700 hover:underline block font-bold truncate">www.solo2ceo.in</a>
+          <a href="https://www.sanskrutitravels.in" target="_blank" class="text-emerald-700 hover:underline block font-bold truncate">www.sanskrutitravels.in</a>
         </div>
       </div>
     </aside>
 
-    <!-- Right Column: Professional Experience Timeline -->
-    <main class="w-full md:w-[68%] p-8 md:p-10 flex flex-col justify-between">
-      <div>
-        <!-- Executive Summary -->
-        <div class="section-block mb-8">
-          <h2 class="text-lg font-bold text-slate-800 border-b-2 border-slate-100 pb-2 mb-3 tracking-tight flex items-center gap-2">
-            Professional Profile
+    <!-- RIGHT MAIN CONTENT (68%) -->
+    <main class="w-[68%] p-7 pt-7 flex flex-col justify-between bg-white">
+      <div class="space-y-4">
+        
+        <!-- Summary Header -->
+        <div>
+          <h2 class="text-xs font-extrabold uppercase tracking-wider text-slate-900 border-b border-slate-200 pb-1 mb-1.5 flex items-center justify-between">
+            <span class="flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-emerald-600"></span>
+              Professional Profile
+            </span>
+            <span class="text-[9.5px] text-emerald-700 font-extrabold uppercase tracking-widest bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200/60">6+ Years Experience</span>
           </h2>
-          <p class="text-slate-600 text-sm leading-relaxed font-normal">
-            Result-oriented Senior Visa Professional with over 6 years of comprehensive experience piloting sophisticated corporate and retail international immigration workflows. Specializing in engineered end-to-end global visa filing matrixes for high-profile client networks navigating Business, Tourist, Student, and Dependent immigration across strict global jurisdictions. Blends operational travel sector intelligence with engineering capabilities to deploy custom technical tools and high-conversion client acquisition platforms.
+          <p class="text-slate-600 text-[11px] para-justify leading-relaxed">
+            Senior Visa &amp; Immigration Professional with 6+ years of versatile experience piloting complex corporate and retail international immigration workflows across global jurisdictions. Proven track record of spearheading end-to-end visa operations encompassing strategy, high-risk documentation, application filing, strict compliance, and consulate liaison across Tourist, Business, and Dependent categories. Blends travel industry expertise with technical capabilities to automate backend systems, structure multi-channel client acquisition pipelines, and maintain consistently high visa approval ratios.
           </p>
         </div>
 
-        <!-- Experience Matrix -->
-        <div class="section-block mb-8">
-          <h2 class="text-lg font-bold text-slate-800 border-b-2 border-slate-100 pb-2 mb-5 tracking-tight">
+        <!-- Experience Section -->
+        <div>
+          <h2 class="text-xs font-extrabold uppercase tracking-wider text-slate-900 border-b border-slate-200 pb-1 mb-2.5 flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-600"></span>
             Professional Experience
           </h2>
-          
-          <div class="space-y-6">
-            <!-- Current Position -->
-            <div class="relative pl-5 border-l-2 border-emerald-500">
-              <div class="absolute w-3 h-3 bg-emerald-500 rounded-full -left-[7px] top-1.5"></div>
-              <div class="flex justify-between items-baseline flex-wrap">
-                <h3 class="text-md font-bold text-slate-800">Senior Visa Executive</h3>
-                <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">2025 – Present | Vashi</span>
+
+          <div class="space-y-3">
+            <!-- Job 1 -->
+            <div class="relative pl-3.5 border-l-2 border-emerald-500">
+              <div class="absolute w-2 h-2 bg-emerald-500 rounded-full -left-[5px] top-1"></div>
+              <div class="flex justify-between items-baseline">
+                <span class="text-[12px] font-bold text-slate-900 leading-tight">Senior Visa Executive &amp; Operations Lead</span>
+                <span class="text-[9.5px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-200/80 px-1.5 py-0.5 rounded leading-none">2026 – Present | Vashi</span>
               </div>
-              <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider mt-0.5">The Visa Manager</p>
-              <p class="text-slate-600 text-sm mt-1.5 leading-relaxed">
-                Directing strategic B2B enterprise visa pipelines across multi-tier corporate accounts. Designing strict vetting matrices to maximize consulate approval percentages, structuring global partner workflows, and optimizing complex compliance regulations to compress pipeline turnaround times.
+              <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mt-0.5">The Visa Manager</p>
+              <p class="text-slate-600 text-[10.5px] para-justify mt-1 leading-snug">
+                Directing end-to-end B2B, corporate, and retail visa operations across the USA, UK, Australia, Canada, New Zealand, South Korea, Schengen, China, Morocco, Vietnam, Malaysia, Thailand, Indonesia, Sri Lanka, and major eVisa destinations. Expanded operational scope into proactive business consultation, client onboarding calls, and cross-functional pipeline management to optimize conversion rates and streamline turnaround times.
               </p>
             </div>
 
-            <!-- Position 2 -->
-            <div class="relative pl-5 border-l-2 border-slate-200">
-              <div class="absolute w-3 h-3 bg-slate-300 rounded-full -left-[7px] top-1.5"></div>
-              <div class="flex justify-between items-baseline flex-wrap">
-                <h3 class="text-md font-bold text-slate-800">Head Visa Executive</h3>
-                <span class="text-xs font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded">2025 – 2025 | Thane (W)</span>
+            <!-- Job 2 -->
+            <div class="relative pl-3.5 border-l-2 border-slate-200">
+              <div class="absolute w-2 h-2 bg-slate-300 rounded-full -left-[5px] top-1"></div>
+              <div class="flex justify-between items-baseline">
+                <span class="text-[12px] font-bold text-slate-900 leading-tight">Head Visa Executive</span>
+                <span class="text-[9.5px] font-bold text-slate-600 bg-slate-100 border border-slate-200 px-1.5 py-0.5 rounded leading-none">2024 – 2026 | Thane (W)</span>
               </div>
-              <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider mt-0.5">Trip Store Holidays</p>
-              <p class="text-slate-600 text-sm mt-1.5 leading-relaxed">
-                Orchestrated end-to-end departmental infrastructure for group corporate movements and private luxury clients. Advised on volatile embassy regulations and directly coordinated high-stakes application pathways, improving standard departmental conversion throughput.
+              <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mt-0.5">Trip Store Holidays</p>
+              <p class="text-slate-600 text-[10.5px] para-justify mt-1 leading-snug">
+                Served as the sole departmental lead managing comprehensive Tourist and Business visa operations across USA, UK, Schengen, Australia, New Zealand, Vietnam, Japan, Thailand, Indonesia, South Korea, Brazil, Bangladesh, and major eVisa corridors. Handled high-stakes documentation, appointment scheduling, and consulate follow-ups independently with 100% compliance adherence.
               </p>
             </div>
 
-            <!-- Position 3 -->
-            <div class="relative pl-5 border-l-2 border-slate-200">
-              <div class="absolute w-3 h-3 bg-slate-300 rounded-full -left-[7px] top-1.5"></div>
-              <div class="flex justify-between items-baseline flex-wrap">
-                <h3 class="text-md font-bold text-slate-800">Head Visa Executive & Tech Lead</h3>
-                <span class="text-xs font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded">2024 – 2025 | Vidyavihar (W)</span>
+            <!-- Job 3 -->
+            <div class="relative pl-3.5 border-l-2 border-slate-200">
+              <div class="absolute w-2 h-2 bg-slate-300 rounded-full -left-[5px] top-1"></div>
+              <div class="flex justify-between items-baseline">
+                <span class="text-[12px] font-bold text-slate-900 leading-tight">Head Visa Executive &amp; Tech Lead</span>
+                <span class="text-[9.5px] font-bold text-slate-600 bg-slate-100 border border-slate-200 px-1.5 py-0.5 rounded leading-none">2022 – 2024 | Vidyavihar (W)</span>
               </div>
-              <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider mt-0.5">Sanskruti Travels</p>
-              <p class="text-slate-600 text-sm mt-1.5 leading-relaxed">
-                Spearheaded operations combining business administration with technology. Designed, built, and launched the company's official public infrastructure, travel assets, and backend ticket reservation panels. Managed targeted ad platforms that increased organic operational visibility.
+              <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mt-0.5">Sanskruti Travels</p>
+              <p class="text-slate-600 text-[10.5px] para-justify mt-1 leading-snug">
+                Piloted visa operations for corporate, leisure, and luxury clients across GCC (Dubai, Saudi Arabia), Schengen, USA, UK, Canada, Australia, and Asian corridors. Concurrently engineered and deployed the firm's in-house customer reservation engine and managed targeted performance advertising to expand operational client inflow.
               </p>
             </div>
 
-            <!-- Position 4 -->
-            <div class="relative pl-5 border-l-2 border-slate-200">
-              <div class="absolute w-3 h-3 bg-slate-300 rounded-full -left-[7px] top-1.5"></div>
-              <div class="flex justify-between items-baseline flex-wrap">
-                <h3 class="text-md font-bold text-slate-800">Visa Executive</h3>
-                <span class="text-xs font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded">2021 – 2024 | Andheri (E)</span>
+            <!-- Job 4 -->
+            <div class="relative pl-3.5 border-l-2 border-slate-200">
+              <div class="absolute w-2 h-2 bg-slate-300 rounded-full -left-[5px] top-1"></div>
+              <div class="flex justify-between items-baseline">
+                <span class="text-[12px] font-bold text-slate-900 leading-tight">Visa Executive</span>
+                <span class="text-[9.5px] font-bold text-slate-600 bg-slate-100 border border-slate-200 px-1.5 py-0.5 rounded leading-none">2020 – 2022 | Andheri (E)</span>
               </div>
-              <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider mt-0.5">Purohit Visa Consultancy</p>
-              <p class="text-slate-600 text-sm mt-1.5 leading-relaxed">
-                Successfully processed over <strong class="text-slate-800 font-semibold">5,000+ custom international files</strong> spans encompassing Student, Family, Business, and Tourist designations. Systematized inbound lead-tracking methodologies to drive strong customer engagement.
+              <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mt-0.5">Purohit Visa Consultancy</p>
+              <p class="text-slate-600 text-[10.5px] para-justify mt-1 leading-snug">
+                Successfully processed 5,000+ international visa applications spanning Student, Business, Tourist, and Family/Dependent designations for the USA, UK, Australia, South Korea, and Canada. Built strong foundational mastery in multi-jurisdiction immigration protocols, biometric systems, and strict compliance vetting.
               </p>
             </div>
           </div>
         </div>
 
-        <!-- Academic Foundation -->
-        <div class="section-block mb-8">
-          <h2 class="text-lg font-bold text-slate-800 border-b-2 border-slate-100 pb-2 mb-4 tracking-tight">
+        <!-- Academic Foundation (Clean Separated Grid) -->
+        <div>
+          <h2 class="text-xs font-extrabold uppercase tracking-wider text-slate-900 border-b border-slate-200 pb-1 mb-2 flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-600"></span>
             Academic Profile
           </h2>
-          <div class="space-y-2 text-sm text-slate-600">
-            <div class="flex justify-between">
-              <div><strong>Bachelor of Science (B.Sc.)</strong> | Ramniranjan Jhunjhunwala College</div>
-              <span class="text-xs font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded h-fit">SGPA: 9.70 / CGPA: 8.45</span>
+          <div class="space-y-1.5 text-slate-700 text-[10.5px]">
+            <div class="flex justify-between items-center bg-slate-50 border border-slate-200/90 px-2.5 py-1.5 rounded shadow-2xs font-semibold">
+              <span>Bachelor of Science (B.Sc.) | Ramniranjan Jhunjhunwala College</span>
+              <span class="text-[9.5px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded">SGPA: 9.70 / CGPA: 8.45</span>
             </div>
-            <div class="flex justify-between text-xs text-slate-400">
-              <div>Higher Secondary (HSC) | RJ College (52.31%)</div>
-              <div>Secondary School (SSC) | Sharada High School (80.20%)</div>
+            <div class="grid grid-cols-2 gap-2 text-[10px] text-slate-600">
+              <div class="bg-white border border-slate-200/80 px-2 py-1 rounded flex justify-between items-center shadow-2xs">
+                <span class="font-medium">Higher Secondary (HSC) | RJ College</span>
+                <span class="font-bold text-slate-700 bg-slate-100 px-1.5 py-0.5 rounded">52.31%</span>
+              </div>
+              <div class="bg-white border border-slate-200/80 px-2 py-1 rounded flex justify-between items-center shadow-2xs">
+                <span class="font-medium">Secondary School (SSC) | Sharada High School</span>
+                <span class="font-bold text-slate-700 bg-slate-100 px-1.5 py-0.5 rounded">80.20%</span>
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- Technology Implementations / Projects -->
-        <div class="section-block">
-          <h2 class="text-lg font-bold text-slate-800 border-b-2 border-slate-100 pb-2 mb-4 tracking-tight">
-            Technical & Digital Implementations
-          </h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-slate-600">
-            <div class="flex items-start gap-2">
-              <span class="text-emerald-500 mt-0.5">✔</span>
-              <div><strong>Sanskruti Travels Engine:</strong> Architecture-to-deployment of custom service portals.</div>
+              <!-- Technical & Digital Projects -->
+      <div>
+        <h2 class="text-xs font-extrabold uppercase tracking-wider text-slate-900 border-b border-slate-200 pb-1 mb-2.5 flex items-center justify-between">
+          <span class="flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-600"></span>
+            Technical &amp; Digital Implementations
+          </span>
+          <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">In-House Solutions</span>
+        </h2>
+        
+        <div class="grid grid-cols-2 gap-2 text-[10.5px]">
+          <!-- Project 1 -->
+          <div class="bg-slate-50 border border-slate-200/90 hover:border-emerald-400/80 p-2.5 rounded-lg shadow-2xs transition-all duration-200 flex flex-col justify-between group">
+            <div>
+              <div class="flex items-center justify-between gap-1 mb-1">
+                <div class="flex items-center gap-1.5 font-bold text-slate-900">
+                  <span class="text-emerald-600 font-extrabold text-xs">✓</span>
+                  <span class="truncate">Sanskruti Travels Portal</span>
+                </div>
+                <span class="text-[8.5px] font-bold text-emerald-700 bg-emerald-100/70 border border-emerald-200 px-1.5 py-0.2 rounded shrink-0">Engine</span>
+              </div>
+              <p class="text-[9.5px] text-slate-500 leading-snug">Full-stack booking platform &amp; backend inventory control system.</p>
             </div>
-            <div class="flex items-start gap-2">
-              <span class="text-emerald-500 mt-0.5">✔</span>
-              <div><strong>Solo2CEO Development:</strong> Scaling digital properties and brand identities.</div>
+          </div>
+
+          <!-- Project 2 -->
+          <div class="bg-slate-50 border border-slate-200/90 hover:border-emerald-400/80 p-2.5 rounded-lg shadow-2xs transition-all duration-200 flex flex-col justify-between group">
+            <div>
+              <div class="flex items-center justify-between gap-1 mb-1">
+                <div class="flex items-center gap-1.5 font-bold text-slate-900">
+                  <span class="text-emerald-600 font-extrabold text-xs">✓</span>
+                  <span class="truncate">Solo2CEO Architecture</span>
+                </div>
+                <span class="text-[8.5px] font-bold text-emerald-700 bg-emerald-100/70 border border-emerald-200 px-1.5 py-0.2 rounded shrink-0">Growth</span>
+              </div>
+              <p class="text-[9.5px] text-slate-500 leading-snug">End-to-end digital branding, funnel design &amp; lead acquisition.</p>
             </div>
-            <div class="flex items-start gap-2">
-              <span class="text-emerald-500 mt-0.5">✔</span>
-              <div><strong>Student Tracker 360:</strong> Custom built RESTful CRUD operations application.</div>
+          </div>
+
+          <!-- Project 3 -->
+          <div class="bg-slate-50 border border-slate-200/90 hover:border-emerald-400/80 p-2.5 rounded-lg shadow-2xs transition-all duration-200 flex flex-col justify-between group">
+            <div>
+              <div class="flex items-center justify-between gap-1 mb-1">
+                <div class="flex items-center gap-1.5 font-bold text-slate-900">
+                  <span class="text-emerald-600 font-extrabold text-xs">✓</span>
+                  <span class="truncate">Student Tracker 360</span>
+                </div>
+                <span class="text-[8.5px] font-bold text-emerald-700 bg-emerald-100/70 border border-emerald-200 px-1.5 py-0.2 rounded shrink-0">REST API</span>
+              </div>
+              <p class="text-[9.5px] text-slate-500 leading-snug">Modular CRUD app for tracking intake cycles &amp; document pipelines.</p>
             </div>
-            <div class="flex items-start gap-2">
-              <span class="text-emerald-500 mt-0.5">✔</span>
-              <div><strong>Automated File Parser:</strong> Multi-format algorithmic parser maximizing efficiency.</div>
+          </div>
+
+          <!-- Project 4 -->
+          <div class="bg-slate-50 border border-slate-200/90 hover:border-emerald-400/80 p-2.5 rounded-lg shadow-2xs transition-all duration-200 flex flex-col justify-between group">
+            <div>
+              <div class="flex items-center justify-between gap-1 mb-1">
+                <div class="flex items-center gap-1.5 font-bold text-slate-900">
+                  <span class="text-emerald-600 font-extrabold text-xs">✓</span>
+                  <span class="truncate">Automated File Parser</span>
+                </div>
+                <span class="text-[8.5px] font-bold text-emerald-700 bg-emerald-100/70 border border-emerald-200 px-1.5 py-0.2 rounded shrink-0">Python</span>
+              </div>
+              <p class="text-[9.5px] text-slate-500 leading-snug">Automated parser for applicant data extraction &amp; form auto-fill.</p>
             </div>
           </div>
         </div>
       </div>
-
-      <!-- Footer/Interests subtle alignment -->
-      <div class="mt-8 pt-4 border-t border-slate-100 text-xs text-slate-400 italic text-center md:text-left section-block">
-        Personal Ecosystem Focus: Automation Engineering, Tech Systems, Philosophy, Creative Media Design.
+      <!-- Footer Ecosystem -->
+      <div class="pt-3 border-t border-slate-100 text-[9.5px] text-slate-400 italic text-left flex justify-between items-center">
+        <span>Personal Ecosystem Focus: Automation Engineering, Tech Systems, Philosophy, Creative Media Design.</span>
       </div>
     </main>
 
